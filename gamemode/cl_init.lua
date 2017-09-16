@@ -84,9 +84,9 @@ usermessage.Hook( "TEAMONE", RecvMyUmsg );
 function WeaponSelectorDerma()
 
 local WeaponFrame = vgui.Create("DFrame")
-WeaponFrame:SetSize(520, 400) 
+WeaponFrame:SetSize(520, 400)
 WeaponFrame:Center()
-WeaponFrame:SetTitle("Shop") 
+WeaponFrame:SetTitle("Shop")
 WeaponFrame:SetDraggable(true)
 WeaponFrame:SetSizable(false)
 WeaponFrame:ShowCloseButton(true)
@@ -113,12 +113,16 @@ local ModelTab = vgui.Create( "DPanel", sheet )
 ModelTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 231, 66, 35 ) ) end
 sheet:AddSheet( "Player Model", ModelTab, "icon16/user_orange.png" )
 
+local EntitiesTab = vgui.Create( "DPanel", sheet )
+EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 231, 66, 35 ) ) end
+sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_orange.png" )
+
 local PistolButton = vgui.Create("DButton", weaponsTab)
 PistolButton:SetSize(100, 30)
 PistolButton:SetPos(10, 35)
 PistolButton:SetText("Pistol (800)")
 PistolButton.DoClick = function() RunConsoleCommand("weapon_take", "pistol") WeaponFrame:Close() end --make it run our "weapon_take" console command with "pistol" as the 1st argument and then close the menu
- 
+
 local SMGButton = vgui.Create("DButton", weaponsTab)
 SMGButton:SetSize(100, 30)
 SMGButton:SetPos(140, 35)
@@ -263,6 +267,13 @@ Model5Button:SetText("Zombie (200)")
 Model5Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model5Button.DoClick = function() RunConsoleCommand("weapon_take", "zombie") WeaponFrame:Close() end
 
+local EntityButton = vgui.Create("DButton", EntitiesTab)
+EntityButton:SetSize(100, 30)
+EntityButton:SetPos(10, 70)
+EntityButton:SetText("Bla (200)")
+EntityButton:SetTextColor( Color( 0, 0, 255, 255 ) )
+EntityButton.DoClick = function() RunConsoleCommand("weapon_take", "zombie") WeaponFrame:Close() end
+
 -- |||||||||||||||||||||||||||||
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
@@ -288,7 +299,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			CRSBButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/weapons/w_crossbow.mdl" )
@@ -298,7 +309,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			ShotButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/weapons/w_shotgun.mdl" )
@@ -308,7 +319,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			ARButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/weapons/w_IRifle.mdl" )
@@ -318,7 +329,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			FragButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/weapons/w_eq_fraggrenade_thrown.mdl" )
@@ -328,7 +339,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			AlyxButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/weapons/w_Pistol.mdl" )
@@ -338,7 +349,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			PistolAmmoButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -347,7 +358,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-							
+
 			PistolAmmoButton2.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -356,7 +367,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-						
+
 			PistolAmmoButton3.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -365,7 +376,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-						
+
 			PistolAmmoButton4.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -374,7 +385,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-						
+
 			PistolAmmoButton5.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -383,7 +394,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-						
+
 			PistolAmmoButton6.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/357ammobox.mdl" )
@@ -392,7 +403,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			HPButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/HealthKit.mdl" )
@@ -402,7 +413,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			ArmorButton.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/HealthKit.mdl" )
@@ -412,21 +423,21 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 				function icon:LayoutEntity( Entity ) return end
 			end
-			
+
 			Model1Button.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/player/gman_high.mdl" )
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
 			end
-			
+
 			Model2Button.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/player/police.mdl" )
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
 			end
-			
+
 			Model3Button.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetParent( PrevPanel )
@@ -434,7 +445,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/skeleton.mdl" )
 			end
-			
+
 			Model4Button.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetParent( PrevPanel )
@@ -442,7 +453,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/phoenix.mdl" )
 			end
-			
+
 			Model5Button.OnCursorEntered = function()
 			local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetParent( PrevPanel )
@@ -450,7 +461,15 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/zombie_classic.mdl" )
 			end
-			
+
+			EntityButton.OnCursorEntered = function()
+				local icon = vgui.Create( "DModelPanel", PrevPanel )
+				icon:SetParent( PrevPanel )
+				icon:SetPos( -50, -50 )
+				icon:SetSize( 300, 300 )
+				icon:SetModel( "models/player/phoenix.mdl" )
+			end
+
 		PistolButton.OnCursorExited = function()
 		PrevPanel:Clear()
 		end
@@ -511,8 +530,11 @@ PrevPanel:SetSize( 200, 200 )
 		Model5Button.OnCursorExited = function()
 		PrevPanel:Clear()
 		end
-	
-		
+		EntityButton.OnCursorExited = function()
+			PrevPanel:Clear()
+		end
+
+
 			end
 			
 concommand.Add("shop", WeaponSelectorDerma)
