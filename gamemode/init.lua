@@ -411,16 +411,21 @@ function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
 
-
-
 	/////////////////////////////////////////////////////////////
 	/////////////////PAIDAY FUNCTION/////////////////////////////
-	//TEAM 1 PAYDAY is diffrent than TEAM 2? now global..////////
+	/////////////////////////////////////////////////////////////
 		timer.Create( "GivePoints", 600, 0, function() //300
 			local aliveNPCs1 = #ents.FindByName( "TEAM1" )
 			local aliveNPCs2 = #ents.FindByName( "TEAM2" )
+			
 			for k, v in ipairs( player.GetAll() ) do
-				v:AddXp( (aliveNPCs1 + aliveNPCs2) * 5 )
-				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1 + aliveNPCs2) * 5 ) .. " points!");
+			if v:Team() == 1 then
+				v:AddXp( (aliveNPCs1) * 15 )
+				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
+
+			else
+				v:AddXp( (aliveNPCs2) * 15 )
+				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
+			end
 			end
 		end )
