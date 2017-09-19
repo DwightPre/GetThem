@@ -1,11 +1,12 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
+AddCSLuaFile("cl_shop.lua")
+AddCSLuaFile("cl_score.lua")
 
 include( "shared.lua" )
-
 include("rounds.lua") -- Enable/disable rounds.
---include("cl_shop.lua") -- Shop!
---AddCSLuaFile("cl_score.lua") --
+include("cl_shop.lua")
+
 
 /*
   ________        __ ___________.__
@@ -15,6 +16,9 @@ include("rounds.lua") -- Enable/disable rounds.
  \______  /\___  >__|  |____|   |___|  /\___  >__|_|  /
         \/     \/                    \/     \/      \/
 */
+
+
+
 
 if ( SERVER ) then
 
@@ -32,6 +36,8 @@ if ( SERVER ) then
 	end
 
 	hook.Add( "PlayerInitialSpawn", "xPlayerInitialSpawn", xFirstSpawn )
+
+
 
 	function PrintXp( pl )
 		pl:ChatPrint( "Your xp is: " .. pl:GetXp() )
@@ -55,316 +61,17 @@ function Shop( ply )
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
-concommand.Add("spawn_crate",function(ply,cmd,args)
-	local crate = ents.Create("item_ammo_crate")
-	crate:SetPos(ply:GetEyeTrace().HitPos)
-	crate:SetAngles(ply:GetForward():Normalize():Angle())
-	crate:SetKeyValue("AmmoType",1)
-end)
 
-function GivePlayerAWeapon( ply, cmd, args )
-	--Pistol
-	if args[1] == "pistol" then
-	if ply:GetXp() > 800 then
-	--ply:StripWeapons()
-	    ply:Give("weapon_pistol")
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got a pistol!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 800 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-	end
-	--SMG
-	if args[1] == "smg" then --if the 1st argument is "smg" then do:
-	if ply:GetXp() > 1000 then
-		--ply:StripWeapons()
-		ply:Give("weapon_smg1")
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got an SMG!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 1000 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-	--Crossbow
-	if args[1] == "crossbow" then
-	if ply:GetXp() > 1000 then
-		--ply:StripWeapons()
-		ply:Give("weapon_crossbow")
-		ply:GiveAmmo( 10, "XBowBolt", true )
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got an crossbow!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 1000 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough X$P!")
-	end
-     end
---Shotgun
-	if args[1] == "shotgun" then
-	if ply:GetXp() > 1000 then
-	--ply:StripWeapons()
-		ply:Give("weapon_shotgun")
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got an shotgun!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 1000 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
 
---AR2
-	if args[1] == "ar2" then
-	if ply:GetXp() > 1000 then
-	--ply:StripWeapons()
-		ply:Give("weapon_ar2")
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got an AR2!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 1000 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
 
---Frag
-	if args[1] == "frag" then
-	if ply:GetXp() > 500 then
-	ply:StripWeapons()
-		ply:Give("weapon_frag")
-		--ply:GiveAmmo( 1, "weapon_frag")
-		ply:Give("weapon_crowbar")
-		ply:ChatPrint("You got a frag!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 500 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
+/*
+function ENT:OnTakeDamage(dmginfo)
+	self:SetHealth(self:GetHealth() - dmginfo:GetDamage())
+	for k, ply in pairs( player.GetAll() ) do
+	ply:SetHealth( ply:Health() + 10 )
 	end
-     end
-
---Pistol Ammo
-	if args[1] == "pistolammo" then
-	if ply:GetXp() > 200 then
-		ply:GiveAmmo( 200, "Pistol")
-	 	ply:ChatPrint("You got pistol ammo!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---SMG Ammo
-	if args[1] == "smgammo" then
-	if ply:GetXp() > 400 then
-		ply:GiveAmmo(100,"smg1");
-	 	ply:ChatPrint("You got SMG ammo!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 400 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---Bolt Ammo
-	if args[1] == "blotammo" then
-	if ply:GetXp() > 400 then
-		ply:GiveAmmo( 40, "XBowBolt")
-	 	ply:ChatPrint("You got crossbow ammo!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 400 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---Shotgun Ammo
-	if args[1] == "shotgunammo" then
-	if ply:GetXp() > 400 then
-		ply:GiveAmmo( 40, "Buckshot")
-	 	ply:ChatPrint("You got Buckshot!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 400 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---AR2 Ammo
-	if args[1] == "AR2ammo" then
-	if ply:GetXp() > 400 then
-		ply:GiveAmmo( 120, "AR2")
-	 	ply:ChatPrint("You got AR2 ammo!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 400 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---Alyxgun
-	if args[1] == "Alyxgun" then
-	if ply:GetXp() > 1200 then
-		ply:Give("weapon_alyxgun")
-	 	ply:ChatPrint("You got Alyxgun!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 1200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
---alyxgun Ammo
-	if args[1] == "Alyxgunammo" then
-	if ply:GetXp() > 100 then
-		ply:GiveAmmo( 50, "Alyxgun")
-		--ply:Give("weapon_alyxgun")
-	 	ply:ChatPrint("You got Alyx's gun ammo!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 100 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- Flashlight
-	if args[1] == "flashlight" then
-	if ply:GetXp() > 100 then
-		ply:AllowFlashlight( true )
-	 	ply:ChatPrint("You got a Flashlight!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 100 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- 150HP
-	if args[1] == "HP" then
-	if ply:GetXp() > 300 then
-		ply:SetHealth( 150 )
-		ply:SetMaxHealth( 150 )
-	 	ply:ChatPrint("You got 150HP!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 300 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- Armor
-	if args[1] == "armor" then
-	if ply:GetXp() > 500 then
-	ply:SetArmor( 100 )
-	 	ply:ChatPrint("You got armor!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 500 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- Sprint
-	if args[1] == "sprint" then
-	if ply:GetXp() > 500 then
-	ply:SetRunSpeed(720)
-	 	ply:ChatPrint("You're 2X faster now!!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 500 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- Gman
-	if args[1] == "gman" then
-	if ply:GetXp() > 200 then
-	ply:SetModel("models/player/gman_high.mdl")
-	 	ply:ChatPrint("You're Gman!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- Cop
-	if args[1] == "cop" then
-	if ply:GetXp() > 200 then
-	ply:SetModel("models/player/police.mdl")
-	 	ply:ChatPrint("You're a cop!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- skeleton
-	if args[1] == "skeleton" then
-	if ply:GetXp() > 200 then
-	ply:SetModel("models/player/skeleton.mdl")
-	 	ply:ChatPrint("You're a skeleton!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- phoenix
-	if args[1] == "phoenix" then
-	if ply:GetXp() > 200 then
-	ply:SetModel("models/player/phoenix.mdl")
-	 	ply:ChatPrint("You're a phoenix!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
--- zombie
-	if args[1] == "zombie" then
-	if ply:GetXp() > 200 then
-	ply:SetModel("models/player/zombie_classic.mdl")
-	 	ply:ChatPrint("You're a zombie! Aargh!")
-		local current_xp = ply:GetXp()
-	ply:SetXp( current_xp - 200 )
-		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
-	else
-	ply:ChatPrint ( "Not Enough $!")
-	end
-     end
-
 end
-
-concommand.Add("weapon_take", GivePlayerAWeapon)
+*/
 
 	///////////////////////////////////////////////////
 	/////////////////SPAWN/////////////////////////////
@@ -407,7 +114,6 @@ if ply:Health() < ply:GetMaxHealth() then
 	end
 	end)
 end
-
 	///////////////////////////////////////////////////
 	/////////////////SPAWN NPC/////////////////////////
 	//////////////////////////////////////////////////
@@ -447,6 +153,9 @@ else
 
 hook.Add( "KeyPress", "KeyPressedHook", KeyPressed )
 
+hook.Add("PlayerCanPickupWeapon","NoNPCPickups", function(ply,wep)
+	if( wep.IsNPCWeapon ) then return false end
+end )
 	///////////////////////////////////////////////////
 	/////////////////DONT MOVE NPC////////////////////
 	//////////////////////////////////////////////////
@@ -463,25 +172,6 @@ function GM:Think()
 
 end
 
-	///////////////////////////////////////////////////
-	/////////////////ReMOVE dead NPC////////////////////
-	//////////////////////////////////////////////////
-
---function RemoveDeadRag( ent )
-/*
-	if (ent == NULL) or (ent == nil) then return end
-	if (ent:GetClass() == "class C_ClientRagdoll") then
-		if ent:IsValid() and !(ent == NULL) then
-			SafeRemoveEntityDelayed(ent,0)
-			game.RemoveRagdolls()
-		end
-	end
-	*/
---end
---hook.Add("OnEntityCreated", "RemoveDeadRag", RemoveDeadRag)
-
-
-
 
 	///////////////////////////////////////////////////
 	/////////////////KILLED FUNCTIONS/////////////////
@@ -495,7 +185,7 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	end
 	end
 
-
+	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
 	killer:AddXp( math.random(-600, -1000) )
@@ -517,13 +207,14 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
 	end
 	end
-
-	end
+end
 	hook.Call("HUDPaint");
+end
 end
 
 
 function GM:PlayerDeath( victim, inflictor, killer )
+		if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
 	killer:AddXp( math.random(60, 500) )
 	else
@@ -531,7 +222,16 @@ function GM:PlayerDeath( victim, inflictor, killer )
 	killer:AddXp( math.random(60, 500) )
 	end
 	end
+	end
 end
+
+--DropWeapon When Killed
+function GM:DoPlayerDeath (ply , attacker, damage)
+	local wep = ply:GetActiveWeapon()
+	if (wep:IsValid()) then ply:DropWeapon(wep)end
+end
+
+
 	///////////////////////////////////////////////////
 	/////////////////AUTO - DOOR FUNCTION/////////////
 	//////////////////////////////////////////////////
@@ -653,6 +353,18 @@ ply:Give("weapon_physgun")
 end
 end
 concommand.Add( "give_physgun", PhysgunGive )
+
+--DropWeapon command
+local function DropWeapon(ply,cmd,args)
+	if !ply:Alive() then return end
+
+	local CurWeap = ply:GetActiveWeapon()
+
+	if IsValid( CurWeap ) then
+		ply:DropWeapon( CurWeap )
+	end
+end
+concommand.Add( "drop", DropWeapon )
 
 
  function spawn_prop1(ply)

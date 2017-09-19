@@ -1,3 +1,10 @@
+function GM:UpdateSettings()
+
+    --round.Time = GetConVar( "round.Time" ):GetInt()
+
+end	
+	
+if (SERVER) then
 	round = {}
 
 	-- Variables Round-System
@@ -132,3 +139,14 @@ if (round.Enable == true) then
 	end
 	
 timer.Create("round.Handle", 1, 0, round.Handle)
+
+
+------------------------------------------------------------------------
+elseif CLIENT then
+
+
+
+
+
+end
+
