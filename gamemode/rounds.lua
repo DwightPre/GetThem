@@ -32,30 +32,14 @@ local roundTimer = round.Time
 
 hook.Add( "Think", "CurTimeDelay", function()
  if CurTime() < delay then return end
-	--print( delay )
-	--print ( roundTimer)
 	roundTimer = roundTimer - 1
 	delay = CurTime() + 1
-	
-	
-	function Broadcast(Text)
-	--for k, v in pairs(player.GetAll()) do
-	--v:SetNWInt("roundTimer", roundTimer)
-	--end
-	--SetGlobalInt ("roundTimer" , roundTimer)
-	end
-	
 	
 	Roundtimer1 = roundTimer
 	umsg.Start("RoundTimer");
 	umsg.String(Roundtimer1);
 	umsg.End();
-	
-	--for k, v in pairs( player.GetAll() ) do
-	--v:SetNWInt( 'roundTimer', Roundtimer1 )
-	--end
-	--SetGlobalInt ("roundTimer" , roundTimer1)
-	
+		
 	local timeFormat = string.FormattedTime( Roundtimer1, "%02i:%02i" )
 	SetGlobalInt ("roundTimer" , timeFormat)
 
@@ -141,12 +125,27 @@ if (round.Enable == true) then
 timer.Create("round.Handle", 1, 0, round.Handle)
 
 
-------------------------------------------------------------------------
+------------------------------------CLIENT------------------------------------
 elseif CLIENT then
 
+function RoundHud()
 
+if(GetGlobalInt("NPCteam1") ~= null) then
+draw.WordBox( 6, ScrW() * 0.507, ScrH() * 0.06, "Blue[ ".. GetGlobalInt("NPCteam1") .. " ]","DermaLarge",Color(200,200,200,50),Color(0,0,255,255))
+else
+draw.WordBox( 6, ScrW() * 0.507, ScrH() * 0.06, "Blue[ ".. 0 .. " ]","DermaLarge",Color(200,200,200,50),Color(0,0,255,255))
+end
 
+if(GetGlobalInt("NPCteam2") ~= null) then
+draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.06, "Red[ ".. GetGlobalInt("NPCteam2") .. " ]","DermaLarge",Color(200,200,200,50),Color(255,0,0,255))
+else
+draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.06, "Red[ ".. 0 .. " ]","DermaLarge",Color(200,200,200,50),Color(255,0,0,255))
+end
 
+draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.01, "Round Time: ".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(200,0,0,255),Color(255,255,255,255))
+
+ end
+hook.Add("HUDPaint","Top",RoundHud)
 
 end
 

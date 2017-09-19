@@ -312,15 +312,16 @@ if args[1] == "frag" then
 		 	Guard1:Spawn()
 			Guard1:GiveWeapon("weapon_smg1")
 		 	Guard1:SetName("Guard1")
+			
+			ply:ChatPrint("You got a Guard!")
 
-		 	ply:ChatPrint("You got a Guard!")
-		 	end
 		 	local current_xp = ply:GetXp()
 		 	ply:SetXp( current_xp - 200 )
 		 		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
 		 	else
 		 	ply:ChatPrint ( "Not Enough $!")
 		 	end
+			end
 end
 
 concommand.Add("weapon_take", GivePlayerAWeapon)
@@ -361,7 +362,7 @@ sheet:AddSheet( "Player Model", ModelTab, "icon16/user_orange.png" )
 
 local EntitiesTab = vgui.Create( "DPanel", sheet )
 EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 231, 66, 35 ) ) end
-sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_orange.png" )
+sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_red.png" )
 
 local PistolButton = vgui.Create("DButton", weaponsTab)
 PistolButton:SetSize(100, 30)
