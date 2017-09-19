@@ -69,8 +69,8 @@ if CLIENT then
 	})
 
 	surface.CreateFont("ScoreboardPlayersFont", {
-		font		= "CloseCaption_Normal",
-		size		= 18,
+		font		= "CloseCaption_Bolt",
+		size		= 35,
 		weight		= 500,
 		antialias 	= true
 	})
