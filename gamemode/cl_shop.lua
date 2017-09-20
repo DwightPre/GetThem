@@ -302,7 +302,6 @@ if args[1] == "frag" then
 		 -- Guard
 		 	if args[1] == "Guard" then
 		 	if ply:GetXp() > 200 then
-
 		 	local Guard1 = ents.Create("simple_nextbot")
 		 	--Guard1:SetModel( "models/player/hostage/hostage_02.mdl" )
 		 	--Guard1:AddEntityRelationship(player.GetByID(1), D_NU, 99 )

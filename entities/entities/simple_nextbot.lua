@@ -5,30 +5,37 @@ ENT.Spawnable		= true
 
 local teamID
 
-local bullet = {}
-
 function ENT:Initialize()
 
 	self:SetModel("models/player/gman_high.mdl")
 	self:SetHealth(400)
-
+	for k,v in pairs( player.GetAll() ) do
+	self:SetTeamId(v:Team())
+	end 
 end
+
+local delay = 0
 
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
-
-	-- If you are not jumping yet and a player is close jump at them
+	
+	if CurTime() < delay then return end
+	
 		local ent = ents.FindInSphere( self:GetPos(), 200 )
 		for k,v in pairs( ent ) do
 			if v:IsPlayer() && v:Team() != teamID then
 				self.loco:FaceTowards( v:GetPos() )
 				self:SetEnemy(v)
 				self:ShootEnemy()
+
 			else
 				self:SetEnemy(NULL)
 			end
-			end
+			end		
+			
+			delay = CurTime() + 0.7
 end
+
 
 function ENT:SetTeamId(teamNr)
 	teamID = teamNr
@@ -46,7 +53,6 @@ local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos 
 	wep:SetSolid(SOLID_NONE) --collision stuff
 
 	wep:SetParent(self)  -- sets the weapon's parent to self
-
 	wep.IsNPCWeapon = true
 	wep:Fire("setparentattachment", "anim_attachment_RH") -- binds the weapon to the attachment of its parent
 	wep:AddEffects(EF_BONEMERGE) -- merges the weapon with the model's bones to make it look like he's actually holding it
@@ -65,7 +71,7 @@ function ENT:ShootEnemy()
         bullet.Tracer = 1
         bullet.TracerName = "Tracer"
         bullet.Force = 1
-        bullet.Damage = math.random(1,3)
+        bullet.Damage = math.random(0.1,3)
         bullet.AmmoType = "ar2"
 
 self:FireBullets( bullet )
