@@ -28,7 +28,6 @@ function RoundedBoxHook()
 draw.RoundedBox( 6, 30, ScrH()-160, 220, 50, Color(5, 10, 10, 100) ); --Spawn
 draw.RoundedBox( 6, 30, ScrH()-220, 220, 50, Color(5, 10, 10, 100) ); -- Kills
 draw.RoundedBox( 6, 30, ScrH()-280, 220, 50, Color(5, 10, 10, 100) ); -- Cash
-
 end
 hook.Add("HUDPaint", "RoundedBoxHud", RoundedBoxHook)
 
