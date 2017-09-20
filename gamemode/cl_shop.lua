@@ -307,7 +307,7 @@ if args[1] == "frag" then
 		 	--Guard1:SetModel( "models/player/hostage/hostage_02.mdl" )
 		 	--Guard1:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
 		 	Guard1:SetPos(ply:GetEyeTrace().HitPos)
-		 	Guard1:SetHealth(200)
+		 	--Guard1:SetHealth(200)
 			Guard1:SetTeamId(ply:Team())
 		 	Guard1:Spawn()
 			Guard1:GiveWeapon("weapon_smg1")

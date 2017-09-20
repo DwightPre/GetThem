@@ -128,24 +128,43 @@ timer.Create("round.Handle", 1, 0, round.Handle)
 ------------------------------------CLIENT------------------------------------
 elseif CLIENT then
 
-function RoundHud()
+--New Scorebordthing
+local ourMat = Material( "materials/background.png" ) -- Calling Material() every frame is quite expensive
 
-if(GetGlobalInt("NPCteam1") ~= null) then
-draw.WordBox( 6, ScrW() * 0.507, ScrH() * 0.06, "Blue[ ".. GetGlobalInt("NPCteam1") .. " ]","DermaLarge",Color(200,200,200,50),Color(0,0,255,255))
-else
-draw.WordBox( 6, ScrW() * 0.507, ScrH() * 0.06, "Blue[ ".. 0 .. " ]","DermaLarge",Color(200,200,200,50),Color(0,0,255,255))
-end
+hook.Add( "HUDPaint", "RoundHud", function()
 
-if(GetGlobalInt("NPCteam2") ~= null) then
-draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.06, "Red[ ".. GetGlobalInt("NPCteam2") .. " ]","DermaLarge",Color(200,200,200,50),Color(255,0,0,255))
-else
-draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.06, "Red[ ".. 0 .. " ]","DermaLarge",Color(200,200,200,50),Color(255,0,0,255))
-end
+	surface.SetDrawColor( 255, 255, 255, 255 )
+	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
+	surface.DrawTexturedRect( ScrW() * 0.38, 5, 320, 75 )
+	
+	if(GetGlobalInt("NPCteam1") == null) then
+	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.02, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else 
+	if (GetGlobalInt("NPCteam1")  > 9) then
+	draw.WordBox( 12, ScrW() * 0.585, ScrH() * 0.02, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else
+	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.02, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	end
+	end
+	
+	if(GetGlobalInt("NPCteam2") == null) then
+	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.02, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else 
+	if (GetGlobalInt("NPCteam2")  > 9) then
+	draw.WordBox( 12, ScrW() * 0.385, ScrH() * 0.02, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else
+	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.02, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	end
+	end
+	
+	draw.WordBox( 6, ScrW() * 0.474, ScrH() * 0.02, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 
-draw.WordBox( 6, ScrW() * 0.44, ScrH() * 0.01, "Round Time: ".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(200,0,0,255),Color(255,255,255,255))
+end )
 
- end
-hook.Add("HUDPaint","Top",RoundHud)
+
+
+
+
 
 end
 

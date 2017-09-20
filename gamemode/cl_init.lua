@@ -4,6 +4,8 @@ include("cl_shop.lua")
 include("playerInfo.lua")
 include("rounds.lua")
 
+include( "materials/background.png" )
+
 -- Clientside only stuff goes here
 local meta = FindMetaTable("Player")
 
@@ -26,6 +28,7 @@ function RoundedBoxHook()
 draw.RoundedBox( 6, 30, ScrH()-160, 220, 50, Color(5, 10, 10, 100) ); --Spawn
 draw.RoundedBox( 6, 30, ScrH()-220, 220, 50, Color(5, 10, 10, 100) ); -- Kills
 draw.RoundedBox( 6, 30, ScrH()-280, 220, 50, Color(5, 10, 10, 100) ); -- Cash
+
 end
 hook.Add("HUDPaint", "RoundedBoxHud", RoundedBoxHook)
 
@@ -64,3 +67,5 @@ function RemoveDeadRag( ent )
 
 end
 hook.Add("OnEntityCreated", "RemoveDeadRag", RemoveDeadRag)
+
+
