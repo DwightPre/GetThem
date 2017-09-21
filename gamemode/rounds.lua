@@ -1,5 +1,5 @@
 AddCSLuaFile()
-
+--include( "content/materials/background.png" )
 
 function GM:UpdateSettings()
 
@@ -138,32 +138,32 @@ local ourMat = Material( "materials/background.png" ) -- Calling Material() ever
 
 hook.Add( "HUDPaint", "RoundHud", function()
 
-	surface.CreateFont("BigFont", {font= "Roboto",size = 55, shadow = true,})
+	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55,})
 	surface.SetDrawColor( 255, 255, 255, 255 )
 	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
 	surface.DrawTexturedRect( ScrW() * 0.38, 5, 320, 75 )
 	
 	if(GetGlobalInt("NPCteam1") == null) then
-	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.0095, "".. "0" .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else 
 	if (GetGlobalInt("NPCteam1")  > 9) then
-	draw.WordBox( 12, ScrW() * 0.575, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.575, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
-	draw.WordBox( 12, ScrW() * 0.585, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.585, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	end
 	end
 	
 	if(GetGlobalInt("NPCteam2") == null) then
-	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.0095, "".. "0" .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else 
 	if (GetGlobalInt("NPCteam2")  > 9) then
-	draw.WordBox( 12, ScrW() * 0.375, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.375, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
-	draw.WordBox( 12, ScrW() * 0.385, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() * 0.385, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	end
 	end
 	
-	draw.WordBox( 6, ScrW() * 0.455, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"BigFont",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 6, ScrW() * 0.455, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 
 end )
 
