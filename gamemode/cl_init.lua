@@ -4,6 +4,7 @@ include("cl_shop.lua")
 include("playerInfo.lua")
 include("rounds.lua")
 
+include( "materials/background.png" )
 
 
 -- Clientside only stuff goes here

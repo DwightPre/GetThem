@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 --Selfmade weaponshop! :)
 
 if SERVER then
@@ -324,6 +326,8 @@ if args[1] == "frag" then
 end
 
 concommand.Add("weapon_take", GivePlayerAWeapon)
+
+
 
 elseif CLIENT then 
 

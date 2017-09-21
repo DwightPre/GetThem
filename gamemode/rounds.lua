@@ -1,5 +1,5 @@
 AddCSLuaFile()
-include( "materials/background.png" )
+
 
 function GM:UpdateSettings()
 

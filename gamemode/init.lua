@@ -2,6 +2,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("cl_shop.lua")
 AddCSLuaFile("cl_score.lua")
+AddCSLuaFile("rounds.lua")
 
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
