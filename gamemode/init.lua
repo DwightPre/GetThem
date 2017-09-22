@@ -61,18 +61,6 @@ function Shop( ply )
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
-
-
-
-/*
-function ENT:OnTakeDamage(dmginfo)
-	self:SetHealth(self:GetHealth() - dmginfo:GetDamage())
-	for k, ply in pairs( player.GetAll() ) do
-	ply:SetHealth( ply:Health() + 10 )
-	end
-end
-*/
-
 	///////////////////////////////////////////////////
 	/////////////////SPAWN/////////////////////////////
 	//////////////////////////////////////////////////
@@ -97,10 +85,10 @@ end
 
 function GM:PlayerLoadout(ply)
     if (ply:Team() == 1) then
-        ply:Give("weapon_crowbar")
+        ply:Give("gt_spawner")
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Blue!");
     else
-        ply:Give("weapon_crowbar")
+        ply:Give("gt_spawner")
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
 end
 	end
@@ -114,44 +102,6 @@ if ply:Health() < ply:GetMaxHealth() then
 	end
 	end)
 end
-	///////////////////////////////////////////////////
-	/////////////////SPAWN NPC/////////////////////////
-	//////////////////////////////////////////////////
-
-function KeyPressed (ply, key)
-if ( key == IN_USE ) then
-
-if (ply:Health()>10) then
-if (ply:Team() == 1) then
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
-	ply:SetHealth( ply:Health() - 10 )
-	ply:AddFrags( 1 )
-	local npc = ents.Create("npc_citizen")
-	npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
-	npc:SetPos(ply:GetEyeTrace().HitPos)
-	npc:SetHealth(99)
-	npc:Spawn()
-	npc:SetName("TEAM1")
-
-else
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
-	ply:SetHealth( ply:Health() - 10 )
-	ply:AddFrags( 1 )
-	local npc = ents.Create("npc_citizen")
-	npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
-	npc:SetPos(ply:GetEyeTrace().HitPos)
-	npc:SetHealth(99)
-	npc:Spawn()
-	npc:SetName("TEAM2")
-	npc:DrawShadow( false )
-	npc:SetColor(255, 0, 0, 255)
-
-	end
-		end
-			end
-				end
-
-hook.Add( "KeyPress", "KeyPressedHook", KeyPressed )
 
 hook.Add("PlayerCanPickupWeapon","NoNPCPickups", function(ply,wep)
 	if( wep.IsNPCWeapon ) then return false end
@@ -410,12 +360,6 @@ end
 function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
-
-
-
-	/////////////////////////////////////////////////////////////
-	/////////////////PAIDAY FUNCTION/////////////////////////////
-	//TEAM 1 PAYDAY is diffrent than TEAM 2? now global..////////
 		timer.Create( "GivePoints", 600, 0, function() //300
 			local aliveNPCs1 = #ents.FindByName( "TEAM1" )
 			local aliveNPCs2 = #ents.FindByName( "TEAM2" )

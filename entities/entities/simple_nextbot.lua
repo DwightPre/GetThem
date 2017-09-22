@@ -7,25 +7,29 @@ local teamID
 
 local bullet = {}
 
+local delay = 0
+
 function ENT:Initialize()
 
-	self:SetModel("models/player/gman_high.mdl")
+	self:SetModel("models/mossman.mdl")
 	self:SetHealth(400)
 
 end
 
+function ENT:RunBehaviour()
+while(true) do
+self:StartActivity( ACT_IDLE )
+end
+end
+
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
-
-	-- If you are not jumping yet and a player is close jump at them
 		local ent = ents.FindInSphere( self:GetPos(), 200 )
 		for k,v in pairs( ent ) do
 			if v:IsPlayer() && v:Team() != teamID then
 				self.loco:FaceTowards( v:GetPos() )
 				self:SetEnemy(v)
 				self:ShootEnemy()
-			else
-				self:SetEnemy(NULL)
 			end
 			end
 end
@@ -42,7 +46,6 @@ local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos 
 	wep:SetPos(pos) --sets the position of the gun to "pos"
 
 	wep:Spawn() -- spawns the weapon
-
 	wep:SetSolid(SOLID_NONE) --collision stuff
 
 	wep:SetParent(self)  -- sets the weapon's parent to self
@@ -66,11 +69,13 @@ function ENT:ShootEnemy()
         bullet.TracerName = "Tracer"
         bullet.Force = 1
         bullet.Damage = math.random(1,3)
-        bullet.AmmoType = "ar2"
-
+        bullet.AmmoType = "Pistol"
+if CurTime() < delay then return end
 self:FireBullets( bullet )
-
+delay = CurTime() + 0.3
 self:MuzzleFlash()
+
+
 
 end
 
@@ -81,9 +86,11 @@ function ENT:GetEnemy()
 	return self.Enemy
 end
 
+
 list.Set( "NPC", "simple_nextbot", {
 	Name = "Simple bot",
 	Class = "simple_nextbot",
+	Weapons = { "weapon_smg1" },
 	Category = "NextBot"
 } )
 

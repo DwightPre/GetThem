@@ -7,7 +7,7 @@ function GivePlayerAWeapon( ply, cmd, args )
 	if args[1] == "pistol" then
 	if ply:GetXp() > 800 then
 	--ply:StripWeapons()
-	    ply:Give("weapon_pistol")
+	    ply:Give("gt_spawner")
 		ply:Give("weapon_crowbar")
 		ply:ChatPrint("You got a pistol!")
 		local current_xp = ply:GetXp()
@@ -301,6 +301,23 @@ function GivePlayerAWeapon( ply, cmd, args )
 	ply:ChatPrint ( "Not Enough $!")
 	end
      end
+
+		 -- Ammo crate
+			 if args[1] == "ammo_crate" then
+			 if ply:GetXp() > 200 then
+				 local ammo_crate1 = ents.Create("simple_ammo_crate")
+				 ammo_crate1:SetPos(ply:GetEyeTrace().HitPos + Vector(0,0,17))
+				 ammo_crate1:SetHealth(200)
+				 ammo_crate1:Spawn()
+				 ammo_crate1:SetName("ammo_crate1")
+				 local current_xp = ply:GetXp()
+				 ply:SetXp( current_xp - 200 )
+				 ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
+			 else
+			 ply:ChatPrint ( "Not Enough $!")
+			 end
+		 end
+
 		 -- Guard
 		 	if args[1] == "Guard" then
 		 	if ply:GetXp() > 200 then
@@ -313,18 +330,19 @@ function GivePlayerAWeapon( ply, cmd, args )
 			Guard1:SetTeamId(ply:Team())
 		 	Guard1:Spawn()
 			Guard1:GiveWeapon("weapon_smg1")
+			Guard1:StartActivity(ACT_IDLE_AIM_STIMULATED )
 		 	Guard1:SetName("Guard1")
 
 		 	ply:ChatPrint("You got a Guard!")
-		 	end
+
 		 	local current_xp = ply:GetXp()
 		 	ply:SetXp( current_xp - 200 )
 		 		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
 		 	else
 		 	ply:ChatPrint ( "Not Enough $!")
 		 	end
+				end
 end
-
 concommand.Add("weapon_take", GivePlayerAWeapon)
 
 elseif CLIENT then
@@ -521,6 +539,13 @@ EntityButton:SetPos(10, 35)
 EntityButton:SetText("HP Box (200)")
 EntityButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 EntityButton.DoClick = function() RunConsoleCommand("weapon_take", "Guard") WeaponFrame:Close() end
+
+local EntityButton1 = vgui.Create("DButton", EntitiesTab)
+EntityButton1:SetSize(100, 30)
+EntityButton1:SetPos(10, 70)
+EntityButton1:SetText("Ammo crate")
+EntityButton1:SetTextColor( Color( 0, 0, 255, 255 ) )
+EntityButton1.DoClick = function() RunConsoleCommand("weapon_take", "ammo_crate") WeaponFrame:Close() end
 
 -- |||||||||||||||||||||||||||||
 
@@ -719,6 +744,15 @@ PrevPanel:SetSize( 200, 200 )
 				icon:Center()
 			end
 
+			EntityButton1.OnCursorEntered = function()
+				local icon = vgui.Create( "DModelPanel", PrevPanel )
+				icon:SetModel( "models/Items/HealthKit.mdl" )
+				icon:SetSize( 1000, 1000 )
+				icon:SetCamPos(Vector (50, 50, 120))
+				icon:SetLookAt( Vector( 0, 0, 0 ) )
+				icon:Center()
+			end
+
 		PistolButton.OnCursorExited = function()
 		PrevPanel:Clear()
 		end
@@ -780,6 +814,9 @@ PrevPanel:SetSize( 200, 200 )
 		PrevPanel:Clear()
 		end
 		EntityButton.OnCursorExited = function()
+			PrevPanel:Clear()
+		end
+		EntityButton1.OnCursorExited = function()
 			PrevPanel:Clear()
 		end
 
