@@ -1,3 +1,4 @@
+AddCSLuaFile()
 if CLIENT then
 
 local vars =
