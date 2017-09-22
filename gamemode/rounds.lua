@@ -138,7 +138,7 @@ hook.Add( "HUDPaint", "RoundHud", function()
 	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55})
 	surface.SetDrawColor( 255, 255, 255, 255 )
 	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
-	surface.DrawTexturedRect( ScrW() * 0.38, 5, 320, 75 )
+	surface.DrawTexturedRect( ScrW() /2 - 160, 5, 320, 75 )
 
 	if(GetGlobalInt("NPCteam1") == null) then
 	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
