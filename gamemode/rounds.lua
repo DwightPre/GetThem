@@ -1,3 +1,6 @@
+AddCSLuaFile()
+--include( "content/materials/background.png" )
+
 function GM:UpdateSettings()
 
     --round.Time = GetConVar( "round.Time" ):GetInt()
@@ -32,30 +35,14 @@ local roundTimer = round.Time
 
 hook.Add( "Think", "CurTimeDelay", function()
  if CurTime() < delay then return end
-	--print( delay )
-	--print ( roundTimer)
 	roundTimer = roundTimer - 1
 	delay = CurTime() + 1
-	
-	
-	function Broadcast(Text)
-	--for k, v in pairs(player.GetAll()) do
-	--v:SetNWInt("roundTimer", roundTimer)
-	--end
-	--SetGlobalInt ("roundTimer" , roundTimer)
-	end
-	
 	
 	Roundtimer1 = roundTimer
 	umsg.Start("RoundTimer");
 	umsg.String(Roundtimer1);
 	umsg.End();
-	
-	--for k, v in pairs( player.GetAll() ) do
-	--v:SetNWInt( 'roundTimer', Roundtimer1 )
-	--end
-	--SetGlobalInt ("roundTimer" , roundTimer1)
-	
+		
 	local timeFormat = string.FormattedTime( Roundtimer1, "%02i:%02i" )
 	SetGlobalInt ("roundTimer" , timeFormat)
 
@@ -141,11 +128,44 @@ if (round.Enable == true) then
 timer.Create("round.Handle", 1, 0, round.Handle)
 
 
-------------------------------------------------------------------------
+------------------------------------CLIENT------------------------------------
 elseif CLIENT then
 
 
 
+--New Scorebordthing
+local ourMat = Material( "materials/background.png" ) -- Calling Material() every frame is quite expensive
+
+hook.Add( "HUDPaint", "RoundHud", function()
+
+	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55})
+	surface.SetDrawColor( 255, 255, 255, 255 )
+	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
+	surface.DrawTexturedRect( ScrW() * 0.38, 5, 320, 75 )
+	
+	if(GetGlobalInt("NPCteam1") == null) then
+	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else 
+	if (GetGlobalInt("NPCteam1")  > 9) then
+	draw.WordBox( 12, ScrW() * 0.575, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else
+	draw.WordBox( 12, ScrW() * 0.585, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	end
+	end
+	
+	if(GetGlobalInt("NPCteam2") == null) then
+	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else 
+	if (GetGlobalInt("NPCteam2")  > 9) then
+	draw.WordBox( 12, ScrW() * 0.375, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	else
+	draw.WordBox( 12, ScrW() * 0.385, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	end
+	end
+	
+	draw.WordBox( 6, ScrW() * 0.455, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+
+end )
 
 
 end

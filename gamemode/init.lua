@@ -2,6 +2,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("cl_shop.lua")
 AddCSLuaFile("cl_score.lua")
+AddCSLuaFile("rounds.lua")
 
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
@@ -208,18 +209,6 @@ timer.Create( "DoorCheck", 1, 0, function()
     end
 end )
 
-
-/*
-function GM:PlayerDeath( victim, inflictor, attacker )
-	if (attacker ~= victim) then
-	attacker:AddXp( math.random(100, 200) )
-	attacker:SetNWInt("killcounter", attacker:GetNWInt("killcounter") + 1)
-    end
-
-
-end
-*/
-
 	//////////////////////////////////////////////////
 	/////////////////OLD '//' vieuw-function///////////
 	//////////////////////////////////////////////////
@@ -360,11 +349,25 @@ end
 function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
+<<<<<<< HEAD
+=======
+
+	/////////////////////////////////////////////////////////////
+	/////////////////PAIDAY FUNCTION/////////////////////////////
+	/////////////////////////////////////////////////////////////
+>>>>>>> 7fc66b89c40fb7be99f1c63e040dc8c1539a8756
 		timer.Create( "GivePoints", 600, 0, function() //300
 			local aliveNPCs1 = #ents.FindByName( "TEAM1" )
 			local aliveNPCs2 = #ents.FindByName( "TEAM2" )
+			
 			for k, v in ipairs( player.GetAll() ) do
-				v:AddXp( (aliveNPCs1 + aliveNPCs2) * 5 )
-				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1 + aliveNPCs2) * 5 ) .. " points!");
+			if v:Team() == 1 then
+				v:AddXp( (aliveNPCs1) * 15 )
+				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
+
+			else
+				v:AddXp( (aliveNPCs2) * 15 )
+				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
+			end
 			end
 		end )
