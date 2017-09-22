@@ -437,7 +437,7 @@ FragButton.DoClick = function() RunConsoleCommand("weapon_take", "frag") WeaponF
 local AlyxButton = vgui.Create("DButton", weaponsTab)
 AlyxButton:SetSize(100, 30)
 AlyxButton:SetPos(270, 70)
-AlyxButton:SetText("Alyxgun(")
+AlyxButton:SetText("Alyxgun")
 AlyxButton.DoClick = function() RunConsoleCommand("weapon_take", "Alyxgun") WeaponFrame:Close() end
 
 -------------------------------------------------------------------
