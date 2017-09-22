@@ -134,7 +134,7 @@ elseif CLIENT then
 
 
 --New Scorebordthing
-local ourMat = Material( "materials/background.png" ) -- Calling Material() every frame is quite expensive
+local ourMat = Material( "background.png" ) -- Calling Material() every frame is quite expensive
 
 hook.Add( "HUDPaint", "RoundHud", function()
 

@@ -19,7 +19,6 @@ local delay = 0
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
 	
-	if CurTime() < delay then return end
 	
 		local ent = ents.FindInSphere( self:GetPos(), 200 )
 		for k,v in pairs( ent ) do
@@ -28,12 +27,12 @@ function ENT:BehaveUpdate( fInterval )
 				self:SetEnemy(v)
 				self:ShootEnemy()
 
-			else
-				self:SetEnemy(NULL)
+			--else
+			--	self:SetEnemy(NULL)
 			end
 			end		
 			
-			delay = CurTime() + 0.7
+			
 end
 
 
@@ -62,8 +61,7 @@ self.Weapon = wep
 end
 
 function ENT:ShootEnemy()
-
-			  local bullet = {}
+	  local bullet = {}
         bullet.Num = 1
         bullet.Src = self.Weapon:GetPos()+Vector(0,0,0)
         bullet.Dir = self:GetEnemy():WorldSpaceCenter()-(self.Weapon:GetPos()+Vector(0,0,-20))
@@ -71,11 +69,12 @@ function ENT:ShootEnemy()
         bullet.Tracer = 1
         bullet.TracerName = "Tracer"
         bullet.Force = 1
-        bullet.Damage = math.random(0.1,3)
+        bullet.Damage = math.random(1,3)
         bullet.AmmoType = "ar2"
-
+		
+if CurTime() < delay then return end
 self:FireBullets( bullet )
-
+delay = CurTime() + 0.2
 self:MuzzleFlash()
 
 end
