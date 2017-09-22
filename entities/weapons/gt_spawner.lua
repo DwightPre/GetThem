@@ -60,6 +60,17 @@ SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 
 local ShootSound = Sound("Metal.SawbladeStick")
 
+function SWEP:Initialize()
+if CLIENT then
+	local ply = LocalPlayer()
+	if(ply:Team() == 1) then
+	LocalPlayer():GetViewModel():SetColor(Color(0,0,255,255))
+	else
+	LocalPlayer():GetViewModel():SetColor(Color(255,0,0,255))
+	end
+end
+end
+
 function SWEP:Reload()
 end
 

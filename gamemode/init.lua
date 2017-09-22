@@ -7,7 +7,6 @@ AddCSLuaFile("rounds.lua")
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
-resource.AddFile("content/materials/background.png")
 
 
 /*
@@ -66,6 +65,7 @@ hook.Add("ShowHelp", "MyHook", Shop)
 	///////////////////////////////////////////////////
 	/////////////////SPAWN/////////////////////////////
 	//////////////////////////////////////////////////
+
 
 function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
