@@ -5,34 +5,46 @@ ENT.Spawnable		= true
 
 local teamID
 
-function ENT:Initialize()
-
-	self:SetModel("models/player/gman_high.mdl")
-	self:SetHealth(400)
-	for k,v in pairs( player.GetAll() ) do
-	self:SetTeamId(v:Team())
-	end 
-end
+local bullet = {}
 
 local delay = 0
 
+function ENT:Initialize()
+
+	self:SetModel("models/mossman.mdl")
+	self:SetHealth(400)
+	for k,v in pairs( player.GetAll() ) do
+	self:SetTeamId(v:Team())
+	end
+end
+
+function ENT:RunBehaviour()
+while(true) do
+self:StartActivity( ACT_IDLE )
+end
+end
+
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
-	
-	
+local delay = 0
+end
+
+function ENT:BehaveUpdate( fInterval )
+	if ( !self.BehaveThread ) then return end
 		local ent = ents.FindInSphere( self:GetPos(), 200 )
 		for k,v in pairs( ent ) do
 			if v:IsPlayer() && v:Team() != teamID then
 				self.loco:FaceTowards( v:GetPos() )
 				self:SetEnemy(v)
+
 				self:ShootEnemy()
 
 			--else
 			--	self:SetEnemy(NULL)
 			end
-			end		
-			
-			
+			end
+
+
 end
 
 
@@ -48,7 +60,6 @@ local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos 
 	wep:SetPos(pos) --sets the position of the gun to "pos"
 
 	wep:Spawn() -- spawns the weapon
-
 	wep:SetSolid(SOLID_NONE) --collision stuff
 
 	wep:SetParent(self)  -- sets the weapon's parent to self
@@ -70,6 +81,7 @@ function ENT:ShootEnemy()
         bullet.TracerName = "Tracer"
         bullet.Force = 1
         bullet.Damage = math.random(1,3)
+
         bullet.AmmoType = "ar2"
 		
 if CurTime() < delay then return end
@@ -86,9 +98,11 @@ function ENT:GetEnemy()
 	return self.Enemy
 end
 
+
 list.Set( "NPC", "simple_nextbot", {
 	Name = "Simple bot",
 	Class = "simple_nextbot",
+	Weapons = { "weapon_smg1" },
 	Category = "NextBot"
 } )
 
