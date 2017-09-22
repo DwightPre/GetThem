@@ -13,7 +13,7 @@ local vars =
 
 	bar_height = 16,
 
-	width = 0.25
+	width = 0.15
 
 };
 
@@ -23,8 +23,8 @@ local colors =
 	background =
 	{
 
-		border = Color( 190, 255, 128, 255 ),
-		background = Color( 120, 240, 0, 75 )
+		border = Color( 0, 182, 219, 150 ),
+		background = Color( 0, 182, 219, 75 )
 
 	},
 
@@ -65,7 +65,7 @@ local function HUDPaint( )
 
 	local _, th = good_hud:TextSize( "TEXT", vars.font );		-- get text size( height in this case )
 
-	local i = 2;							-- shortcut to how many items( bars + text ) we have
+	local i = 5;							-- shortcut to how many items( bars + text ) we have
 
 	local width = vars.width * ScrW( );				-- calculate width
 	local bar_width = width - ( vars.padding * i );			-- calculate bar width and element height
@@ -85,11 +85,26 @@ local function HUDPaint( )
 	good_hud:PaintText( cx, cy, text, vars.font, colors.text );	-- paint health text and health bar
 	good_hud:PaintBar( cx, cy + by, bar_width, vars.bar_height, colors.health_bar, client:Health( ) / 100 );
 
-	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
-
+	by = by + vars.bar_height + vars.bar_spacing;
 	local text = string.format( "Suit: %iSP", client:Armor( ) );	-- get suit text
 	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	-- paint suit text and suit bar
 	good_hud:PaintBar( cx, cy + by + th + vars.text_spacing, bar_width, vars.bar_height, colors.suit_bar, client:Armor( ) / 100 );
+
+	by = by + vars.bar_height + vars.bar_spacing;
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	local text = string.format( "Cash: %i$", LocalPlayer():GetXp() );	-- get suit text
+	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	-- paint suit text and suit bar
+
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	local text = string.format( "Killed: %i", LocalPlayer():GetNWInt("killcounter") );	-- get suit text
+	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	-- paint suit text and suit bar
+
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	by = by + vars.bar_height + vars.bar_spacing;			-- increment text position
+	local text = string.format( "Spawned: %i", LocalPlayer():Frags() );	-- get suit text
+	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	-- paint suit text and suit bar
 
 end
 hook.Add( "HUDPaint", "PaintOurHud", HUDPaint );
