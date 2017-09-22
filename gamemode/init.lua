@@ -62,18 +62,6 @@ function Shop( ply )
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
-
-
-
-/*
-function ENT:OnTakeDamage(dmginfo)
-	self:SetHealth(self:GetHealth() - dmginfo:GetDamage())
-	for k, ply in pairs( player.GetAll() ) do
-	ply:SetHealth( ply:Health() + 10 )
-	end
-end
-*/
-
 	///////////////////////////////////////////////////
 	/////////////////SPAWN/////////////////////////////
 	//////////////////////////////////////////////////
@@ -258,18 +246,6 @@ timer.Create( "DoorCheck", 1, 0, function()
         end
     end
 end )
-
-
-/*
-function GM:PlayerDeath( victim, inflictor, attacker )
-	if (attacker ~= victim) then
-	attacker:AddXp( math.random(100, 200) )
-	attacker:SetNWInt("killcounter", attacker:GetNWInt("killcounter") + 1)
-    end
-
-
-end
-*/
 
 	//////////////////////////////////////////////////
 	/////////////////OLD '//' vieuw-function///////////

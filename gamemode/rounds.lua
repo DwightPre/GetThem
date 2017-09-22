@@ -138,7 +138,7 @@ local ourMat = Material( "materials/background.png" ) -- Calling Material() ever
 
 hook.Add( "HUDPaint", "RoundHud", function()
 
-	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55,})
+	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55})
 	surface.SetDrawColor( 255, 255, 255, 255 )
 	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
 	surface.DrawTexturedRect( ScrW() * 0.38, 5, 320, 75 )

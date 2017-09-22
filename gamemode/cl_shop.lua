@@ -546,6 +546,15 @@ EntityButton:SetFont("DermaDefaultBold")
 EntityButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 EntityButton.DoClick = function() RunConsoleCommand("weapon_take", "Guard") WeaponFrame:Close() end
 
+
+local EntityButton2 = vgui.Create("DButton", EntitiesTab)
+EntityButton2:SetSize(100, 30)
+EntityButton2:SetPos(140, 35)
+EntityButton2:SetText("dunno")
+EntityButton2:SetFont("DermaDefaultBold")
+EntityButton2:SetTextColor( Color( 0, 0, 255, 255 ) )
+EntityButton2.DoClick = function() RunConsoleCommand("weapon_take", "Guard") WeaponFrame:Close() end
+
 -- |||||||||||||||||||||||||||||
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
