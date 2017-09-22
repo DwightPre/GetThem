@@ -7,6 +7,7 @@ AddCSLuaFile("rounds.lua")
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
+resource.AddFile("content/materials/background.png")
 
 
 /*
@@ -349,17 +350,15 @@ end
 function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
-<<<<<<< HEAD
-=======
 
 	/////////////////////////////////////////////////////////////
 	/////////////////PAIDAY FUNCTION/////////////////////////////
 	/////////////////////////////////////////////////////////////
->>>>>>> 7fc66b89c40fb7be99f1c63e040dc8c1539a8756
+
 		timer.Create( "GivePoints", 600, 0, function() //300
 			local aliveNPCs1 = #ents.FindByName( "TEAM1" )
 			local aliveNPCs2 = #ents.FindByName( "TEAM2" )
-			
+
 			for k, v in ipairs( player.GetAll() ) do
 			if v:Team() == 1 then
 				v:AddXp( (aliveNPCs1) * 15 )

@@ -27,7 +27,7 @@ end
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
 local delay = 0
-
+end
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
 

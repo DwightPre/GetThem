@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 --Selfmade weaponshop! :)
 
 if SERVER then
@@ -79,16 +77,19 @@ function GivePlayerAWeapon( ply, cmd, args )
      end
 
 --Frag
-if args[1] == "frag" then 
-	if ply:GetXp() > 500 then	
+	if args[1] == "frag" then
+	if ply:GetXp() > 500 then
+	ply:StripWeapons()
+		ply:GiveAmmo(1, "Grenade")
 		ply:Give("weapon_frag")
-		ply:GiveAmmo( 1, "Grenade")
+		--ply:GiveAmmo( 1, "weapon_frag")
+		ply:Give("weapon_crowbar")
 		ply:ChatPrint("You got a frag!")
 		local current_xp = ply:GetXp()
 	ply:SetXp( current_xp - 500 )
 		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
 	else
-	ply:ChatPrint ( "Not Enough $!") 
+	ply:ChatPrint ( "Not Enough $!")
 	end
      end
 
@@ -321,41 +322,30 @@ if args[1] == "frag" then
 		 -- Guard
 		 	if args[1] == "Guard" then
 		 	if ply:GetXp() > 200 then
+
 		 	local Guard1 = ents.Create("simple_nextbot")
 		 	--Guard1:SetModel( "models/player/hostage/hostage_02.mdl" )
 		 	--Guard1:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
 		 	Guard1:SetPos(ply:GetEyeTrace().HitPos)
-		 	--Guard1:SetHealth(200)
+		 	Guard1:SetHealth(200)
 			Guard1:SetTeamId(ply:Team())
 		 	Guard1:Spawn()
 			Guard1:GiveWeapon("weapon_smg1")
-			Guard1:StartActivity(ACT_IDLE_AIM_STIMULATED )
 		 	Guard1:SetName("Guard1")
-			
-			ply:ChatPrint("You got a Guard!")
 
-<<<<<<< HEAD
 		 	ply:ChatPrint("You got a Guard!")
 
-=======
->>>>>>> 7fc66b89c40fb7be99f1c63e040dc8c1539a8756
 		 	local current_xp = ply:GetXp()
 		 	ply:SetXp( current_xp - 200 )
 		 		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
 		 	else
 		 	ply:ChatPrint ( "Not Enough $!")
 		 	end
-<<<<<<< HEAD
 				end
-=======
-			end
->>>>>>> 7fc66b89c40fb7be99f1c63e040dc8c1539a8756
 end
 concommand.Add("weapon_take", GivePlayerAWeapon)
 
-
-
-elseif CLIENT then 
+elseif CLIENT then
 
 function WeaponSelectorDerma()
 
@@ -391,135 +381,119 @@ sheet:AddSheet( "Player Model", ModelTab, "icon16/user_orange.png" )
 
 local EntitiesTab = vgui.Create( "DPanel", sheet )
 EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 231, 66, 35 ) ) end
-sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_red.png" )
+sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_orange.png" )
 
 local PistolButton = vgui.Create("DButton", weaponsTab)
 PistolButton:SetSize(100, 30)
 PistolButton:SetPos(10, 35)
-PistolButton:SetText("Pistol")
-PistolButton:SetFont("DermaDefaultBold")
+PistolButton:SetText("Pistol (800)")
 PistolButton.DoClick = function() RunConsoleCommand("weapon_take", "pistol") WeaponFrame:Close() end --make it run our "weapon_take" console command with "pistol" as the 1st argument and then close the menu
 
 local SMGButton = vgui.Create("DButton", weaponsTab)
 SMGButton:SetSize(100, 30)
 SMGButton:SetPos(140, 35)
-SMGButton:SetText("SMG")
-SMGButton:SetFont("DermaDefaultBold")
+SMGButton:SetText("SMG (1.000)")
 SMGButton.DoClick = function() RunConsoleCommand("weapon_take", "smg") WeaponFrame:Close() end
 
 local CRSBButton = vgui.Create("DButton", weaponsTab)
 CRSBButton:SetSize(100, 30)
 CRSBButton:SetPos(270, 35)
-CRSBButton:SetText("Crossbow")
-CRSBButton:SetFont("DermaDefaultBold")
+CRSBButton:SetText("Crossbow (1.000)")
 CRSBButton.DoClick = function() RunConsoleCommand("weapon_take", "crossbow") WeaponFrame:Close() end
 
 local ShotButton = vgui.Create("DButton", weaponsTab)
 ShotButton:SetSize(100, 30)
 ShotButton:SetPos(400, 35)
-ShotButton:SetText("Shotgun")
-ShotButton:SetFont("DermaDefaultBold")
+
+ShotButton:SetText("Shotgun (1.000)")
 ShotButton.DoClick = function() RunConsoleCommand("weapon_take", "shotgun") WeaponFrame:Close() end
 
 local ARButton = vgui.Create("DButton", weaponsTab)
 ARButton:SetSize(100, 30)
 ARButton:SetPos(10, 70)
-ARButton:SetText("AR2")
-ARButton:SetFont("DermaDefaultBold")
+ARButton:SetText("AR2(1.000)")
 ARButton.DoClick = function() RunConsoleCommand("weapon_take", "ar2") WeaponFrame:Close() end
 
 local FragButton = vgui.Create("DButton", weaponsTab)
 FragButton:SetSize(100, 30)
-FragButton:SetPos(270, 70)
-FragButton:SetText("Frag")
-FragButton:SetFont("DermaDefaultBold")
+FragButton:SetPos(140, 70)
+FragButton:SetText("Frag(500)")
 FragButton.DoClick = function() RunConsoleCommand("weapon_take", "frag") WeaponFrame:Close() end
 
 local AlyxButton = vgui.Create("DButton", weaponsTab)
 AlyxButton:SetSize(100, 30)
-AlyxButton:SetPos(140, 70)
-AlyxButton:SetText("Alyxgun")
-AlyxButton:SetFont("DermaDefaultBold")
+AlyxButton:SetPos(270, 70)
+AlyxButton:SetText("Alyxgun(1200)")
 AlyxButton.DoClick = function() RunConsoleCommand("weapon_take", "Alyxgun") WeaponFrame:Close() end
 
 -------------------------------------------------------------------
 local PistolAmmoButton = vgui.Create("DButton", ammoTab)
 PistolAmmoButton:SetSize(100, 30)
 PistolAmmoButton:SetPos(10, 35)
-PistolAmmoButton:SetText("Pistol")
-PistolAmmoButton:SetFont("DermaDefaultBold")
+PistolAmmoButton:SetText("Pistol Ammo (200)")
 PistolAmmoButton:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton.DoClick = function() RunConsoleCommand("weapon_take", "pistolammo") WeaponFrame:Close() end
 
 local PistolAmmoButton2 = vgui.Create("DButton", ammoTab)
 PistolAmmoButton2:SetSize(100, 30)
 PistolAmmoButton2:SetPos(140, 35)
-PistolAmmoButton2:SetText("SMG")
-PistolAmmoButton2:SetFont("DermaDefaultBold")
+PistolAmmoButton2:SetText("SMG Ammo (400)")
 PistolAmmoButton2:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton2.DoClick = function() RunConsoleCommand("weapon_take", "smgammo") WeaponFrame:Close() end
 
 local PistolAmmoButton3 = vgui.Create("DButton", ammoTab)
 PistolAmmoButton3:SetSize(100, 30)
 PistolAmmoButton3:SetPos(270, 35)
-PistolAmmoButton3:SetText("Crossbow")
-PistolAmmoButton3:SetFont("DermaDefaultBold")
+PistolAmmoButton3:SetText("Crossbow Ammo (400)")
 PistolAmmoButton3:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton3.DoClick = function() RunConsoleCommand("weapon_take", "blotammo") WeaponFrame:Close() end
 
 local PistolAmmoButton4 = vgui.Create("DButton", ammoTab)
 PistolAmmoButton4:SetSize(100, 30)
 PistolAmmoButton4:SetPos(400, 35)
-PistolAmmoButton4:SetText("Shotgun")
-PistolAmmoButton4:SetFont("DermaDefaultBold")
+PistolAmmoButton4:SetText("Shotgun Ammo (400)")
 PistolAmmoButton4:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton4.DoClick = function() RunConsoleCommand("weapon_take", "shotgunammo") WeaponFrame:Close() end
 
 local PistolAmmoButton5 = vgui.Create("DButton", ammoTab)
 PistolAmmoButton5:SetSize(100, 30)
 PistolAmmoButton5:SetPos(10, 70)
-PistolAmmoButton5:SetText("AR2")
-PistolAmmoButton5:SetFont("DermaDefaultBold")
+PistolAmmoButton5:SetText("AR2 Ammo (400)")
 PistolAmmoButton5:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton5.DoClick = function() RunConsoleCommand("weapon_take", "AR2ammo") WeaponFrame:Close() end
 
 local PistolAmmoButton6 = vgui.Create("DButton", ammoTab)
 PistolAmmoButton6:SetSize(100, 30)
 PistolAmmoButton6:SetPos(140, 70)
-PistolAmmoButton6:SetText("Alyxgun")
-PistolAmmoButton6:SetFont("DermaDefaultBold")
+PistolAmmoButton6:SetText("Alyxgun ammo(100)")
 PistolAmmoButton6:SetTextColor( Color( 255, 0, 0, 255 ) )
 PistolAmmoButton6.DoClick = function() RunConsoleCommand("weapon_take", "Alyxgunammo") WeaponFrame:Close() end
 -------------------------------------------------------------------------------
 local FlashlightButton = vgui.Create("DButton", SpecialsTab)
 FlashlightButton:SetSize(100, 30)
 FlashlightButton:SetPos(10, 35)
-FlashlightButton:SetText("Flashlight")
-FlashlightButton:SetFont("DermaDefaultBold")
+FlashlightButton:SetText("flashlight(100)")
 FlashlightButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 FlashlightButton.DoClick = function() RunConsoleCommand("weapon_take", "flashlight") WeaponFrame:Close() end
 
 local HPButton = vgui.Create("DButton", SpecialsTab)
 HPButton:SetSize(100, 30)
 HPButton:SetPos(140, 35)
-HPButton:SetText("150HP")
-HPButton:SetFont("DermaDefaultBold")
+HPButton:SetText("150HP(300)")
 HPButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 HPButton.DoClick = function() RunConsoleCommand("weapon_take", "HP") WeaponFrame:Close() end
 
 local ArmorButton = vgui.Create("DButton", SpecialsTab)
 ArmorButton:SetSize(100, 30)
 ArmorButton:SetPos(270, 35)
-ArmorButton:SetText("Armor")
-ArmorButton:SetFont("DermaDefaultBold")
+ArmorButton:SetText("Armor (500)")
 ArmorButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 ArmorButton.DoClick = function() RunConsoleCommand("weapon_take", "armor") WeaponFrame:Close() end
 
 local SprintButton = vgui.Create("DButton", SpecialsTab)
 SprintButton:SetSize(100, 30)
 SprintButton:SetPos(400, 35)
-SprintButton:SetText("Sprint")
-SprintButton:SetFont("DermaDefaultBold")
+SprintButton:SetText("Sprint (500)")
 SprintButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 SprintButton.DoClick = function() RunConsoleCommand("weapon_take", "sprint") WeaponFrame:Close() end
 -------------------------------------------------------------
@@ -527,86 +501,57 @@ SprintButton.DoClick = function() RunConsoleCommand("weapon_take", "sprint") Wea
 local Model1Button = vgui.Create("DButton", ModelTab)
 Model1Button:SetSize(100, 30)
 Model1Button:SetPos(10, 35)
-Model1Button:SetText("Gman")
-Model1Button:SetFont("DermaDefaultBold")
+Model1Button:SetText("Gman (200)")
 Model1Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model1Button.DoClick = function() RunConsoleCommand("weapon_take", "gman") WeaponFrame:Hide() end
 
 local Model2Button = vgui.Create("DButton", ModelTab)
 Model2Button:SetSize(100, 30)
 Model2Button:SetPos(140, 35)
-Model2Button:SetText("Cop")
-Model2Button:SetFont("DermaDefaultBold")
+Model2Button:SetText("Cop (200)")
 Model2Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model2Button.DoClick = function() RunConsoleCommand("weapon_take", "cop") WeaponFrame:Close() end
 
 local Model3Button = vgui.Create("DButton", ModelTab)
 Model3Button:SetSize(100, 30)
 Model3Button:SetPos(270, 35)
-Model3Button:SetText("Skeleton")
-Model3Button:SetFont("DermaDefaultBold")
+Model3Button:SetText("Skeleton (200)")
 Model3Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model3Button.DoClick = function() RunConsoleCommand("weapon_take", "skeleton") WeaponFrame:Close() end
 
 local Model4Button = vgui.Create("DButton", ModelTab)
 Model4Button:SetSize(100, 30)
 Model4Button:SetPos(400, 35)
-Model4Button:SetText("Phoenix")
-Model4Button:SetFont("DermaDefaultBold")
+Model4Button:SetText("Phoenix (200)")
 Model4Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model4Button.DoClick = function() RunConsoleCommand("weapon_take", "phoenix") WeaponFrame:Close() end
 
 local Model5Button = vgui.Create("DButton", ModelTab)
 Model5Button:SetSize(100, 30)
 Model5Button:SetPos(10, 70)
-Model5Button:SetText("Zombie")
-Model5Button:SetFont("DermaDefaultBold")
+Model5Button:SetText("Zombie (200)")
 Model5Button:SetTextColor( Color( 0, 0, 255, 255 ) )
 Model5Button.DoClick = function() RunConsoleCommand("weapon_take", "zombie") WeaponFrame:Close() end
 
 local EntityButton = vgui.Create("DButton", EntitiesTab)
 EntityButton:SetSize(100, 30)
 EntityButton:SetPos(10, 35)
-EntityButton:SetText("Guard")
-EntityButton:SetFont("DermaDefaultBold")
+EntityButton:SetText("HP Box (200)")
 EntityButton:SetTextColor( Color( 0, 0, 255, 255 ) )
 EntityButton.DoClick = function() RunConsoleCommand("weapon_take", "Guard") WeaponFrame:Close() end
 
-<<<<<<< HEAD
 local EntityButton1 = vgui.Create("DButton", EntitiesTab)
 EntityButton1:SetSize(100, 30)
 EntityButton1:SetPos(10, 70)
 EntityButton1:SetText("Ammo crate")
 EntityButton1:SetTextColor( Color( 0, 0, 255, 255 ) )
 EntityButton1.DoClick = function() RunConsoleCommand("weapon_take", "ammo_crate") WeaponFrame:Close() end
-=======
-
-local EntityButton2 = vgui.Create("DButton", EntitiesTab)
-EntityButton2:SetSize(100, 30)
-EntityButton2:SetPos(140, 35)
-EntityButton2:SetText("dunno")
-EntityButton2:SetFont("DermaDefaultBold")
-EntityButton2:SetTextColor( Color( 0, 0, 255, 255 ) )
-EntityButton2.DoClick = function() RunConsoleCommand("weapon_take", "Guard") WeaponFrame:Close() end
->>>>>>> 7fc66b89c40fb7be99f1c63e040dc8c1539a8756
 
 -- |||||||||||||||||||||||||||||
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
 PrevPanel:SetPos( 300, 180 )
 PrevPanel:SetSize( 200, 200 )
-
-local CostPanel = vgui.Create( "DPanel" , WeaponFrame )
-CostPanel:SetPos( 20, 340 )
-CostPanel:SetSize( 140, 40)
-
-local CostText = vgui.Create( "DLabel" , CostPanel )
-CostText:SetPos( 6, -5 )
-CostText:SetFont("CloseCaption_Bold")
-CostText:SetColor( Color( 0, 0, 0 ) )
-CostText:SetText( "Cost: " )
-CostText:SetSize( 200 , 50)
---CostText:SizeToContents()
 
 			PistolButton.OnCursorEntered = function()
 				local icon = vgui.Create( "DModelPanel", PrevPanel )
@@ -615,7 +560,6 @@ CostText:SetSize( 200 , 50)
 					icon:SetCamPos(Vector (0, 100, 50))
 					icon:SetLookAt( Vector( 0, 0, 0 ) )
 					icon:Center()
-					CostText:SetText( "Cost: 800" )
 					function icon:LayoutEntity( Entity ) return end
 				end
 
@@ -626,7 +570,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 1.000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -637,7 +580,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 1.000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -648,7 +590,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 1.000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -659,7 +600,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 1.000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -670,7 +610,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 500" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -681,7 +620,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 1.200" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -691,7 +629,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 200" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -701,7 +638,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -711,7 +647,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -721,7 +656,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -731,7 +665,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -741,16 +674,7 @@ CostText:SetSize( 200 , 50)
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 100" )
 				function icon:LayoutEntity( Entity ) return end
-			end
-			
-			FlashlightButton.OnCursorEntered = function()
-				CostText:SetText( "Cost: 100" )
-			end
-			
-			SprintButton.OnCursorEntered = function()
-				CostText:SetText( "Cost: 500" )
 			end
 
 			HPButton.OnCursorEntered = function()
@@ -760,7 +684,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (50, 50, 120))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 300" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -771,7 +694,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (50, 50, 120))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 500" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -780,7 +702,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetModel( "models/player/gman_high.mdl" )
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
-				CostText:SetText( "Cost: 200" )
 			end
 
 			Model2Button.OnCursorEntered = function()
@@ -788,7 +709,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetModel( "models/player/police.mdl" )
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
-				CostText:SetText( "Cost: 200" )
 			end
 
 			Model3Button.OnCursorEntered = function()
@@ -797,7 +717,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/skeleton.mdl" )
-				CostText:SetText( "Cost: 200" )
 			end
 
 			Model4Button.OnCursorEntered = function()
@@ -806,7 +725,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/phoenix.mdl" )
-				CostText:SetText( "Cost: 200" )
 			end
 
 			Model5Button.OnCursorEntered = function()
@@ -815,7 +733,6 @@ CostText:SetSize( 200 , 50)
 				icon:SetPos( -50, -50 )
 				icon:SetSize( 300, 300 )
 				icon:SetModel( "models/player/zombie_classic.mdl" )
-				CostText:SetText( "Cost: 200" )
 			end
 
 			EntityButton.OnCursorEntered = function()
@@ -825,9 +742,7 @@ CostText:SetSize( 200 , 50)
 				icon:SetCamPos(Vector (50, 50, 120))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
-				CostText:SetText( "Cost: 200" )
 			end
-			
 
 			EntityButton1.OnCursorEntered = function()
 				local icon = vgui.Create( "DModelPanel", PrevPanel )
@@ -840,95 +755,66 @@ CostText:SetSize( 200 , 50)
 
 		PistolButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		SMGButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		CRSBButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		ShotButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		ARButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		FragButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		AlyxButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton2.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton3.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton4.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton5.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		PistolAmmoButton6.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
-		end
-		FlashlightButton.OnCursorExited = function()
-		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		HPButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		ArmorButton.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
-		end
-		SprintButton.OnCursorExited = function()
-		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		Model1Button.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		Model2Button.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		Model3Button.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		Model4Button.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		Model5Button.OnCursorExited = function()
 		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
 		end
 		EntityButton.OnCursorExited = function()
-		PrevPanel:Clear()
-		CostText:SetText( "Cost: ")
+			PrevPanel:Clear()
 		end
 		EntityButton1.OnCursorExited = function()
 			PrevPanel:Clear()
@@ -936,6 +822,6 @@ CostText:SetSize( 200 , 50)
 
 
 			end
-			
+
 	concommand.Add("shop", WeaponSelectorDerma)
 end
