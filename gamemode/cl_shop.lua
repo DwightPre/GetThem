@@ -553,6 +553,19 @@ local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
 PrevPanel:SetPos( 300, 180 )
 PrevPanel:SetSize( 200, 200 )
 
+local CostPanel = vgui.Create( "DPanel" , WeaponFrame )
+CostPanel:SetPos( 20, 340 )
+CostPanel:SetSize( 140, 40)
+
+local CostText = vgui.Create( "DLabel" , CostPanel )
+CostText:SetPos( 6, -5 )
+CostText:SetFont("CloseCaption_Bold")
+CostText:SetColor( Color( 0, 0, 0 ) )
+CostText:SetText( "Cost: " )
+CostText:SetSize( 200 , 50)
+-- CostText:SizeToContents()
+
+
 			PistolButton.OnCursorEntered = function()
 				local icon = vgui.Create( "DModelPanel", PrevPanel )
 					icon:SetModel( "models/weapons/w_Pistol.mdl" )
@@ -560,6 +573,7 @@ PrevPanel:SetSize( 200, 200 )
 					icon:SetCamPos(Vector (0, 100, 50))
 					icon:SetLookAt( Vector( 0, 0, 0 ) )
 					icon:Center()
+					CostText:SetText( "Cost: 800" )
 					function icon:LayoutEntity( Entity ) return end
 				end
 
@@ -570,6 +584,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -580,6 +595,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -590,6 +606,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -600,6 +617,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -610,6 +628,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -620,6 +639,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (0, 100, 50))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 1000" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -629,6 +649,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 200" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -638,6 +659,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -647,6 +669,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -656,6 +679,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -665,6 +689,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 400" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -674,6 +699,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetSize( 1000, 1000 )
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 100" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -684,6 +710,7 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (50, 50, 120))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 300" )
 				function icon:LayoutEntity( Entity ) return end
 			end
 
@@ -694,7 +721,16 @@ PrevPanel:SetSize( 200, 200 )
 				icon:SetCamPos(Vector (50, 50, 120))
 				icon:SetLookAt( Vector( 0, 0, 0 ) )
 				icon:Center()
+				CostText:SetText( "Cost: 500" )
 				function icon:LayoutEntity( Entity ) return end
+			end
+
+			FlashlightButton.OnCursorEntered = function()
+				CostText:SetText( "Cost: 100" )
+			end
+
+			SprintButton.OnCursorEntered = function()
+				CostText:SetText( "Cost: 500" )
 			end
 
 			Model1Button.OnCursorEntered = function()
@@ -754,69 +790,91 @@ PrevPanel:SetSize( 200, 200 )
 			end
 
 		PistolButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		SMGButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		CRSBButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		ShotButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		ARButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		FragButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		AlyxButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton2.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton3.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton4.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton5.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		PistolAmmoButton6.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		HPButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		ArmorButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		Model1Button.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		Model2Button.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		Model3Button.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		Model4Button.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		Model5Button.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 		PrevPanel:Clear()
 		end
 		EntityButton.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 			PrevPanel:Clear()
 		end
 		EntityButton1.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
 			PrevPanel:Clear()
 		end
 
