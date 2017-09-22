@@ -7,7 +7,7 @@ function GivePlayerAWeapon( ply, cmd, args )
 	if args[1] == "pistol" then
 	if ply:GetXp() > 800 then
 	--ply:StripWeapons()
-	    ply:Give("gt_spawner")
+	    ply:Give("weapon_pistol")
 		ply:Give("weapon_crowbar")
 		ply:ChatPrint("You got a pistol!")
 		local current_xp = ply:GetXp()
@@ -201,7 +201,7 @@ function GivePlayerAWeapon( ply, cmd, args )
 -- 150HP
 	if args[1] == "HP" then
 	if ply:GetXp() > 300 then
-		ply:SetHealth( 150 )
+		--ply:SetHealth( 150 )
 		ply:SetMaxHealth( 150 )
 	 	ply:ChatPrint("You got 150HP!")
 		local current_xp = ply:GetXp()
@@ -342,6 +342,20 @@ function GivePlayerAWeapon( ply, cmd, args )
 		 	ply:ChatPrint ( "Not Enough $!")
 		 	end
 				end
+				
+-- Healthkit
+	if args[1] == "HealthKit" then
+	if ply:GetXp() > 500 then
+	ply:Give("gt_medkit")
+	 	ply:ChatPrint("You're got a healthkit!")
+		local current_xp = ply:GetXp()
+	ply:SetXp( current_xp - 500 )
+		ply:ChatPrint( "Your $ is: " .. ply:GetXp() )
+	else
+	ply:ChatPrint ( "Not Enough $!")
+	end
+     end				
+				
 end
 concommand.Add("weapon_take", GivePlayerAWeapon)
 
@@ -547,6 +561,14 @@ EntityButton1:SetText("Ammo crate")
 EntityButton1:SetTextColor( Color( 0, 0, 255, 255 ) )
 EntityButton1.DoClick = function() RunConsoleCommand("weapon_take", "ammo_crate") WeaponFrame:Close() end
 
+local EntityButton2 = vgui.Create("DButton", EntitiesTab)
+EntityButton2:SetSize(100, 30)
+EntityButton2:SetPos(140, 70)
+EntityButton2:SetText("HealthKit")
+EntityButton2:SetTextColor( Color( 0, 0, 255, 255 ) )
+EntityButton2.DoClick = function() RunConsoleCommand("weapon_take", "HealthKit") WeaponFrame:Close() end
+
+
 -- |||||||||||||||||||||||||||||
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
@@ -724,6 +746,17 @@ CostText:SetSize( 200 , 50)
 				CostText:SetText( "Cost: 500" )
 				function icon:LayoutEntity( Entity ) return end
 			end
+			
+			EntityButton2.OnCursorEntered = function()
+			local icon = vgui.Create( "DModelPanel", PrevPanel )
+				icon:SetModel( "models/Items/HealthKit.mdl" )
+				icon:SetSize( 1000, 1000 )
+				icon:SetCamPos(Vector (50, 50, 120))
+				icon:SetLookAt( Vector( 0, 0, 0 ) )
+				icon:Center()
+				CostText:SetText( "Cost: 500" )
+				function icon:LayoutEntity( Entity ) return end
+			end
 
 			FlashlightButton.OnCursorEntered = function()
 				CostText:SetText( "Cost: 100" )
@@ -781,6 +814,15 @@ CostText:SetSize( 200 , 50)
 			end
 
 			EntityButton1.OnCursorEntered = function()
+				local icon = vgui.Create( "DModelPanel", PrevPanel )
+				icon:SetModel( "models/Items/HealthKit.mdl" )
+				icon:SetSize( 1000, 1000 )
+				icon:SetCamPos(Vector (50, 50, 120))
+				icon:SetLookAt( Vector( 0, 0, 0 ) )
+				icon:Center()
+			end
+			
+				EntityButton2.OnCursorEntered = function()
 				local icon = vgui.Create( "DModelPanel", PrevPanel )
 				icon:SetModel( "models/Items/HealthKit.mdl" )
 				icon:SetSize( 1000, 1000 )
@@ -874,6 +916,10 @@ CostText:SetSize( 200 , 50)
 			PrevPanel:Clear()
 		end
 		EntityButton1.OnCursorExited = function()
+			CostText:SetText( "Cost: ")
+			PrevPanel:Clear()
+		end
+		EntityButton2.OnCursorExited = function()
 			CostText:SetText( "Cost: ")
 			PrevPanel:Clear()
 		end
