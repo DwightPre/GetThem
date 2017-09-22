@@ -141,26 +141,26 @@ hook.Add( "HUDPaint", "RoundHud", function()
 	surface.DrawTexturedRect( ScrW() /2 - 160, 5, 320, 75 )
 
 	if(GetGlobalInt("NPCteam1") == null) then
-	draw.WordBox( 12, ScrW() * 0.59, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 + 108, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
 	if (GetGlobalInt("NPCteam1")  > 9) then
-	draw.WordBox( 12, ScrW() * 0.575, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 + 108, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
-	draw.WordBox( 12, ScrW() * 0.585, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 + 108, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam1") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	end
 	end
 
 	if(GetGlobalInt("NPCteam2") == null) then
-	draw.WordBox( 12, ScrW() * 0.39, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 - 160, ScrH() * 0.0095, "".. "0" .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
 	if (GetGlobalInt("NPCteam2")  > 9) then
-	draw.WordBox( 12, ScrW() * 0.375, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 - 160, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	else
-	draw.WordBox( 12, ScrW() * 0.385, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 17, ScrW() /2 - 160, ScrH() * 0.0095, "".. GetGlobalInt("NPCteam2") .. "","DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 	end
 	end
 
-	draw.WordBox( 6, ScrW() * 0.455, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
+	draw.WordBox( 12, ScrW() /2 - 48, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 
 end )
 
