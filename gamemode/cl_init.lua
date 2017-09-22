@@ -10,25 +10,6 @@ function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
 
-
-function hud()
-local xp = tostring(LocalPlayer():GetXp())
-
-//draw.SimpleText("$ " .. xp .. "", "DermaLarge", 40, ScrH() - 90 - 60, Color(255,0,0,255))
--- draw.WordBox( 6, ScrW() - ScrW() + 30, ScrH() - 215 , "" .. LocalPlayer():GetNWInt("killcounter") .. " kills","DermaLarge",Color(200,0,0,0),Color(255,255,255,255))
--- draw.WordBox( 6, ScrW() - ScrW() + 30 , ScrH() - 275 , "" .. LocalPlayer():Frags() .. " spawned","DermaLarge",Color(200,0,0,0),Color(255,255,255,255))
-
-end
-hook.Add("HUDPaint", "XPHUD", hud)
-
--- function RoundedBoxHook()
--- draw.RoundedBox( 6, 30, ScrH()-160, 220, 50, Color(5, 10, 10, 100) ); --Spawn
--- draw.RoundedBox( 6, 30, ScrH()-220, 220, 50, Color(5, 10, 10, 100) ); -- Kills
--- draw.RoundedBox( 6, 30, ScrH()-280, 220, 50, Color(5, 10, 10, 100) ); -- Cash
--- end
--- hook.Add("HUDPaint", "RoundedBoxHud", RoundedBoxHook)
-
-
 local function RecvMyUmsg( data )
 
 print( "Team1 (Blue): "..data:ReadString());
