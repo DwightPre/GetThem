@@ -298,11 +298,11 @@ gtObject[24] = {
 	"weaponsTab",
 	0,
 	0,
-	370,
-	10,
+	210,
+	110,
 	"",
 	"models/weapons/w_IRifle.mdl",
-	"Entity",
+	"Weapon",
 }
 
 
