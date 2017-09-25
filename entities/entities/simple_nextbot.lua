@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
-ENT.Base 			= "base_nextbot"
-ENT.Spawnable		= true
+ENT.Base = "base_nextbot" -- This entity is based on "base_ai"
+ENT.Spawnable = true
 
 local teamID
 
@@ -11,28 +11,32 @@ local delay = 0
 
 function ENT:Initialize()
 
-	self:SetModel("models/mossman.mdl")
+	self:SetModel( "models/humans/group01/female_01.mdl" ) -- Sets the model of the NPC.
+	self:SetSolid(  SOLID_BBOX ) -- This entity uses a solid bounding box for collisions.
 	self:SetHealth(400)
 
 end
 
-function ENT:RunBehaviour()
+function ENT:BehaveAct()
+
+end
+
+function ENT:OnLandOnGround()
+
+self:StartActivity(ACT_RUN)
+
+end
+
+function RunBehaviour()
 while(true) do
-self:StartActivity( ACT_IDLE )
+
+self:StartActivity(ACT_IDLE)
+
+coroutine.yield()
 end
 end
 
-function ENT:BehaveUpdate( fInterval )
-	if ( !self.BehaveThread ) then return end
-		local ent = ents.FindInSphere( self:GetPos(), 200 )
-		for k,v in pairs( ent ) do
-			if v:IsPlayer() && v:Team() != teamID then
-				self.loco:FaceTowards( v:GetPos() )
-				self:SetEnemy(v)
-				self:ShootEnemy()
-			end
-			end
-end
+
 
 function ENT:SetTeamId(teamNr)
 	teamID = teamNr
@@ -42,7 +46,7 @@ function ENT:GiveWeapon(wep)
 
 local wep = ents.Create(wep)
 local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos -- location of the hand attachment
-        wep:SetOwner(self) -- sets the owner to self
+    wep:SetOwner(self) -- sets the owner to self
 	wep:SetPos(pos) --sets the position of the gun to "pos"
 
 	wep:Spawn() -- spawns the weapon
@@ -56,6 +60,19 @@ local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos 
 
 self.Weapon = wep
 
+end
+
+function ENT:BehaveUpdate( fInterval )
+	if ( !self.BehaveThread ) then return end
+
+		local ent = ents.FindInSphere( self:GetPos(), 200 )
+		for k,v in pairs( ent ) do
+			if v:IsPlayer() && v:Team() != teamID then
+				self.loco:FaceTowards( v:GetPos() )
+				self:SetEnemy(v)
+				self:ShootEnemy()
+			end
+			end
 end
 
 function ENT:ShootEnemy()
@@ -84,13 +101,43 @@ function ENT:GetEnemy()
 	return self.Enemy
 end
 
-list.Set( "NPC", "simple_nextbot", {
-	Name = "Simple bot",
-	Class = "simple_nextbot",
-	Weapons = { "weapon_smg1" },
-	Category = "NextBot"
-} )
+list.Set( "NPC", "simple_nextbot",     {    Name = "Simple nextbot",
+                                        Class = "simple_nextbot",
+                                        Category = "Bot"
+                                    })
 
+
+-- AddCSLuaFile()
+--
+--
+-- ENT.Base             = "base_nextbot"
+-- ENT.Spawnable        = true
+--
+--
+-- function ENT:Initialize()
+--     --self:SetModel( "models/props_halloween/ghost_no_hat.mdl" );
+--     --self:SetModel( "models/props_wasteland/controlroom_filecabinet002a.mdl" );
+--     self:SetModel( "models/mossman.mdl" );
+-- end
+--
+--
+-- function ENT:BehaveAct()
+-- end
+--
+--
+-- function ENT:RunBehaviour()
+--     while ( true ) do
+--         -- walk somewhere random
+--         self:StartActivity( ACT_IDLE )        -- revert to idle activity
+--
+--
+--         end
+--         coroutine.yield()
+--     end
+-- end
+--
+--
+-- -- List the NPC as spawnable
 
 
 -- AddCSLuaFile()

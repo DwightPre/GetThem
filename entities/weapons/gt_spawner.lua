@@ -64,9 +64,9 @@ function SWEP:Initialize()
 if CLIENT then
 	local ply = LocalPlayer()
 	if(ply:Team() == 1) then
-	LocalPlayer():GetViewModel():SetColor(Color(0,0,255,255))
+	ply:GetViewModel():SetColor(Color(0,0,255,255))
 	else
-	LocalPlayer():GetViewModel():SetColor(Color(255,0,0,255))
+	ply:GetViewModel():SetColor(Color(255,0,0,255))
 	end
 end
 end
@@ -89,8 +89,8 @@ if (ply:Team() == 1) then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
-	local npc = ents.Create("npc_citizen")
-	npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
+	local npc = ents.Create("npc_chicken")
+	-- npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
 	npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetHealth(99)
 	npc:Spawn()
@@ -100,8 +100,8 @@ else
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
-	local npc = ents.Create("npc_citizen")
-	npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
+	local npc = ents.Create("npc_chicken")
+	-- npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
 	npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetHealth(99)
 	npc:Spawn()

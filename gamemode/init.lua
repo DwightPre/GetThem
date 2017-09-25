@@ -5,11 +5,9 @@ AddCSLuaFile("cl_score.lua")
 AddCSLuaFile("rounds.lua")
 AddCSLuaFile("playerInfo.lua")
 
-
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
-
 
 /*
   ________        __ ___________.__
@@ -63,6 +61,7 @@ function Shop( ply )
 	ply:ConCommand("shop")
 end
 hook.Add("ShowHelp", "MyHook", Shop)
+
 
 	///////////////////////////////////////////////////
 	/////////////////SPAWN/////////////////////////////
