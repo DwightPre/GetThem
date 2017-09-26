@@ -10,10 +10,10 @@ self:PhysicsInit( SOLID_VPHYSICS )
 self:SetMoveType( MOVETYPE_VPHYSICS )
 self:SetSolid( SOLID_VPHYSICS )
 
+
 end
 
 function ENT:Use(activator, caller)
-
 	if CurTime() < delay then return end
 	caller:GiveAmmo(30,activator:GetActiveWeapon():GetPrimaryAmmoType())
 	delay = CurTime() + 0.7
@@ -23,6 +23,11 @@ function ENT:Use(activator, caller)
 	self:Remove() 
 	maxtakes = 9
 	end
+	
+	util.AddNetworkString( "maxtakes")
+	net.Start("maxtakes")
+	net.WriteString(maxtakes +1)
+	net.Broadcast()
 end
 
 list.Set( "NPC", "simple_ammo_crate", {
