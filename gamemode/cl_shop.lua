@@ -300,11 +300,7 @@ gtObject[24] = {
 	0,
 	210,
 	110,
-<<<<<<< HEAD
 	"gt_medkit",
-=======
-	"",
->>>>>>> 8c4f69b559cbca7cc05dab133b9a9f78bed0fe64
 	"models/weapons/w_IRifle.mdl",
 	"Weapon",
 }
