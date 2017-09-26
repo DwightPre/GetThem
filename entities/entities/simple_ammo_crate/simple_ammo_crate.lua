@@ -1,7 +1,7 @@
 AddCSLuaFile("shared.lua")
 
 delay = 0
-maxtakes = 9
+maxtakes = 10
 
 function ENT:Initialize()
 self:SetModel("models/Items/ammocrate_smg1.mdl")
@@ -17,11 +17,11 @@ function ENT:Use(activator, caller)
 	if CurTime() < delay then return end
 	caller:GiveAmmo(30,activator:GetActiveWeapon():GetPrimaryAmmoType())
 	delay = CurTime() + 0.7
-	if maxtakes > 0 then
+	if maxtakes > 1 then
 	maxtakes = maxtakes	-1
 	else
 	self:Remove()
-	maxtakes = 9
+	maxtakes = 10
 	end
 	util.AddNetworkString("maxtakes")
 	net.Start("maxtakes")

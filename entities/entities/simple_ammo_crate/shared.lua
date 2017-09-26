@@ -12,12 +12,12 @@ if ( SERVER ) then
 	include( "simple_ammo_crate.lua" )
 else
 
-local str = 9
+local str = 10
 local height = 100
 
 	net.Receive("maxtakes", function()
 	str = net.ReadString()
-	height = str * 60	+ 10
+	height = str * 55
 	end)
 
 	function ENT:Draw()
@@ -36,7 +36,7 @@ local height = 100
 
 
 	draw.SimpleText( "Ammo Crate ", "DermaLarge", 0, -55, Color( 255,255,255 ), 1, 0 )
-	draw.SimpleText( "" .. str +1, "DermaLarge", 0, -10, Color( 255,255,255 ), 1, 0 )
+	draw.SimpleText( "" .. str, "DermaLarge", 0, -10, Color( 255,255,255 ), 1, 0 )
 	draw.RoundedBox( 12, -270, 20, height, 20,  Color( 229,228,55 ) ) 
 	cam.End3D2D()
 
