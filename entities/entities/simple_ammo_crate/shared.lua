@@ -3,7 +3,7 @@ AddCSLuaFile()
 ENT.Base = "base_entity"
 ENT.Spawnable = true
 
-maxtakes = 10
+maxtakes = 9
 
 function ENT:Initialize()
 end
@@ -12,10 +12,12 @@ if ( SERVER ) then
 	include( "simple_ammo_crate.lua" )
 else
 
-local str = ""
+local str = 10
+local height = 100
 
 	net.Receive("maxtakes", function()
 	str = net.ReadString()
+	height = str * 55
 	end)
 
 	function ENT:Draw()
@@ -32,8 +34,10 @@ local str = ""
 	surface.SetDrawColor( Color( 229,228,55 ))
 	surface.DrawOutlinedRect( -300, -100, 600, 178 )
 
+
 	draw.SimpleText( "Ammo Crate ", "DermaLarge", 0, -55, Color( 255,255,255 ), 1, 0 )
 	draw.SimpleText( "" .. str, "DermaLarge", 0, -10, Color( 255,255,255 ), 1, 0 )
+	draw.RoundedBox( 12, -270, 20, height, 20,  Color( 229,228,55 ) ) 
 	cam.End3D2D()
 
 	end
