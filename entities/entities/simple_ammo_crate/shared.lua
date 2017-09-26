@@ -9,7 +9,7 @@ function ENT:Initialize()
 end
 
 if ( SERVER ) then
-	include( "simple_ammo_crate.lua" )	
+	include( "simple_ammo_crate.lua" )
 else
 
 local str = ""
@@ -20,7 +20,7 @@ local str = ""
 
 	function ENT:Draw()
 	self:DrawModel()
-		
+
 	local Pos = self:GetPos()
 	local Ang = self:GetAngles()
 
@@ -35,9 +35,9 @@ local str = ""
 	draw.SimpleText( "Ammo Crate ", "DermaLarge", 0, -55, Color( 255,255,255 ), 1, 0 )
 	draw.SimpleText( "" .. str, "DermaLarge", 0, -10, Color( 255,255,255 ), 1, 0 )
 	cam.End3D2D()
-	
+
 	end
-	
+
 	function ENT:DrawTranslucent()
 		self:Draw()
 	end

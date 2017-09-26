@@ -23,6 +23,10 @@ function ENT:Use(activator, caller)
 	self:Remove()
 	maxtakes = 9
 	end
+	util.AddNetworkString("maxtakes")
+	net.Start("maxtakes")
+	net.WriteString(maxtakes)
+	net.Broadcast()
 end
 
 list.Set( "NPC", "simple_ammo_crate", {
