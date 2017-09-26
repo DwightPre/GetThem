@@ -298,11 +298,15 @@ gtObject[24] = {
 	"weaponsTab",
 	0,
 	0,
-	370,
-	10,
+	210,
+	110,
+<<<<<<< HEAD
+	"gt_medkit",
+=======
 	"",
+>>>>>>> 8c4f69b559cbca7cc05dab133b9a9f78bed0fe64
 	"models/weapons/w_IRifle.mdl",
-	"Entity",
+	"Weapon",
 }
 
 
@@ -328,7 +332,7 @@ if SERVER then
 						end
 
 					elseif(Category == "Ammo") then
-						ply:GiveAmmo(200, entity[11])
+						ply:GiveAmmo(50, entity[11])
 
 					elseif(Category == "Ability") then
 						local Ability = entity[1]
@@ -357,15 +361,17 @@ if SERVER then
 							ammo_crate1:SetName("ammo_crate1")
 
 						elseif(GTEntity == "Guard") then
-							local i = 0
-							local Guard1 = ents.Create("simple_nextbot")
-							Guard1:SetPos(ply:GetEyeTrace().HitPos)
-							Guard1:SetHealth(200)
-							Guard1:SetTeamId(ply:Team())
-						 	Guard1:Spawn()
-							Guard1:GiveWeapon("weapon_smg1")
-							i = i + 1
-							Guard1:SetName("Guard %i")
+							if(ply:IsAdmin()) then
+								local i = 0
+								local Guard1 = ents.Create("simple_nextbot")
+								Guard1:SetPos(ply:GetEyeTrace().HitPos)
+								Guard1:SetHealth(200)
+								Guard1:SetTeamId(ply:Team())
+						 		Guard1:Spawn()
+								Guard1:GiveWeapon("weapon_smg1")
+								i = i + 1
+								Guard1:SetName("Guard %i")
+							end
 						end
 					end
     	else
@@ -390,7 +396,7 @@ WeaponFrame:SetDraggable(true)
 WeaponFrame:SetSizable(false)
 WeaponFrame:ShowCloseButton(true)
 WeaponFrame:MakePopup()
-WeaponFrame.Paint = function(self, w, h) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+WeaponFrame.Paint = function(self, w, h) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 
 local DLabel = vgui.Create( "DLabel", WeaponFrame )
 DLabel:SetPos( 10, 5 )
@@ -409,27 +415,27 @@ sheet:DockPadding(0, 60 ,0 ,0)
 
 local weaponsTab = vgui.Create( "DPanel", sheet )
 weaponsTab:Dock( FILL )
-weaponsTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+weaponsTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Weapons", weaponsTab, "icon16/lightning.png" )
 
 local ammoTab = vgui.Create( "DPanel", sheet )
 ammoTab:Dock( FILL )
-ammoTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+ammoTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Ammo", ammoTab, "icon16/package_add.png" )
 
 local SpecialsTab = vgui.Create( "DPanel", sheet )
 SpecialsTab:Dock( FILL )
-SpecialsTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+SpecialsTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Abilities", SpecialsTab, "icon16/star.png" )
 
 local ModelTab = vgui.Create( "DPanel", sheet )
 ModelTab:Dock( FILL )
-ModelTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+ModelTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Player Model", ModelTab, "icon16/user_orange.png" )
 
 local EntitiesTab = vgui.Create( "DPanel", sheet )
 EntitiesTab:Dock( FILL )
-EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0 ) ) end
+EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_orange.png" )
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
@@ -465,9 +471,15 @@ for key,value in pairs(gtObject) do
 		Button = vgui.Create("DButton", EntitiesTab)
 	end
 
+surface.CreateFont("ButtonLayout", {
+	font = "DermaLarge",
+	size = 22
+})
+
 Button:SetSize(150, 45)
 Button:SetPos(entity[6], entity[7])
 Button:SetText(entity[1])
+Button:SetFont("ButtonLayout")
 Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) WeaponFrame:Close() end
 
 Button.OnCursorEntered = function()
