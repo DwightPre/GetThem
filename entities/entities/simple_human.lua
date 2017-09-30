@@ -8,7 +8,8 @@ function ENT:Initialize()
 	self:SetModel( "models/chicken/chicken.mdl" ) -- Sets the model of the NPC.
 	self:SetSolid(  SOLID_BBOX ) -- This entity uses a solid bounding box for collisions.
 	self:SetHealth(100)
-
+	
+	
 end
 
 function ENT:BehaveAct()
@@ -19,9 +20,26 @@ function ENT:OnLandOnGround()
 
 end
 
+function ENT:BehaveStart()
+	self.BehaveThread = coroutine.create( function() 
+	
+	self:PlaySequence( "walk01" , 0.5) 
+	self.BehaveThread = nil --Fix: ENT:RunBehaviour() has finished executing!
+	
+end )
+end
+
 function ENT:RunBehaviour()	
-	self:ResetSequence( self:LookupSequence( "walk01" ) );
-	self:SetPlaybackRate( self:SequenceDuration() + 0.2 );
+
+end
+
+function ENT:PlaySequence( name, speed )
+	local len = self:SetSequence( name )
+	speed = speed or 1
+
+	self:ResetSequenceInfo()
+	self:SetCycle( 0 )
+	self:SetPlaybackRate( speed )
 end
 
 function ENT:OnKilled( dmg )
