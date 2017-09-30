@@ -46,7 +46,7 @@ if ( SERVER ) then
 	hook.Add( "PlayerInitialSpawn", "xPlayerInitialSpawn", xFirstSpawn )
 
 	function PrintXp( ply )
-	ply:ChatPrint( "Your cash is: " .. pl:GetXp() .. ", " .. pl:GetToken() .. " Tokens" )
+	ply:ChatPrint( "Your cash is: " .. ply:GetXp() .. ", " .. ply:GetToken() .. " Tokens" )
 	end
 	concommand.Add( "xp_get", PrintXp )
 	
