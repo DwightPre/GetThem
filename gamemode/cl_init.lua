@@ -3,7 +3,7 @@ include("cl_score.lua")
 include("cl_shop.lua")
 include("playerInfo.lua")
 include("rounds.lua")
-include("chicken.mdl")
+
 
 -- Clientside only stuff goes here
 local meta = FindMetaTable("Player")

@@ -13,6 +13,7 @@ gtObject[1] = {
 		"weapon_pistol",
 		"models/weapons/w_Pistol.mdl",
 		"Weapon",
+		0
 }
 
 gtObject[2] = {
@@ -26,6 +27,7 @@ gtObject[2] = {
 	"weapon_smg1",
 	"models/weapons/w_smg1.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[3] = {
@@ -37,8 +39,9 @@ gtObject[3] = {
 	370,
 	10,
 	"weapon_crossbow",
-	"models/weapons/w_IRifle.mdl",
+	"models/weapons/w_crossbow.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[4] = {
@@ -50,8 +53,9 @@ gtObject[4] = {
 	50,
 	60,
 	"weapon_shotgun",
-	"models/weapons/w_IRifle.mdl",
+	"models/weapons/w_shotgun.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[5] = {
@@ -65,6 +69,7 @@ gtObject[5] = {
 	"weapon_ar2",
 	"models/weapons/w_IRifle.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[6] = {
@@ -76,8 +81,9 @@ gtObject[6] = {
 	370,
 	60,
 	"weapon_frag",
-	"models/weapons/w_IRifle.mdl",
+	"models/weapons/w_eq_fraggrenade_thrown.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[7] = {
@@ -89,8 +95,9 @@ gtObject[7] = {
 	50,
 	110,
 	"weapon_alyxgun",
-	"models/weapons/w_IRifle.mdl",
+	"models/weapons/w_Pistol.mdl",
 	"Weapon",
+	0
 }
 
 gtObject[8] = {
@@ -102,7 +109,7 @@ gtObject[8] = {
 	50,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"Pistol",
 }
@@ -115,7 +122,7 @@ gtObject[9] = {
 	210,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"smg1",
 }
@@ -128,7 +135,7 @@ gtObject[10] = {
 	370,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"XBowBolt",
 }
@@ -141,7 +148,7 @@ gtObject[11] = {
 	50,
 	60,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"Buckshot"
 }
@@ -154,7 +161,7 @@ gtObject[12] = {
 	210,
 	60,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"AR2",
 }
@@ -167,7 +174,7 @@ gtObject[13] = {
 	370,
 	60,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/357ammobox.mdl",
 	"Ammo",
 	"Alyxgun",
 }
@@ -224,37 +231,40 @@ gtObject[18] = {
 	"Gman",
 	200,
 	"weaponsTab",
-	0,
-	0,
+	50,
+	120,
 	50,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/player/gman_high.mdl",
 	"Model",
+	50
 }
 gtObject[19] = {
 	"Cop",
 	200,
 	"weaponsTab",
-	0,
-	0,
+	50,
+	120,
 	210,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/player/police.mdl",
 	"Model",
+	50
 }
 gtObject[20] = {
 	"Skeleton",
 	200,
 	"weaponsTab",
-	0,
-	0,
+	50,
+	120,
 	370,
 	10,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/player/skeleton.mdl",
 	"Model",
+	50
 }
 gtObject[21] = {
 	"Zombie",
@@ -265,7 +275,7 @@ gtObject[21] = {
 	50,
 	60,
 	"",
-	"models/weapons/w_IRifle.mdl",
+	"models/player/zombie_classic.mdl",
 	"Model",
 }
 gtObject[22] = {
@@ -481,8 +491,15 @@ Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) WeaponFr
 Button.OnCursorEntered = function()
   local icon = vgui.Create( "DModelPanel", PrevPanel )
     icon:SetModel( entity[9] )
-    icon:SetSize( 1000, 1000 )
-    icon:SetCamPos(Vector (0, entity[4], entity[5]))
+		if(Category == "Model") then
+			icon:SetPos( -50, -50 )
+			icon:SetSize( 300, 300 )
+		elseif(Category ~= "Ammo") then
+			icon:SetCamPos(Vector (entity[11], entity[4], entity[5]))
+			icon:SetSize( 1000, 1000 )
+		else
+			icon:SetSize(1000,1000)
+		end
     icon:SetLookAt( Vector( 0, 0, 0 ) )
     icon:Center()
     CostText:SetText( "Cost: " .. tostring(entity[2]) .. "")

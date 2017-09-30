@@ -4,13 +4,12 @@ AddCSLuaFile("cl_shop.lua")
 AddCSLuaFile("cl_score.lua")
 AddCSLuaFile("rounds.lua")
 AddCSLuaFile("playerInfo.lua")
-AddCSLuaFile("chicken/chicken.mdl")
 
-include("chicken.mdl")
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
 include("cl_score.lua")
+resource.AddFile("models/chicken/chicken.mdl")
 
 /*
   ________        __ ___________.__

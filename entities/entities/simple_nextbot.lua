@@ -11,7 +11,7 @@ local delay = 0
 
 function ENT:Initialize()
 
-	self:SetModel( "models/humans/group01/female_01.mdl" ) -- Sets the model of the NPC.
+	self:SetModel( "models/player/leet.mdl" ) -- Sets the model of the NPC.
 	self:SetSolid(  SOLID_BBOX ) -- This entity uses a solid bounding box for collisions.
 	self:SetHealth(400)
 
@@ -22,12 +22,11 @@ function ENT:BehaveAct()
 end
 
 function ENT:OnLandOnGround()
-
-self:StartActivity(ACT_RUN)
-
+self.IdleAnim = (ACT_IDLE)
+self:StartActivity(self.IdleAnim)
 end
 
-function RunBehaviour()
+function ENT:RunBehaviour()
 while(true) do
 
 self:StartActivity(ACT_IDLE)
@@ -46,7 +45,7 @@ function ENT:GiveWeapon(wep)
 
 local wep = ents.Create(wep)
 local pos = self:GetAttachment(self:LookupAttachment("anim_attachment_RH")).Pos -- location of the hand attachment
-    wep:SetOwner(self) -- sets the owner to self
+  wep:SetOwner(self) -- sets the owner to self
 	wep:SetPos(pos) --sets the position of the gun to "pos"
 
 	wep:Spawn() -- spawns the weapon
@@ -65,11 +64,13 @@ end
 function ENT:BehaveUpdate( fInterval )
 	if ( !self.BehaveThread ) then return end
 
-		local ent = ents.FindInSphere( self:GetPos(), 200 )
+		local ent = ents.FindInSphere( self:GetPos(), 300 )
 		for k,v in pairs( ent ) do
 			if v:IsPlayer() && v:Team() != teamID then
 				self.loco:FaceTowards( v:GetPos() )
 				self:SetEnemy(v)
+				self.IdleAnim = (ACT_IDLE_AIM_STIMULATED)
+				self:StartActivity(self.IdleAnim)
 				self:ShootEnemy()
 			end
 			end
@@ -89,7 +90,7 @@ function ENT:ShootEnemy()
         bullet.AmmoType = "Pistol"
 if CurTime() < delay then return end
 self:FireBullets( bullet )
-delay = CurTime() + 0.3
+delay = CurTime() + 0.1
 self:MuzzleFlash()
 
 end
