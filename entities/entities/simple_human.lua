@@ -26,6 +26,10 @@ end
 
 function ENT:OnKilled( dmg )
 
+	local effect = EffectData()
+	effect:SetOrigin(self:GetPos() + Vector(0, 0, -10))
+	util.Effect("ManhackSparks", effect)
+
 hook.Call( "OnNPCKilled", GAMEMODE, self, dmg:GetAttacker(), dmg:GetInflictor() )
 self:Remove()
 
