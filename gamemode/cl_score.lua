@@ -1,14 +1,10 @@
---include("cl_init.lua")
-
-/////////////////////////////////////////////
-////////////////////SCOREBORD////////////////
-/////////////////////////////////////////////
-
 include ("shared.lua")
 
+//---------------//
+// Scoreboard	//
+//---------------//
 if CLIENT then
     local Scoreboard_Roundness = 8
-	--local Scoreboard_Color = Color(team.GetColor( LocalPlayer():Team() ))
 
 	local Scoreboard_Color = Color(25, 255, 255, 1)
 	local Scoreboard_XGap = 6
@@ -31,13 +27,6 @@ if CLIENT then
 	local PlayerBar_Height = 24
 	local PlayerBar_Color = Color(0, 0, 0, 255)
 
-    --function PlyColor( ply, Team )
-    --      local Colour = team.GetColor(ply:Team()) or Color(0,0,0)
-    --     -- chat.AddText(Color(255,255,255),"(CHAT) ",Colour,ply:Nick(),Color(255,255,255),": "..strText)
-		--  --local Title_BackgroundColor = Color(Colour)
-		--  local Scoreboard_Color = Color(Colour)
-    --end
-
 	local PlayerBar_Font = "ScoreboardPlayersFont"
 	local PlayerBar_BackgroundRoundness = 4
 
@@ -52,7 +41,8 @@ if CLIENT then
 			Columns[2] = {name="Team", command=function(self, arg) return tostring(arg:Team()) end}
 			Columns[3] = {name="Humans", command=function(self, arg) return tostring(arg:Frags()) end}
 			Columns[4] = {name="Kills", command=function(self, arg) return tostring(arg:GetNWInt("killcounter"))end}
-			Columns[5] = {name="Cash", command=function(self, arg) return tostring(arg:GetXp())end}
+			Columns[5] = {name="Tokens", command=function(self, arg) return tostring(arg:GetToken())end}
+			Columns[6] = {name="Cash", command=function(self, arg) return tostring(arg:GetXp())end}
 
 	surface.CreateFont("ScoreboardTitleFont", {
 		font		= "CloseCaption_Normal",
@@ -104,8 +94,7 @@ if CLIENT then
 			draw.RoundedBox(Title_BackgroundRoundness, 0, 0, self:GetWide(), self:GetTall(), Title_BackgroundColor)
 			surface.SetFont(Title_Font)
 			surface.SetTextColor(Title_Color.r, Title_Color.g, Title_Color.b, Title_Color.a)
-			--surface.SetTextColor(team.GetColor( LocalPlayer():Team() ))
-
+			
 			surface.SetTextPos(self:GetWide()*.5-(w*.5), self:GetTall()*.5-(h*.5))
 			surface.DrawText(Title_Text)
 		end

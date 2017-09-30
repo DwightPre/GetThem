@@ -20,56 +20,53 @@ resource.AddFile("models/chicken/chicken.mdl")
         \/     \/                    \/     \/      \/
 */
 
-
-
-
 if ( SERVER ) then
 
 	XP_STARTAMOUNT = 0
+	TOKEN_STARTAMOUNT = 0
 
 	function xFirstSpawn( ply )
 		local experience = ply:GetPData( "xp" )
-
+		local cash = ply:GetPData( "token" )
+		
 		if experience == nil then
 			ply:SetPData("xp", XP_STARTAMOUNT)
 			ply:SetXp( XP_STARTAMOUNT )
 		else
 		ply:SetXp( experience )
 		end
+		
+	if cash == nil then
+		ply:SetPData("token", TOKEN_STARTAMOUNT)
+		ply:SetToken( TOKEN_STARTAMOUNT )
+		else
+		ply:SetToken( cash )
 	end
-
+	end
 	hook.Add( "PlayerInitialSpawn", "xPlayerInitialSpawn", xFirstSpawn )
 
-
-
-	function PrintXp( pl )
-		pl:ChatPrint( "Your xp is: " .. pl:GetXp() )
+	function PrintXp( ply )
+	ply:ChatPrint( "Your cash is: " .. pl:GetXp() .. ", " .. pl:GetToken() .. " Tokens" )
 	end
-
-	function xPlayerDisconnect( ply )
-		print("Player Disconnect: Xp saved to SQLLite and TXT")
+	concommand.Add( "xp_get", PrintXp )
+	
+	function GM:PlayerDisconnected( ply )
+		print("Player Disconnect: Tokens and Cash are saved to TXT")
 		ply:SaveXp()
 		ply:SaveXpTXT()
+		ply:SaveToken()
+		ply:SaveTokenTXT()
 	end
-
-	concommand.Add( "xp_get", PrintXp )
-
 end
 
-	///////////////////////////////////////////////////
-	/////////////////SHOP!!////////////////////////////
-	//////////////////////////////////////////////////
 function Shop( ply )
 	ply:ConCommand("shop")
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
-
-	///////////////////////////////////////////////////
-	/////////////////SPAWN/////////////////////////////
-	//////////////////////////////////////////////////
-
-
+//---------------//
+// Player Spawn	//
+//---------------//
 function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
 	local teamn = math.random(1, 2)
@@ -84,10 +81,9 @@ function GM:PlayerInitialSpawn(ply)
 	end
 end
 
-	////////////////////////////////////////////////////
-	/////////////////////CHANGE TEAM FUNCTION///////////
-	////////////////////////////////////////////////////
-
+//---------------//
+// Change Team	//
+//---------------//
 function GM:PlayerLoadout(ply)
     if (ply:Team() == 1) then
         ply:Give("gt_spawner")
@@ -97,7 +93,10 @@ function GM:PlayerLoadout(ply)
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
 end
 	end
-
+	
+//---------------//
+// Healthgain	//
+//---------------//
 function GM:Initialize()
     timer.Create( "Healthgain", 1, 0, function()
 	for k, ply in pairs( player.GetAll() ) do
@@ -111,10 +110,10 @@ end
 hook.Add("PlayerCanPickupWeapon","NoNPCPickups", function(ply,wep)
 	if( wep.IsNPCWeapon ) then return false end
 end )
-	///////////////////////////////////////////////////
-	/////////////////DONT MOVE NPC////////////////////
-	//////////////////////////////////////////////////
 
+//---------------//
+// Don't Move NPC//
+//---------------//
 function GM:Think()
 
 	for _, npc in pairs( ents.FindByClass( "npc_*" ) ) do
@@ -127,10 +126,9 @@ function GM:Think()
 
 end
 
-
-	///////////////////////////////////////////////////
-	/////////////////KILLED FUNCTIONS/////////////////
-	//////////////////////////////////////////////////
+//----------------//
+// Killed Function//
+//---------------//
 
 function GM:OnNPCKilled( victim, killer, weapon )
 	if victim:GetName() == "SpecialOne" then
@@ -180,17 +178,14 @@ function GM:PlayerDeath( victim, inflictor, killer )
 	end
 end
 
---DropWeapon When Killed
 function GM:DoPlayerDeath (ply , attacker, damage)
 	local wep = ply:GetActiveWeapon()
 	if (wep:IsValid()) then ply:DropWeapon(wep)end
 end
 
-
-	///////////////////////////////////////////////////
-	/////////////////AUTO - DOOR FUNCTION/////////////
-	//////////////////////////////////////////////////
-
+//---------------//
+// Auto Door	//
+//---------------//
 local DoorTypes = { "func_door", "func_door_rotating", "prop_door_rotating" }
 
 timer.Create( "DoorCheck", 1, 0, function()
@@ -213,31 +208,25 @@ timer.Create( "DoorCheck", 1, 0, function()
     end
 end )
 
-	//////////////////////////////////////////////////
-	/////////////////OLD '//' vieuw-function///////////
-	//////////////////////////////////////////////////
+//---------------//
+// '//' Command	//
+//---------------//
 function ISaid( ply, text, team )
-			--local aliveNPCs1 = #ents.FindByName( "TEAM1" )
-			--local aliveNPCs2 = #ents.FindByName( "TEAM2" )
-			local SpecialOne = #ents.FindByName( "SpecialOne" )
 
+	local SpecialOne = #ents.FindByName( "SpecialOne" )
 
     if (string.sub(text, 1, 2) == "//") then
 	for k, v in ipairs( player.GetAll() ) do
-	--v:PrintMessage( HUD_PRINTTALK, "The Blue Team Has " .. tostring( aliveNPCs1 ) .. " NPC's, The Red Team Has " .. tostring( aliveNPCs2 ) .. " NPC's." )
 	v:PrintMessage( HUD_PRINTTALK, "There are " .. tostring( SpecialOne ) .. " Special NPC's." )
-
 	end
 	end
 
 end
-
 hook.Add( "PlayerSay", "ISaid", ISaid );
 
-	///////////////////////////////////////////////////
-	/////////////////ADMIN FUNCTIONS//////////////////
-	//////////////////////////////////////////////////
-
+//---------------//
+// 	ADMIN		//
+//---------------//
 function change_team( ply )
 if (ply:Team() == 1) then
   ply:SetTeam(2)
@@ -249,7 +238,6 @@ end
 
 end
 concommand.Add( "change_team", change_team )
-
 
 function GM:PlayerNoClip(ply, on)
 	if ply:IsAdmin() then
@@ -297,7 +285,6 @@ end
 end
 concommand.Add( "give_physgun", PhysgunGive )
 
---DropWeapon command
 local function DropWeapon(ply,cmd,args)
 	if !ply:Alive() then return end
 
@@ -320,11 +307,9 @@ end
 end
 concommand.Add( "spawn_prop1", spawn_prop1 )
 
-
-	///////////////////////////////////////////////////
-	///////////////// XP  ////////////////////////////
-	//////////////////////////////////////////////////
-
+//---------------//
+// 	XP&TOKEN	//
+//--------------//
 local meta = FindMetaTable("Player")
 
 function meta:AddXp( amount )
@@ -353,23 +338,48 @@ end
 function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
+--
+function meta:AddToken( amount )
+	local current_token = self:GetToken()
+	self:SetToken( current_token + amount )
+end
 
-	/////////////////////////////////////////////////////////////
-	/////////////////PAIDAY FUNCTION/////////////////////////////
-	/////////////////////////////////////////////////////////////
+function meta:SetToken( amount )
+	self:SetNetworkedInt( "Token", amount )
+	self:SaveToken()
+end
 
-		timer.Create( "GivePoints", 600, 0, function() //300
-			local aliveNPCs1 = #ents.FindByName( "TEAM1" )
-			local aliveNPCs2 = #ents.FindByName( "TEAM2" )
+function meta:SaveToken()
+	local cash = self:GetToken()
+	self:SetPData( "token", cash )
+end
 
-			for k, v in ipairs( player.GetAll() ) do
-			if v:Team() == 1 then
-				v:AddXp( (aliveNPCs1) * 15 )
-				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
+function meta:SaveTokenTXT()
+	file.Write( gmod.GetGamemode().Name .."/Token/".. string.gsub(self:SteamID(), ":", "_") ..".txt", self:GetTokenString() )
+end
 
-			else
-				v:AddXp( (aliveNPCs2) * 15 )
-				v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
-			end
-			end
-		end )
+function meta:TakeToken( amount )
+   self:AddToken( -amount )
+end
+
+function meta:GetToken()
+	return self:GetNetworkedInt( "Token" )
+end
+
+//---------------//
+// 	PAYDAY		//
+//---------------//
+timer.Create( "GivePoints", 600, 0, function() //300
+	local aliveNPCs1 = #ents.FindByName( "TEAM1" )
+	local aliveNPCs2 = #ents.FindByName( "TEAM2" )
+
+	for k, v in ipairs( player.GetAll() ) do
+		if v:Team() == 1 then
+		v:AddXp( (aliveNPCs1) * 15 )
+		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
+		else
+		v:AddXp( (aliveNPCs2) * 15 )
+		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
+		end
+	end
+end )

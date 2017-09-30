@@ -314,8 +314,22 @@ gtObject[24] = {
 	"models/weapons/w_IRifle.mdl",
 	"Weapon",
 }
+gtObject[25] = {
+	"GT_Builder",
+	200,
+	"weaponsTab",
+	0,
+	0,
+	370,
+	110,
+	"gt_builder",
+	"models/weapons/w_IRifle.mdl",
+	"Weapon",
+}
 
-
+//---------------//
+// 	Shop!		// Thx to DarthSwedo
+//---------------//
 if SERVER then
 
   function GivePlayerAWeapon(ply, cmd, args)
@@ -442,7 +456,7 @@ sheet:AddSheet( "Player Model", ModelTab, "icon16/user_orange.png" )
 local EntitiesTab = vgui.Create( "DPanel", sheet )
 EntitiesTab:Dock( FILL )
 EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
-sheet:AddSheet( "Entities", EntitiesTab, "icon16/user_orange.png" )
+sheet:AddSheet( "Entities", EntitiesTab, "icon16/ruby.png" )
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
 PrevPanel:SetPos( 300, 320 )

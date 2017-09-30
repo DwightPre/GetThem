@@ -1,10 +1,4 @@
 AddCSLuaFile()
-function GM:UpdateSettings()
-
-    --round.Time = GetConVar( "round.Time" ):GetInt()
-
-end
-
 if (SERVER) then
 	round = {}
 
@@ -20,16 +14,14 @@ if (SERVER) then
 	round.TimeLeft = -1
 	round.Breaking = false
 
-	///////////////////////////////////////////////////
-	/////////////////     ROUNDSYSTEM//////////////////
-	//////////////////////////////////////////////////
+//---------------//
+// Round-System	//
+//---------------//
 util.AddNetworkString("Round_Timer")
 util.AddNetworkString("Round_active")
 
 local delay = 0
 local roundTimer = round.Time
-
-
 
 hook.Add( "Think", "CurTimeDelay", function()
  if CurTime() < delay then return end
@@ -63,8 +55,6 @@ end
 function round.End()
 	-- (Anything that may need to happen when the round ends)
 
-
-
 	--------Best Player Shizzl------------
 	local BestScore = 0
 	local BestPlayer
@@ -76,8 +66,6 @@ function round.End()
 		v:AddXp( v:Frags()*30 )
 		v:PrintMessage( HUD_PRINTTALK, "[WON!] + " .. v:Frags()*30 .. " $!");
 		BestScore = Frags
-
-
 	end
 	end
 
@@ -126,18 +114,17 @@ if (round.Enable == true) then
 timer.Create("round.Handle", 1, 0, round.Handle)
 
 
-------------------------------------CLIENT------------------------------------
+//---------------//
+// 	CLIENT!		//
+//---------------//
 elseif CLIENT then
 
-
---New Scorebordthing
-local ourMat = Material( "background.png" ) -- Calling Material() every frame is quite expensive
+local ourMat = Material( "background.png" ) 
 
 hook.Add( "HUDPaint", "RoundHud", function()
 
-	--surface.CreateFont("BigFont", {font= "DermaLarge",size = 55})
 	surface.SetDrawColor( 255, 255, 255, 255 )
-	surface.SetMaterial( ourMat	) -- If you use Material, cache it!
+	surface.SetMaterial( ourMat	)
 	surface.DrawTexturedRect( ScrW() /2 - 160, 5, 320, 75 )
 
 	if(GetGlobalInt("NPCteam1") == null) then
@@ -163,6 +150,4 @@ hook.Add( "HUDPaint", "RoundHud", function()
 	draw.WordBox( 12, ScrW() /2 - 48, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
 
 end )
-
-
 end

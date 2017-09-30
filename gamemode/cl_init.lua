@@ -12,6 +12,10 @@ function meta:GetXp()
 	return self:GetNetworkedInt( "Xp" )
 end
 
+function meta:GetToken()
+	return self:GetNetworkedInt( "Token" )
+end
+
 local function RecvMyUmsg( data )
 
 print( "Team1 (Blue): "..data:ReadString());
@@ -40,7 +44,6 @@ function RemoveDeadRag( ent )
 	if (ent:GetClass() == "class C_ClientRagdoll") then
 		if ent:IsValid() and !(ent == NULL) then
 			SafeRemoveEntityDelayed(ent, 5)
-			--game.RemoveRagdolls()
 		end
 	end
 
@@ -51,6 +54,4 @@ hook.Add( "HUDShouldDraw", "hide hud", function( name )
      if ( name == "CHudHealth" or name == "CHudBattery" ) then
          return false
      end
-
-     -- Never return anything default here, it will break other addons using this hook.
 end )
