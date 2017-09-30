@@ -1,15 +1,12 @@
 AddCSLuaFile()
 
-ENT.Base = "base_nextbot" -- This entity is based on "base_ai"
+ENT.Base = "base_nextbot"
 ENT.Spawnable = true
 
 function ENT:Initialize()
-
-	self:SetModel( "models/chicken/chicken.mdl" ) -- Sets the model of the NPC.
-	self:SetSolid(  SOLID_BBOX ) -- This entity uses a solid bounding box for collisions.
-	self:SetHealth(100)
-	
-	
+	self:SetModel( "models/chicken/chicken.mdl" )
+	self:SetSolid(  SOLID_BBOX )
+	self:SetHealth(100)	
 end
 
 function ENT:BehaveAct()
@@ -22,10 +19,8 @@ end
 
 function ENT:BehaveStart()
 	self.BehaveThread = coroutine.create( function() 
-	
 	self:PlaySequence( "walk01" , 0.5) 
-	self.BehaveThread = nil --Fix: ENT:RunBehaviour() has finished executing!
-	
+	self.BehaveThread = nil --Fix: ENT:RunBehaviour() has finished executing! ,don't need that
 end )
 end
 
