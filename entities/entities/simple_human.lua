@@ -19,8 +19,9 @@ function ENT:OnLandOnGround()
 
 end
 
-function ENT:RunBehaviour()
-
+function ENT:RunBehaviour()	
+	self:ResetSequence( self:LookupSequence( "walk01" ) );
+	self:SetPlaybackRate( self:SequenceDuration() + 0.2 );
 end
 
 function ENT:OnKilled( dmg )
