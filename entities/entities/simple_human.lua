@@ -19,7 +19,7 @@ end
 
 function ENT:BehaveStart()
 	self.BehaveThread = coroutine.create( function() 
-	self:PlaySequence( "walk01" , 0.5) 
+	self:PlaySequence( "idle01" , 0.5) 
 	self.BehaveThread = nil --Fix: ENT:RunBehaviour() has finished executing! ,don't need that
 end )
 end
