@@ -133,6 +133,7 @@ end
 function GM:OnNPCKilled( victim, killer, weapon )
 	if victim:GetName() == "SpecialOne" then
 	killer:AddXp( math.random(600, 1000) )
+	killer:AddToken( math.random(1, 4) )
 	for k,v in pairs(player.GetAll()) do
 		v:PrintMessage( HUD_PRINTTALK, "[GetThem]A Special NPC has been killed.");
 	end
