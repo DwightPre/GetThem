@@ -329,7 +329,7 @@ function meta:SaveXp()
 end
 
 function meta:SaveXpTXT()
-	file.Write( gmod.GetGamemode().Name .."/Xp/".. string.gsub(self:SteamID(), ":", "_") ..".txt", self:GetXpString() )
+	file.Write( gmod.GetGamemode().Name .."/Xp/".. string.gsub(self:SteamID(), ":", "_") ..".txt", tostring(self:GetXp()) )
 end
 
 function meta:TakeXp( amount )
@@ -356,7 +356,7 @@ function meta:SaveToken()
 end
 
 function meta:SaveTokenTXT()
-	file.Write( gmod.GetGamemode().Name .."/Token/".. string.gsub(self:SteamID(), ":", "_") ..".txt", self:GetTokenString() )
+	file.Write( gmod.GetGamemode().Name .."/Token/".. string.gsub(self:SteamID(), ":", "_") ..".txt", tostring(self:GetToken()) )
 end
 
 function meta:TakeToken( amount )
