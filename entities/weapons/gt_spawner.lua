@@ -90,7 +90,8 @@ if (ply:Team() == 1) then
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
-	npc:SetPos(ply:GetEyeTrace().HitPos)
+	--npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM1")
@@ -100,7 +101,7 @@ else
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
-	npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM2")
@@ -110,6 +111,7 @@ else
 	end
 		end
 end
+
 function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire(CurTime() + self.Delay)
@@ -147,7 +149,60 @@ function SWEP:PrimaryAttack()
 
 
 end
---Throw a wooden chair on secondary attack
+
 function SWEP:SecondaryAttack()
 self:spawn_humans()
+end
+
+function SWEP:DrawHUD()
+	if not self.destinationModel then
+		self.destinationModel = ClientsideModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetupBones()
+
+		self.destinationModel:SetColor(Color( 70, 70, 70, 200))
+		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
+	end
+	
+	self.destinationModel:SetPos(self:CalcDestination())
+	local textPos = self.destinationModel:GetPos():ToScreen()
+	draw.DrawText( "*", "robot_small", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+end
+
+function SWEP:OnRemove()
+	if self.destinationModel then
+		SafeRemoveEntity(self.destinationModel)
+	end
+end
+
+function SWEP:CalcDestination()
+	local forwardWithoutZ = self.Owner:GetForward()
+	forwardWithoutZ.z = 0
+	local eyeTrace = util.TraceLine( {
+		start = self.Owner:GetPos() + Vector(0, 0, 110),
+		endpos = self.Owner:GetPos() + Vector(0, 0, 110) +  forwardWithoutZ * 1500
+	} )
+
+	local tpDistance = 1000 -- max dis.
+
+	if eyeTrace.Hit then
+	tpDistance = math.Clamp((eyeTrace.HitPos - self.Owner:GetPos()):Length(), 110, 1500) + 1200
+	end
+
+	local aimVector = self.Owner:GetAimVector()
+
+	local trace = util.TraceLine( {
+		start = self.Owner:GetPos() + Vector(0, 0, 110),
+		endpos = self.Owner:GetPos() + Vector(0, 0, 110) + aimVector * tpDistance
+	} )
+
+	--No spawn in wall
+	local secondTraceStart = trace.HitPos - (trace.Normal * 21) 
+
+	local secondTrace = util.TraceLine( {
+		start = secondTraceStart,
+		endpos = secondTraceStart - Vector(0, 0, 1000)
+	} )
+
+	return secondTrace.HitPos
 end

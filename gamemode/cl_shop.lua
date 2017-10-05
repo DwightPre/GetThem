@@ -381,7 +381,7 @@ if SERVER then
 							ammo_crate1:SetName("ammo_crate1")
 
 						elseif(GTEntity == "Guard") then
-							if(ply:IsAdmin()) then
+							--if(ply:IsAdmin()) then
 								local i = 0
 								local Guard1 = ents.Create("simple_nextbot")
 								Guard1:SetPos(ply:GetEyeTrace().HitPos)
@@ -391,7 +391,7 @@ if SERVER then
 								Guard1:GiveWeapon("weapon_smg1")
 								i = i + 1
 								Guard1:SetName("Guard %i")
-							end
+							--end
 						end
 					end
     	else
