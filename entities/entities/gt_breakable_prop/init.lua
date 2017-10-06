@@ -3,7 +3,8 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 --ENT.Model = {"models/hunter/blocks/cube075x2x1.mdl"}
-ENT.StartHealth = 100
+ENT.StartHealth = 500
+delay = 0
 
 function ENT:Initialize()
 	if self:GetModel() == "models/error.mdl" then
@@ -29,7 +30,11 @@ function ENT:Think()
 end
 
 function ENT:Use(activator, caller)
-
+--if CurTime() < delay then return end
+if self:Health() < (self.StartHealth) and caller:GetActiveWeapon():GetClass() == "gt_builder" then
+self:SetHealth(self:Health() +20)
+--delay = CurTime() + 0.3
+end
 end
 
 function ENT:OnTakeDamage(dmginfo)

@@ -74,7 +74,10 @@ function SWEP:Think()
 end
 
 function SWEP:SecondaryAttack()
-self:SetBlock( "models/props_interiors/Furniture_shelf01a.mdl")
+--self:SetBlock( "models/props_interiors/Furniture_shelf01a.mdl")
+self:SetBlock( "models/hunter/blocks/cube1x1x1.mdl")
+--self:SetBlock( "models/hunter/blocks/cube05x05x05.mdl")
+--self:SetBlock( "models/hunter/blocks/cube075x2x1.mdl")
 end
 
 function SWEP:PrimaryAttack()
@@ -87,27 +90,121 @@ self:SetBlock( model)
 end
 
 function SWEP:SetBlock( model_file )
-if self.Owner:GetToken() > 0 then
+
+local tr = self.Owner:GetEyeTrace()
+local SpawnPos = tr.HitPos + tr.HitNormal * 20
+local xpos = math.floor( SpawnPos.x / 36.5 ) * 36.5 + 18.25
+local ypos = math.floor( SpawnPos.y / 36.5 ) * 36.5 + 18.25
+local zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 18.25
+local distvec = tr.HitPos - self.Owner:GetPos()
+
+	//get eye trace
+	local zpos = 0
+	local tr = self:GetOwner():GetEyeTrace()
+	local startpos = self:GetOwner():GetShootPos()
+	local isBlock = false
+	
+	local tracedata = {}
+	tracedata.start = startpos
+	tracedata.endpos = tr.HitPos + tr.HitNormal * 20
+	tracedata.filter = self.Owner
+
+	//check if the trace hit anything
+	local checktr = util.TraceLine(tracedata)
+	if checktr.HitNonWorld then
+		target = checktr.Entity
+		if ( target ) then 
+			isBlock = true 
+		end
+	end
+	
+	local checkent = 0
+	local checkvec = Vector(0,0,0)
+	if tr.HitNonWorld then
+		checkent = tr.Entity
+		checkvec = checkent:GetPos()
+	end
+	
+if ( isBlock == false && tr.HitWorld == false ) then
+
+			
+	//if no block is nearby or blocking
+	if ( tr.HitWorld == true && isBlock == false)  then 
+	zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0
+	end 
+		
+	//check: placing on top, bottom, or the four sides
+	local hitz = tr.HitPos.z
+	local checkvecz = checkvec.z
+	local hmc = hitz - checkvecz   //hmc should be about '16' when placing on top OR on bottom (w/ propchange can be diff.)
+	if (hitz < 0) then
+		hitz = - hitz
+	end
+	if (checkvecz <0) then
+		checkvecz = - checkvecz
+	end
+	local hmc2 = hitz - checkvecz
+	if (hmc2 < 0) then
+		hmc2 = - hmc2
+	end
+		
+	// top OR bottom		
+	local toporbottom = 0
+	if (hmc2 > 15.9 && hmc2 < 16.1) then 
+		if (hmc < 0) then
+		toporbottom = 2
+		end
+		if (hmc > 0) then
+		toporbottom = 1
+		end
+	end
+		
+		if (toporbottom == 0) then  //one of the four sides
+			if (tr.HitPos.z > checkvec.z) then
+				zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0
+				end
+			if (tr.HitPos.z < checkvec.z) then
+				zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0//36.5
+				end
+		end
+		
+		if (toporbottom == 1) then //top
+			zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 36.5
+			if ((SpawnPos.z - zpos) < -1) then
+				zpos = math.floor( SpawnPos.z / 36.5) * 36.5 + 0
+			end
+			end
+		
+		if (toporbottom == 2) then //bottom
+			zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0
+			if ((SpawnPos.z - zpos) > 1) then
+			zpos =math.floor( SpawnPos.z / 36.5 ) * 36.5 + 36.5
+			end
+			end		
+end
+		
+//Spawn Code
+	--if self.Owner:GetToken() > 0 then
 	local ent = ents.Create( "gt_breakable_prop" )
 	if ( !IsValid( ent ) ) then return end
 	ent:SetModel( model_file )
-	ent:SetPos( self.Owner:EyePos() + ( self.Owner:GetAimVector() * 60 ) )
-	ent:SetAngles( self.Owner:EyeAngles() )
-	ent:Health(500)
+	ent:SetPos( Vector(xpos,ypos,zpos) )
+	--ent:SetAngles( self.Owner:EyeAngles() )
+	ent:SetHealth(500) 
 	ent:Spawn()
 
 	local phys = ent:GetPhysicsObject()
 	if ( !IsValid( phys ) ) then ent:Remove() return end
 
-	--freeze
+//freeze
 	local l = ent:GetPhysicsObject()
     if l:IsValid() then
         l:EnableMotion(false)
 		l:Sleep(false) 
 	end
 	
-	self.Owner:SetToken( self.Owner:GetToken() -1)
-	end
+	--self.Owner:SetToken( self.Owner:GetToken() -1)
+	--end
 end
 
 
