@@ -166,7 +166,7 @@ function SWEP:DrawHUD()
 	
 	self.destinationModel:SetPos(self:CalcDestination())
 	local textPos = self.destinationModel:GetPos():ToScreen()
-	draw.DrawText( "*", "robot_small", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
 end
 
 function SWEP:OnRemove()
