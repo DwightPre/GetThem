@@ -125,13 +125,12 @@ local distvec = tr.HitPos - self.Owner:GetPos()
 		checkvec = checkent:GetPos()
 	end
 	
-if ( isBlock == false && tr.HitWorld == false ) then
-
-			
 	//if no block is nearby or blocking
 	if ( tr.HitWorld == true && isBlock == false)  then 
 	zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0
 	end 
+	
+if ( isBlock == false && tr.HitWorld == false ) then
 		
 	//check: placing on top, bottom, or the four sides
 	local hitz = tr.HitPos.z
