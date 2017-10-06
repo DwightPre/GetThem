@@ -10,6 +10,7 @@ include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
 include("cl_score.lua")
 resource.AddFile("models/chicken/chicken.mdl")
+resource.AddFile("materials/vgui/background.png")
 
 /*
   ________        __ ___________.__
