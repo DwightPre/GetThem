@@ -34,6 +34,10 @@ function ENT:Use(activator, caller)
 if self:Health() < (self.StartHealth) and caller:GetActiveWeapon():GetClass() == "gt_builder" then
 self:SetHealth(self:Health() +20)
 --delay = CurTime() + 0.3
+else
+if self:Health() == (self.StartHealth) and caller:GetActiveWeapon():GetClass() == "gt_builder" then
+self:Remove() // for now..
+end
 end
 end
 
