@@ -353,24 +353,38 @@ if SERVER then
 
 					elseif(Category == "Ammo") then
 						ply:GiveAmmo(50, entity[11])
+						ply:ChatPrint("You got " .. entity[1] .. "!")
+						ply:SetXp( current_xp - entity[2] )
 
 					elseif(Category == "Ability") then
 						local Ability = entity[1]
 						if(Ability == "Flashlight") then
 							ply:AllowFlashlight( true )
+							ply:ChatPrint("You got a " .. entity[1] .. "!")
+							ply:SetXp( current_xp - entity[2] )
 						elseif(Ability == "HP") then
 							ply:SetMaxHealth( 150 )
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:SetXp( current_xp - entity[2] )
 						elseif(Ability == "Armor") then
 							ply:SetArmor( 100 )
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:SetXp( current_xp - entity[2] )
 						elseif(Ability == "Sprint") then
-							ply:SetRunSpeed(720)
+							ply:SetRunSpeed(500)
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:SetXp( current_xp - entity[2] )
 						end
 
 					elseif(Category == "Model") then
 						ply:SetModel(entity[9])
+						ply:ChatPrint("You are a " .. entity[1] .. "!")
+						ply:SetXp( current_xp - entity[2] )
 
 					elseif(Category == "Entity") then
-
+						ply:ChatPrint("You got a " .. entity[1] .. "!")
+						ply:SetXp( current_xp - entity[2] )
+						
 						local GTEntity = entity[1]
 
 						if(GTEntity == "Ammo crate") then
