@@ -75,9 +75,10 @@ end
 
 function SWEP:SecondaryAttack()
 --self:SetBlock( "models/props_interiors/Furniture_shelf01a.mdl")
-self:SetBlock( "models/hunter/blocks/cube1x1x1.mdl")
+--self:SetBlock( "models/hunter/blocks/cube1x1x1.mdl")
 --self:SetBlock( "models/hunter/blocks/cube05x05x05.mdl")
 --self:SetBlock( "models/hunter/blocks/cube075x2x1.mdl")
+self:SetBlock( "models/hunter/blocks/cube075x075x075.mdl")
 end
 
 function SWEP:PrimaryAttack()
@@ -188,6 +189,7 @@ end
 	if ( !IsValid( ent ) ) then return end
 	ent:SetModel( model_file )
 	ent:SetPos( Vector(xpos,ypos,zpos) )
+	ent:SetMaterial("models/props_pipes/GutterMetal01a")
 	--ent:SetAngles( self.Owner:EyeAngles() )
 	ent:SetHealth(500) 
 	ent:Spawn()
@@ -206,7 +208,32 @@ end
 	--end
 end
 
+function SWEP:DrawHUD()
+local tr = self.Owner:GetEyeTrace()
+local SpawnPos = tr.HitPos + tr.HitNormal * 20
+local xpos = math.floor( SpawnPos.x / 36.5 ) * 36.5 + 18.25
+local ypos = math.floor( SpawnPos.y / 36.5 ) * 36.5 + 18.25
+local 				zpos = math.floor( SpawnPos.z / 36.5 ) * 36.5 + 0//36.5
 
+	if not self.destinationModel then
+		self.destinationModel = ClientsideModel("models/hunter/blocks/cube075x075x075.mdl")
+		self.destinationModel:SetModel("models/hunter/blocks/cube075x075x075.mdl")
+		self.destinationModel:SetColor(Color( 70, 70, 70, 200))
+		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
+	end
+	
+	self.destinationModel:SetPos(Vector(xpos,ypos,zpos))
+	local textPos = self.destinationModel:GetPos():ToScreen()
+	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+end
+
+function SWEP:OnRemove()
+	if self.destinationModel then
+		SafeRemoveEntity(self.destinationModel)
+	end
+end
+
+/*
 if (CLIENT) then
 function openPropMenu( ply, cmd, args )
 	//create main frame
@@ -242,3 +269,4 @@ function openPropMenu( ply, cmd, args )
 	
 concommand.Add("gt_propmenu", openPropMenu )
 end
+*/

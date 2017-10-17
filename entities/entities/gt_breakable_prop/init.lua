@@ -40,11 +40,18 @@ if self:Health() == (self.StartHealth) and caller:GetActiveWeapon():GetClass() =
 self:Remove() // for now..
 end
 end
+
+if self:Health() == (self.StartHealth) then self:SetColor(Color(255,255,255,255)) end
+
 end
 
 function ENT:OnTakeDamage(dmginfo)
 	self:SetHealth(self:Health() - dmginfo:GetDamage())
-	if self:Health() < (self.StartHealth/3) then self:SetColor(255,0,0) end
+	if self:Health() < (self.StartHealth/1.1) then self:SetColor(Color(255,60,0,255)) end --454
+	if self:Health() < (self.StartHealth/1.2) then self:SetColor(Color(200,60,0,255)) end --416
+	if self:Health() < (self.StartHealth/1.5) then self:SetColor(Color(145,60,0,255)) end --333
+	if self:Health() < (self.StartHealth/2) then self:SetColor(Color(90,0,60,255)) end --250
+	if self:Health() < (self.StartHealth/3) then self:SetColor(Color(45,0,60,200)) end --166
 	if self:Health() <= 0 then self:DoDeath() end
 end
 
