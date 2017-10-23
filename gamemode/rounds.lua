@@ -5,7 +5,7 @@ if (SERVER) then
 	-- Variables Round-System
 	round.Clean = true
 	round.Enable = true
-	round.Break	= 20	-- second breaks
+	round.Break	= 40	-- second breaks
 	round.Time	= 60*10	-- minute rounds
 	--round.Time = CreateConVar("round.Time", "0")
 	--round.Break = CreateConVar("round.Break", "0")
@@ -64,8 +64,10 @@ function round.End()
 	if Frags > BestScore then
 		BestPlayer = v:Name()
 		v:AddXp( v:Frags()*30 )
+		v:AddToken( 1 )
 		v:PrintMessage( HUD_PRINTTALK, "[WON!] + " .. v:Frags()*30 .. " $!");
 		BestScore = Frags
+		v:SetNWInt("killcounter", 0)
 	end
 	end
 
