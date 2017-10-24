@@ -251,8 +251,8 @@ end
 function RestartMap(ply)
 if ply:IsAdmin() then
 game.CleanUpMap()
-SetGlobalInt("NPCteam1", 0)
-SetGlobalInt("NPCteam2", 0)
+--SetGlobalInt("NPCteam1", 0)
+--SetGlobalInt("NPCteam2", 0)
 
 	for k,v in pairs(player.GetAll()) do
 		v:Spawn()
