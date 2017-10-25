@@ -83,13 +83,15 @@ function round.End()
 	// Best Team Player	//
 	//------------------//
 	local BestScore = 0
+	local BestScore1 = 0
 	local BestPlayer
 
 for k,v in pairs( player.GetAll() ) do
 	local Frags = v:Frags()	
 	
 	if Frags > BestScore then
-	if v:Team() == 2  then	
+	if v:Team() == 2  then
+	BestScore = Frags
 	SetGlobalString( "BestPlayer", v:Name())
 	SetGlobalInt( "TotalSpawns", team.TotalFrags( v:Team())) --v:Frags()
 	SetGlobalInt( "Kills", v:GetNWInt("killcounter") )
@@ -100,7 +102,7 @@ for k,v in pairs( player.GetAll() ) do
 	v:AddXp( v:Frags()*20 )
 	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
 	else 
-	
+	BestScore1 = Frags
 	SetGlobalString( "BestPlayer1", v:Name())
 	SetGlobalInt( "TotalSpawns1", team.TotalFrags( v:Team()))
 	SetGlobalInt( "Kills1", v:GetNWInt("killcounter") )
