@@ -113,7 +113,7 @@ for k,v in pairs( player.GetAll() ) do
 	end
 
 	local AliveTeam1 =  GetGlobalInt("Alive")
-	local AliveTeam2 =  GetGlobalInt("Alive1")+2
+	local AliveTeam2 =  GetGlobalInt("Alive1")
 	
 	if AliveTeam1 > AliveTeam2 then
 	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
@@ -143,10 +143,6 @@ end
 		v:ConCommand("CloseEndStats")
 	end
 	end
-	
-	SetGlobalInt("NPCteam1", 0)
-	SetGlobalInt("NPCteam2", 0)
-
 end
 
 function round.Handle()
