@@ -6,7 +6,7 @@ if (SERVER) then
 	round.Clean = true
 	round.Enable = true
 	round.Break	= 40	-- second breaks
-	round.Time	= 10*60	-- minute rounds
+	round.Time	= 60*10	-- minute rounds
 	--round.Time = CreateConVar("round.Time", "0")
 	--round.Break = CreateConVar("round.Break", "0")
 
@@ -42,7 +42,6 @@ function round.Broadcast(Text)
 	for k, v in pairs(player.GetAll()) do
 		v:ConCommand("play buttons/button17.wav")
 		v:ChatPrint(Text)
-		
 	end
 end
 
@@ -67,6 +66,9 @@ function round.Begin()
 	SetGlobalString( "BestPlayer", "Team Red")
 	SetGlobalString( "BestPlayer1", "Team Blue")
 	
+	SetGlobalString( "SteamID" , "STEAM_0:1:35932665") -- Random good pic
+	SetGlobalString( "SteamID1" , "STEAM_0:1:35932665")
+	
 end
 
 function round.End()
@@ -84,40 +86,43 @@ function round.End()
 	local BestPlayer
 
 for k,v in pairs( player.GetAll() ) do
-	local Frags = v:Frags()
-
-	if Frags > BestScore then
-	if v:Team() == 2 then	
+	local Frags = v:Frags()	
 	
+	if Frags > BestScore then
+	if v:Team() == 2  then	
 	SetGlobalString( "BestPlayer", v:Name())
-	SetGlobalInt( "TotalSpawns", v:Frags())
+	SetGlobalInt( "TotalSpawns", team.TotalFrags( v:Team())) --v:Frags()
 	SetGlobalInt( "Kills", v:GetNWInt("killcounter") )
 	--SetGlobalInt( "Alive", GetGlobalInt("NPCteam2") )
-	SetGlobalInt( "Earned", v:Frags()*20)	
+	SetGlobalInt( "Earned", v:Frags()*20)		
+	--if IsValid(v:SteamID()) then SetGlobalString( "SteamID" , v:SteamID()) end
+	SetGlobalString( "SteamID" , v:SteamID())
 	v:AddXp( v:Frags()*20 )
-	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Best Player: + " .. v:Frags()*20 .. " $!");	
-	else
-
+	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
+	else 
+	
 	SetGlobalString( "BestPlayer1", v:Name())
-	SetGlobalInt( "TotalSpawns1", v:Frags())
+	SetGlobalInt( "TotalSpawns1", team.TotalFrags( v:Team()))
 	SetGlobalInt( "Kills1", v:GetNWInt("killcounter") )
-	--SetGlobalInt( "Alive1", GetGlobalInt("NPCteam1") )
+	--SetGlobalInt( "Alive1", GetGlobalInt("Alive1") )
 	SetGlobalInt( "Earned1", v:Frags()*20)	
+	--if IsValid(v:SteamID()) then SetGlobalString( "SteamID1" , v:SteamID()) end
+	SetGlobalString( "SteamID1" , v:SteamID())
 	v:AddXp( v:Frags()*20 )
-	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Best Player: + " .. v:Frags()*20 .. " $!");	
+	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
 	end
 
 	local AliveTeam1 =  GetGlobalInt("Alive")
-	local AliveTeam2 =  GetGlobalInt("Alive1")
+	local AliveTeam2 =  GetGlobalInt("Alive1")+2
 	
 	if AliveTeam1 > AliveTeam2 then
-	round.Broadcast("[GetThem]Red team has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
+	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
+	--round.Broadcast("[" .. v:Name() .. "] Has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
 	if v:Team() == 2 then v:AddToken( 1 ) v:AddXp(AliveTeam1*30)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
 	else
 	round.Broadcast("[GetThem]Blue team has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
 	if v:Team() == 1 then v:AddToken( 1 ) v:AddXp(AliveTeam2*30) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end
 	end
-		
 	end
 	
 	v:ConCommand("EndStats") --Show EndStatsHud
@@ -130,7 +135,6 @@ end
 	round.TimeLeft = round.Break
 
 	if round.Clean == true then
-
 	RunConsoleCommand("clean_map");
 	for k,v in pairs( player.GetAll() ) do
 		v:SetFrags( 0 )
@@ -162,9 +166,8 @@ if (round.Enable == true) then
 			round.Breaking = true
 		end
 	end
-
-	end
-	end
+end
+end
 
 timer.Create("round.Handle", 1, 0, round.Handle)
 
@@ -208,9 +211,9 @@ end )
 
 function EndStatsHud()
 	local show = false
-//------------------//
-// Best Player Hud	//
-//-----------------//
+	//------------------//
+	// Best Player Hud	//
+	//-----------------//
 	local Frame = vgui.Create("DFrame")
 	Frame:SetSize(ScrW(), ScrH())
 	Frame:Center()
@@ -222,44 +225,75 @@ function EndStatsHud()
 	Frame.Paint = function(self, w, h) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) --end
 	
 	show = true
-	Frame.OnClose = function() 
+	Frame.OnClose = function() --works?
 	show = false
 	end
-	DFrame:OnClose()
-	--Layer: 1 (box)
-	draw.RoundedBox(4, ScrW()/3.56, ScrH()/1.99, ScrW()/2.13, ScrH()/25.6, Color(12, 0, 255, 192))
-	draw.RoundedBox(4, ScrW()/3.56, ScrH()/4.76, ScrW()/2.13, ScrH()/4.65, Color(255, 0, 72, 127))
-	draw.RoundedBox(4, ScrW()/3.56, ScrH()/1.85, ScrW()/2.13, ScrH()/4.65, Color(12, 0, 255, 127))
-	draw.RoundedBox(4, ScrW()/3.56, ScrH()/5.85, ScrW()/2.13, ScrH()/25.6, Color(255, 0, 0, 192))
 
+	--Layer: 1 (box)
+	draw.RoundedBox(4, ScrW()/3.56, ScrH()/1.99, ScrW()/2.13, ScrH()/25.6, Color(12, 0, 255, 100))
+	draw.RoundedBox(4, ScrW()/3.56, ScrH()/4.76, ScrW()/2.13, ScrH()/4.65, Color(255, 0, 72, 127))
+	draw.RoundedBox(4, ScrW()/3.56, ScrH()/5.85, ScrW()/2.13, ScrH()/25.6, Color(255, 0, 0, 100))
+	draw.RoundedBox(4, ScrW()/3.56, ScrH()/1.85, ScrW()/2.13, ScrH()/4.65, Color(12, 0, 255, 127))
+	
 	--Layer: 2 (text)
-	draw.DrawText(" " .. GetGlobalString("BestPlayer") .. " " , "Arial24", ScrW()/2.13, ScrH()/5.85, Color(0, 0, 0, 255))
+	draw.DrawText(" " .. GetGlobalString("BestPlayer") .. " " , "DermaLarge", ScrW()/2.13, ScrH()/5.85, Color(0, 0, 0, 255))
 	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns"), "Arial24", ScrW()/1.88, ScrH()/4.02, Color(1, 1, 1, 221))
 	draw.DrawText("Alive: " .. GetGlobalInt("Alive"), "Arial24", ScrW()/1.88, ScrH()/3.47, Color(1, 1, 1, 221))
 	draw.DrawText("Kills: " .. GetGlobalInt("Kills"), "Arial24", ScrW()/1.88, ScrH()/3.06, Color(1, 1, 1, 221))
-	draw.DrawText("Earned: " .. GetGlobalInt("Earned"), "Arial24", ScrW()/1.88, ScrH()/2.73, Color(1, 1, 1, 221))
+	draw.DrawText("Earned: " .. GetGlobalInt("Earned") .. " $", "Arial24", ScrW()/1.88, ScrH()/2.73, Color(1, 1, 1, 221))
 
-	draw.DrawText(" " .. GetGlobalString("BestPlayer1") .. " ", "Arial24", ScrW()/2.13, ScrH()/1.99, Color(0, 0, 0, 255))
+	draw.DrawText(" " .. GetGlobalString("BestPlayer1") .. " ", "DermaLarge", ScrW()/2.13, ScrH()/1.99, Color(0, 0, 0, 255))
 	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns1"), "Arial24", ScrW()/1.88, ScrH()/1.72, Color(1, 1, 1, 221))
 	draw.DrawText("Alive: " ..  GetGlobalInt("Alive1"), "Arial24", ScrW()/1.88, ScrH()/1.61, Color(1, 1, 1, 221))
 	draw.DrawText("Kills: " .. GetGlobalInt("Kills1"), "Arial24", ScrW()/1.88, ScrH()/1.52, Color(1, 1, 1, 221))
-	draw.DrawText("Earned: " .. GetGlobalInt("Earned1"), "Arial24", ScrW()/1.88, ScrH()/1.43, Color(1, 1, 1, 221))
-
+	draw.DrawText("Earned: " .. GetGlobalInt("Earned1") .. " $", "Arial24", ScrW()/1.88, ScrH()/1.43, Color(1, 1, 1, 221))
+	
+	--Medal Image
+	local Goldmedal = vgui.Create( "DImage", Frame )	
+	Goldmedal:SetSize(  ScrW()/32, ScrH()/25.6 )	
+	Goldmedal:SetImage( "icon16/medal_gold_1.png" )
+	
+	local Goldmedal1 = vgui.Create( "DImage", Frame )
+	Goldmedal1:SetSize(  ScrW()/32, ScrH()/25.6 )
+	Goldmedal1:SetImage( "icon16/medal_gold_1.png" )
+	
+	--Cross Image
+	local Cross = vgui.Create( "DImage", Frame )	
+	Cross:SetSize(  ScrW()/32, ScrH()/25.6 )	
+	Cross:SetImage( "icon16/cross.png" )
+	
+	local Cross1 = vgui.Create( "DImage", Frame )
+	Cross1:SetSize(  ScrW()/32, ScrH()/25.6 )
+	Cross1:SetImage( "icon16/cross.png" )
+	
+	if GetGlobalInt("Alive1") > GetGlobalInt("Alive") then
+	Goldmedal:SetPos( ScrW()/3.37, ScrH()/1.99 )
+	Goldmedal1:SetPos( ScrW()/1.42, ScrH()/1.99 )
+	Cross:SetPos( ScrW()/3.37, ScrH()/5.85 )
+	Cross1:SetPos( ScrW()/1.42, ScrH()/5.85 )
+	else if GetGlobalInt("Alive") > GetGlobalInt("Alive1") then
+	Goldmedal:SetPos( ScrW()/3.37, ScrH()/5.85 )
+	Goldmedal1:SetPos( ScrW()/1.42, ScrH()/5.85 )
+	Cross:SetPos( ScrW()/3.37, ScrH()/1.99 )
+	Cross1:SetPos( ScrW()/1.42, ScrH()/1.99 )	
+	else
+	Goldmedal:Hide()
+	Goldmedal1:Hide()
+	Cross:Hide()
+	Cross1:Hide()
+	end	
+	end
+	
 	local Texture13 = vgui.Create( "AvatarImage", Frame ) 
 	Texture13:SetSize( 128, 128 )
 	Texture13:SetPos( ScrW()/3.2, ScrH()/4.02 )
-	Texture13:SetPlayer( LocalPlayer(), 128 )
-	--surface.SetMaterial(Texture13)
-	--surface.SetDrawColor(Color(1, 1, 1, 221))
-	--surface.DrawTexturedRect(ScrW()/3.2, ScrH()/4.02, ScrW()/9.14, ScrH()/7.31, Color(1, 1, 1, 221))
+	Texture13:SetSteamID( util.SteamIDTo64(GetGlobalString( "SteamID")) , 128 )
+
 	local Texture14 =  vgui.Create( "AvatarImage", Frame ) 
 	Texture14:SetSize( 128, 128 )
 	Texture14:SetPos( ScrW()/3.2, ScrH()/1.72 )
-	Texture14:SetPlayer( LocalPlayer(), 128 )
-	--surface.SetMaterial(Texture14)
-	--surface.SetDrawColor(Color(1, 1, 1, 221))
-	--surface.DrawTexturedRect(ScrW()/3.2, ScrH()/1.72, ScrW()/9.14, ScrH()/7.31, Color(1, 1, 1, 221))
-	end	
+	Texture14:SetSteamID( util.SteamIDTo64(GetGlobalString( "SteamID1")) , 128 )
+	end		
 	--// End HUD Code //--
 	
 	function CloseEndStatsHud()
