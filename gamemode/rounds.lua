@@ -120,8 +120,9 @@ for k,v in pairs( player.GetAll() ) do
 	--round.Broadcast("[" .. v:Name() .. "] Has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
 	if v:Team() == 2 then v:AddToken( 1 ) v:AddXp(AliveTeam1*30)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
 	else
-	round.Broadcast("[GetThem]Blue team has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
-	if v:Team() == 1 then v:AddToken( 1 ) v:AddXp(AliveTeam2*30) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end
+	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Blue has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
+	--round.Broadcast("[" .. v:Name() .. "] Has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
+	if v:Team() == 1 then v:AddToken( 1 ) v:AddXp(AliveTeam2*30) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end	
 	end
 	end
 	
