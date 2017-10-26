@@ -89,7 +89,7 @@ function round.End()
 for k,v in pairs( player.GetAll() ) do
 	local Frags = v:Frags()	
 	
-	if Frags > BestScore then
+	if Frags > BestScore or Frags > BestScore1 then
 	if v:Team() == 2  then
 	BestScore = Frags
 	SetGlobalString( "BestPlayer", v:Name())
