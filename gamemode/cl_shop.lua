@@ -326,6 +326,18 @@ gtObject[25] = {
 	"models/weapons/w_IRifle.mdl",
 	"Weapon",
 }
+gtObject[26] = {
+	"Spike",
+	400,
+	"weaponsTab",
+	50,
+	120,
+	370,
+	10,
+	"",
+	"models/props_junk/TrafficCone001a.mdl",
+	"Entity",
+}
 
 //---------------//
 // 	Shop!		// Thx to DarthSwedo
@@ -406,7 +418,16 @@ if SERVER then
 								i = i + 1
 								Guard1:SetName("Guard %i")
 							--end
-						end
+						--end
+						elseif(GTEntity == "Spike") then
+							local i = 0
+							local Spike = ents.Create("gt_spike")
+							Spike:SetPos(ply:GetEyeTrace().HitPos + Vector(0,0,17))
+							Spike:SetHealth(500)
+							Spike:Spawn()
+							i = i + 1
+							Spike:SetName("Spike %i")
+						end						
 					end
     	else
 

@@ -172,9 +172,11 @@ function GM:PlayerDeath( victim, inflictor, killer )
 		if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
 	killer:AddXp( math.random(60, 500) )
+	--killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	else
 	if killer:Team() == 2 and victim:Team() == 1 then
 	killer:AddXp( math.random(60, 500) )
+	--killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	end
 	end
 	end
