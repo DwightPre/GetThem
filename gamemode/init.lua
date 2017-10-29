@@ -184,7 +184,13 @@ end
 
 function GM:DoPlayerDeath (ply , attacker, damage)
 	local wep = ply:GetActiveWeapon()
-	if (wep:IsValid()) then ply:DropWeapon(wep)end
+	if (wep:IsValid()) then ply:DropWeapon(wep) end
+
+	ply:Spectate( OBS_MODE_IN_EYE )
+	ply:SpectateEntity( wep )
+	ply:Lock()	
+	
+	timer.Simple( 5, function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
 
 //---------------//
