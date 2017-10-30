@@ -84,7 +84,6 @@ function round.End()
 	//------------------//
 	local BestScore = 0
 	local BestScore1 = 0
-	local BestPlayer
 
 for k,v in pairs( player.GetAll() ) do
 	local Frags = v:Frags()	
@@ -95,9 +94,7 @@ for k,v in pairs( player.GetAll() ) do
 	SetGlobalString( "BestPlayer", v:Name())
 	SetGlobalInt( "TotalSpawns", team.TotalFrags( v:Team())) --v:Frags()
 	SetGlobalInt( "Kills", v:GetNWInt("killcounter") )
-	--SetGlobalInt( "Alive", GetGlobalInt("NPCteam2") )
 	SetGlobalInt( "Earned", v:Frags()*20)		
-	--if IsValid(v:SteamID()) then SetGlobalString( "SteamID" , v:SteamID()) end
 	SetGlobalString( "SteamID" , v:SteamID())
 	v:AddXp( v:Frags()*20 )
 	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
@@ -106,9 +103,7 @@ for k,v in pairs( player.GetAll() ) do
 	SetGlobalString( "BestPlayer1", v:Name())
 	SetGlobalInt( "TotalSpawns1", team.TotalFrags( v:Team()))
 	SetGlobalInt( "Kills1", v:GetNWInt("killcounter") )
-	--SetGlobalInt( "Alive1", GetGlobalInt("Alive1") )
 	SetGlobalInt( "Earned1", v:Frags()*20)	
-	--if IsValid(v:SteamID()) then SetGlobalString( "SteamID1" , v:SteamID()) end
 	SetGlobalString( "SteamID1" , v:SteamID())
 	v:AddXp( v:Frags()*20 )
 	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
@@ -119,11 +114,9 @@ for k,v in pairs( player.GetAll() ) do
 	
 	if AliveTeam1 > AliveTeam2 then
 	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
-	--round.Broadcast("[" .. v:Name() .. "] Has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
 	if v:Team() == 2 then v:AddToken( 1 ) v:AddXp(AliveTeam1*30)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
 	else
 	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Blue has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
-	--round.Broadcast("[" .. v:Name() .. "] Has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
 	if v:Team() == 1 then v:AddToken( 1 ) v:AddXp(AliveTeam2*30) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end	
 	end
 	end
@@ -224,7 +217,7 @@ function EndStatsHud()
 	Frame.Paint = function(self, w, h) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) --end
 	
 	show = true
-	Frame.OnClose = function() --works?
+	Frame.OnClose = function()
 	show = false
 	end
 
@@ -236,16 +229,16 @@ function EndStatsHud()
 	
 	--Layer: 2 (text)
 	draw.DrawText(" " .. GetGlobalString("BestPlayer") .. " " , "DermaLarge", ScrW()/2.13, ScrH()/5.85, Color(0, 0, 0, 255))
-	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns"), "Arial24", ScrW()/1.88, ScrH()/4.02, Color(1, 1, 1, 221))
-	draw.DrawText("Alive: " .. GetGlobalInt("Alive"), "Arial24", ScrW()/1.88, ScrH()/3.47, Color(1, 1, 1, 221))
-	draw.DrawText("Kills: " .. GetGlobalInt("Kills"), "Arial24", ScrW()/1.88, ScrH()/3.06, Color(1, 1, 1, 221))
-	draw.DrawText("Earned: " .. GetGlobalInt("Earned") .. " $", "Arial24", ScrW()/1.88, ScrH()/2.73, Color(1, 1, 1, 221))
+	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns"), "Trebuchet24", ScrW()/1.88, ScrH()/4.02, Color(1, 1, 1, 221))
+	draw.DrawText("Alive: " .. GetGlobalInt("Alive"), "Trebuchet24", ScrW()/1.88, ScrH()/3.47, Color(1, 1, 1, 221))
+	draw.DrawText("Kills: " .. GetGlobalInt("Kills"), "Trebuchet24", ScrW()/1.88, ScrH()/3.06, Color(1, 1, 1, 221))
+	draw.DrawText("Earned: " .. GetGlobalInt("Earned") .. " $", "Trebuchet24", ScrW()/1.88, ScrH()/2.73, Color(1, 1, 1, 221))
 
 	draw.DrawText(" " .. GetGlobalString("BestPlayer1") .. " ", "DermaLarge", ScrW()/2.13, ScrH()/1.99, Color(0, 0, 0, 255))
-	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns1"), "Arial24", ScrW()/1.88, ScrH()/1.72, Color(1, 1, 1, 221))
-	draw.DrawText("Alive: " ..  GetGlobalInt("Alive1"), "Arial24", ScrW()/1.88, ScrH()/1.61, Color(1, 1, 1, 221))
-	draw.DrawText("Kills: " .. GetGlobalInt("Kills1"), "Arial24", ScrW()/1.88, ScrH()/1.52, Color(1, 1, 1, 221))
-	draw.DrawText("Earned: " .. GetGlobalInt("Earned1") .. " $", "Arial24", ScrW()/1.88, ScrH()/1.43, Color(1, 1, 1, 221))
+	draw.DrawText("Total Spawns: " .. GetGlobalInt("TotalSpawns1"), "Trebuchet24", ScrW()/1.88, ScrH()/1.72, Color(1, 1, 1, 221))
+	draw.DrawText("Alive: " ..  GetGlobalInt("Alive1"), "Trebuchet24", ScrW()/1.88, ScrH()/1.61, Color(1, 1, 1, 221))
+	draw.DrawText("Kills: " .. GetGlobalInt("Kills1"), "Trebuchet24", ScrW()/1.88, ScrH()/1.52, Color(1, 1, 1, 221))
+	draw.DrawText("Earned: " .. GetGlobalInt("Earned1") .. " $", "Trebuchet24", ScrW()/1.88, ScrH()/1.43, Color(1, 1, 1, 221))
 	
 	--Medal Image
 	local Goldmedal = vgui.Create( "DImage", Frame )	

@@ -61,5 +61,22 @@ function ENT:Touch( touchentity )
 	touchentity:TakeDamage(2)
 	--touchentity:ScreenFade( SCREENFADE.OUT ,  Color( 255, 0, 0, 128 ), 0.3, 0 )
 	self:SetHealth(self:Health() -10)
+	
+	local vel = touchentity:GetForward()
+	vel.z = 0
+	vel:Normalize()
+	if touchentity:IsOnGround() then
+		vel = vel * 20
+		touchentity:SetPos(touchentity:GetPos() + Vector(0, 0, 1))
+		vel.z = vel.z + 10
+	else
+		vel = vel * 2
+	end
+	if not touchentity:IsOnGround() and touchentity:GetVelocity().z < 0 then
+		vel.z = touchentity:GetVelocity().z * - 1
+	end
+	vel.z = vel.z + 90
+	touchentity:SetVelocity(vel)
+	
 	end
 end

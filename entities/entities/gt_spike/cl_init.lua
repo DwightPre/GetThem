@@ -15,6 +15,12 @@ function ENT:Draw()
 	draw.RoundedBox( 12, -130, 20, height /2, 20,  Color( 0,0,155 ) ) 
 	cam.End3D2D()
 	end
+	/*
+	--can be extremely expensive to process. 
+	hook.Add( "PreDrawHalos", "AddHalos", function()
+	halo.Add( ents.FindByClass( "gt_spike*" ), Color( 255, 0, 0 ), 5, 5, 2)
+	end )
+	*/
 
 	function ENT:DrawTranslucent()
 		self:Draw()
