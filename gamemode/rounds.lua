@@ -7,8 +7,9 @@ if (SERVER) then
 	round.Enable = true
 	round.Break	= 40	-- second breaks
 	round.Time	= 60*10	-- minute rounds
-	--round.Time = CreateConVar("round.Time", "0")
-	--round.Break = CreateConVar("round.Break", "0")
+	--round.Time = GetConVar("round.Time"):GetInt() 
+	--round.Break = GetConVar("round.Break"):GetInt() 
+
 
 	-- Read Variables
 	round.TimeLeft = -1

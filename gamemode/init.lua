@@ -193,6 +193,18 @@ function GM:DoPlayerDeath (ply , attacker, damage)
 	timer.Simple( ply:GetNWInt("DeathWait"), function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
 
+hook.Add( "PlayerShouldTakeDamage", "PlayerShouldTakeDamage:AvoidTeamDamage", function( _victim, _attacker )
+	if ( IsValid( _victim ) && IsValid( _attacker ) && _victim:IsPlayer( ) && _attacker:IsPlayer( ) ) then
+
+        local _teamA =  _victim:Team( );
+        local _teamB = _attacker:Team( );
+
+        if ( _teamA == _teamB ) then
+            return false;
+        end
+    end
+end );
+
 //---------------//
 // Auto Door	//
 //---------------//
@@ -237,6 +249,14 @@ hook.Add( "PlayerSay", "ISaid", ISaid );
 //---------------//
 // 	ADMIN		//
 //---------------//
+
+function NoSuicide( ply )
+if !ply:IsAdmin() then
+	return false
+end
+end
+hook.Add( "CanPlayerSuicide", "Suicide", NoSuicide )
+
 function change_team( ply )
 if (ply:Team() == 1) then
   ply:SetTeam(2)
