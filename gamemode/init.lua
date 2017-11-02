@@ -200,13 +200,13 @@ function GM:DoPlayerDeath (ply , attacker, damage)
 	timer.Simple( ply:GetNWInt("DeathWait"), function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
 
-hook.Add( "PlayerShouldTakeDamage", "PlayerShouldTakeDamage:AvoidTeamDamage", function( _victim, _attacker )
-	if ( IsValid( _victim ) && IsValid( _attacker ) && _victim:IsPlayer( ) && _attacker:IsPlayer( ) ) then
+hook.Add( "PlayerShouldTakeDamage", "PlayerShouldTakeDamage:AvoidTeamDamage", function( victim, attacker )
+	if ( IsValid( victim ) && IsValid( attacker ) && victim:IsPlayer( ) && attacker:IsPlayer( ) ) then
 
-        local _teamA =  _victim:Team( );
-        local _teamB = _attacker:Team( );
-
-        if ( _teamA == _teamB ) then
+        local teamA =  victim:Team( );
+        local teamB = attacker:Team( );
+		
+        if ( teamA == teamB ) then
             return false;
         end
     end
