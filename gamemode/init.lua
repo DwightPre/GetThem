@@ -72,7 +72,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
 	local teamn = math.random(1, 2)
     math.randomseed(os.time())
-	ply:SetNWInt("DeathWait", 3)
+	ply:SetNWInt("DeathWait", 2)
     if team.NumPlayers(1) < team.NumPlayers(2) then
     ply:SetTeam(1)
 	ply:SetModel( "models/player/hostage/hostage_02.mdl" )
@@ -183,6 +183,7 @@ function GM:PlayerDeath( victim, inflictor, killer )
 end
 
 function GM:DoPlayerDeath (ply , attacker, damage)
+	MaxWaitSeconds = 15
 	local wep = ply:GetActiveWeapon()
 	if (wep:IsValid()) then ply:DropWeapon(wep) end	
 	ply:SetNWInt("DeathWait", ply:GetNWInt("DeathWait")+1)
@@ -190,6 +191,7 @@ function GM:DoPlayerDeath (ply , attacker, damage)
 	ply:SpectateEntity( wep )
 	ply:Lock()
 	if ply:IsAdmin() and  ply:GetNWInt("DeathWait") > 5 then  ply:SetNWInt("DeathWait", 0) end
+	if ply:GetNWInt("DeathWait") > MaxWaitSeconds then  ply:SetNWInt("DeathWait", MaxWaitSeconds) end
 	--ply:ChatPrint("Dead, Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.Start( "Notification" )
 		net.WriteString("Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
