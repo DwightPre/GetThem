@@ -16,27 +16,55 @@ function meta:GetToken()
 	return self:GetNetworkedInt( "Token" )
 end
 
-local function RecvMyUmsg( data )
+-- Notifications Receiving & HUD
+net.Receive( "Notification",  function()
 
-print( "Team1 (Blue): "..data:ReadString());
+local Notification = net.ReadString()
+local NotificationLenght = string.len( Notification )
+local DrawImage = net.ReadDouble()
 
-end
+	--Panel
+	NotifyPanel = vgui.Create( "DNotify" )
+	NotifyPanel:SetPos(ScrW()/1.17, ScrH()/8.9)
+	NotifyPanel:SetLife(2)
+	if NotificationLenght < 6 then NotifyPanel:SetSize( 180, 51.2 )
+	else
+	NotifyPanel:SetSize( 180, 80 )
+	NotifyPanel:SetLife(5)
+	end
 
- local function RecvMyUmsg2( data2 )
+	--Background
+	local Background = vgui.Create( "DPanel", NotifyPanel )
+	Background:Dock( FILL )
+	Background:SetBackgroundColor(  Color(64, 64, 64, 155) )
 
-print( "Team2 (Red): "..data2:ReadString() );
-
-end
-
- local function RecvMyUmsg3( data3 )
-
---print( "roundTimer" ..data3:ReadString() );
-
-end
-usermessage.Hook( "RoundTimer", RecvMyUmsg3 );
-usermessage.Hook( "TEAMTWO", RecvMyUmsg2 );
-usermessage.Hook( "TEAMONE", RecvMyUmsg );
-
+	--Label
+	local lbl = vgui.Create( "DLabel", Background )
+	lbl:SetPos( 10, -10)
+	lbl:SetAutoStretchVertical()
+	lbl:SetSize( 130, 72 )
+	lbl:SetText( "" )
+	lbl:SetText( Notification )
+	lbl:SetTextColor( Color( 255, 200, 0 ) )
+	lbl:SetFont( "DermaLarge" )
+	lbl:SetWrap( true )	
+	if NotificationLenght < 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 5) end
+	
+	--Images
+	if DrawImage == 2 then
+	local DollarIMG = vgui.Create( "DImage", Background )
+	DollarIMG:SetPos( 136, 5 )	
+	DollarIMG:SetSize( 40, 40 )
+	DollarIMG:SetImage( "icon16/money_dollar.png" )
+	elseif DrawImage == 3 then
+	local CancelIMG = vgui.Create( "DImage", Background )
+	CancelIMG:SetPos( 136, 20 )	
+	CancelIMG:SetSize( 40, 40 )
+	CancelIMG:SetImage( "icon16/cancel.png" )
+	end
+	
+	NotifyPanel:AddItem( Background )	
+end)
 
 function RemoveDeadRag( ent )
 

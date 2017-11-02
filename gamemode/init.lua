@@ -143,11 +143,11 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	killer:AddXp( math.random(-600, -1000) )
+	killer:TakeXp( math.random(600, 1000) )
 	else
 	if killer:Team() == 2 and victim:GetName() == "TEAM2" then
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
-	killer:AddXp( math.random(-600, -1000) )
+	killer:TakeXp( math.random(600, 1000) )
 	end
 
     if killer:Team() == 1 and victim:GetName() == "TEAM2" then
@@ -184,12 +184,17 @@ end
 
 function GM:DoPlayerDeath (ply , attacker, damage)
 	local wep = ply:GetActiveWeapon()
-	if (wep:IsValid()) then ply:DropWeapon(wep) end
+	if (wep:IsValid()) then ply:DropWeapon(wep) end	
 	ply:SetNWInt("DeathWait", ply:GetNWInt("DeathWait")+1)
 	ply:Spectate( OBS_MODE_IN_EYE )
 	ply:SpectateEntity( wep )
-	ply:Lock()	
-	ply:ChatPrint("Dead, wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+	ply:Lock()
+	if ply:IsAdmin() and  ply:GetNWInt("DeathWait") > 5 then  ply:SetNWInt("DeathWait", 0) end
+	--ply:ChatPrint("Dead, Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		net.Start( "Notification" )
+		net.WriteString("Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		net.WriteDouble(3)
+		net.Send( Entity( 1 ))
 	timer.Simple( ply:GetNWInt("DeathWait"), function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
 
@@ -341,10 +346,23 @@ concommand.Add( "spawn_prop1", spawn_prop1 )
 // 	XP&TOKEN	//
 //--------------//
 local meta = FindMetaTable("Player")
+util.AddNetworkString( "Notification" )
 
 function meta:AddXp( amount )
 	local current_xp = self:GetXp()
 	self:SetXp( current_xp + amount )
+	
+	if string.find(string.lower(amount), "-") then
+		net.Start( "Notification" )
+		net.WriteString("" .. amount)
+		net.WriteDouble(2)
+		net.Send( Entity( 1 ))
+	else
+		net.Start( "Notification" )
+		net.WriteString("+ " .. amount)
+		net.WriteDouble(2) 
+		net.Send( Entity( 1 ))
+	end
 end
 
 function meta:SetXp( amount )
@@ -395,6 +413,7 @@ end
 function meta:GetToken()
 	return self:GetNetworkedInt( "Token" )
 end
+
 
 //---------------//
 // 	PAYDAY		//
