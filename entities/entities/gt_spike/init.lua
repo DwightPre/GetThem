@@ -59,7 +59,7 @@ end
 function ENT:Touch( touchentity )
 	if touchentity:IsPlayer() then
 	touchentity:TakeDamage(2)
-	--touchentity:ScreenFade( SCREENFADE.OUT ,  Color( 255, 0, 0, 128 ), 0.3, 0 )
+	touchentity:ScreenFade( SCREENFADE.OUT ,  Color( 255, 0, 0, 128 ), 0.3, 0 )
 	self:SetHealth(self:Health() -10)
 	
 	local vel = touchentity:GetForward()
