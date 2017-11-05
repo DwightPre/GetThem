@@ -1,77 +1,76 @@
-if SERVER then
 
 AddCSLuaFile()
 
-SWEP.Weight = 5
+if (SERVER) then
+        SWEP.Weight                     = 5
+        SWEP.AutoSwitchTo               = false
+        SWEP.AutoSwitchFrom             = false
+end
 
-SWEP.Base = "weapon_base"
+if ( CLIENT ) then
+		SWEP.PrintName				    = "GT Builder"
+		SWEP.Instructions 				= "Mouse 2 to place prop"
 
-SWEP.AutoSwitchTo = false
-SWEP.AutoSwitchFrom = false
+        SWEP.DrawAmmo                   = false
+        SWEP.DrawWeaponInfoBox          = false     
+        SWEP.BounceWeaponIcon           = false    
+        SWEP.SwayScale                  = 1.0         
+        SWEP.BobScale                   = 1.0          
+   --   SWEP.WepSelectIcon              = surface.GetTextureID( "weapons/swep" )
+        SWEP.ViewModelFOV               = 75
+        SWEP.ViewModelFlip              = false
+end
 
-elseif CLIENT then
+SWEP.Category                 		    = "Builder Weapon"
 
-SWEP.PrintName = "GT Builder"
+SWEP.Author                             = "Dwight-Pre"
+SWEP.Contact                            = ""
+SWEP.Purpose						    = "Spawns Base Props"
+
+SWEP.Spawnable                          = false
+SWEP.AdminSpawnable                     = false
 
 SWEP.Slot = 5
 SWEP.SlotPos = 1
 
-SWEP.DrawAmmo = false
+SWEP.ViewModel = Model(  "models/weapons/v_crowbar.mdl" )
+SWEP.WorldModel = Model( "models/hunter/blocks/cube05x05x05.mdl" )
 
-SWEP.DrawCrosshair = true
+SWEP.TracerType                         = "Tracer"
 
+SWEP.InfiniteAmmo                       = true
+SWEP.UseScope                           = false
+SWEP.WeaponDeploySpeed                  = 1
+
+SWEP.Primary.ClipSize                   = -1
+SWEP.Primary.DefaultClip                = -1
+//SWEP.Primary.Automatic                = false
+SWEP.Primary.Ammo                       = "none"
+
+SWEP.Secondary.ClipSize                 = -1
+SWEP.Secondary.DefaultClip              = -1
+SWEP.Secondary.Automatic                = false
+SWEP.Secondary.Ammo       			    = "none"
+			  
+function SWEP:Reload()
+            
 end
-
-SWEP.Primary.ClipSize = -1
-SWEP.Primary.DefaultClip = -1
-SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "none"
-
-SWEP.Secondary.ClipSize = 3
-SWEP.Secondary.DefaultClip = 3
-SWEP.Secondary.Automatic = false
-SWEP.Secondary.Ammo = "gwDashCharges"
-
-SWEP.SwingSound = "Weapon_Crowbar.Single"
-SWEP.HitSound = "Weapon_Crowbar.Melee_Hit"
-SWEP.HitWorldSound = "Weapon_Crowbar.Melee_HitWorld"
-
-SWEP.AllowDrop = false
-SWEP.Kind = WEAPON_MELEE
-SWEP.HoldType = "melee"
-
-SWEP.Delay = 0.7
-SWEP.Range = 85
-SWEP.Damage = 20
-SWEP.AutoSpawnable = false
-
-SWEP.Author = "Dwight-Pre"
-SWEP.Contact = ""
-SWEP.Purpose = "Spawns Base Props"
-SWEP.Instructions = "Mouse 2"
-
-SWEP.Category = "weapons"
-
-SWEP.Spawnable = true
-SWEP.AdminSpawnable = true
-
-SWEP.ViewModel = "models/weapons/v_crowbar.mdl"
-SWEP.WorldModel = "models/hunter/blocks/cube05x05x05.mdl"
-
 
 function SWEP:Initialize()
 
 end
 
---Prop Selection Menu
+/* --Prop Selection Menu
 function SWEP:Reload()
 if CurTime() < delay then return end
 RunConsoleCommand("gt_propmenu");
 delay = CurTime() + 0.7
-end
+end */
 
 function SWEP:Think()
 end
+
+if (SERVER) then
 
 function SWEP:SecondaryAttack()
 --self:SetBlock( "models/props_interiors/Furniture_shelf01a.mdl")
@@ -86,9 +85,11 @@ function SWEP:PrimaryAttack()
 --self:SetBlock( "models/hunter/blocks/cube05x05x05.mdl" )
 end
 
+
 function GiveBlock (model)
 self:SetBlock( model)
 end
+
 
 function SWEP:SetBlock( model_file )
 
@@ -186,12 +187,13 @@ end
 //Spawn Code
 	--if self.Owner:GetToken() > 0 then
 	local ent = ents.Create( "gt_breakable_prop" )
+	--local ent = ents.Create("prop_physics")
 	if ( !IsValid( ent ) ) then return end
 	ent:SetModel( model_file )
 	ent:SetPos( Vector(xpos,ypos,zpos) )
 	ent:SetMaterial("models/props_pipes/GutterMetal01a")
 	--ent:SetAngles( self.Owner:EyeAngles() )
-	ent:SetHealth(500) 
+	--ent:SetHealth(400) 
 	ent:Spawn()
 
 	local phys = ent:GetPhysicsObject()
@@ -207,6 +209,8 @@ end
 	--self.Owner:SetToken( self.Owner:GetToken() -1)
 	--end
 end
+
+elseif CLIENT then
 
 function SWEP:DrawHUD()
 local tr = self.Owner:GetEyeTrace()
@@ -232,7 +236,7 @@ function SWEP:OnRemove()
 		SafeRemoveEntity(self.destinationModel)
 	end
 end
-
+end
 /*
 if (CLIENT) then
 function openPropMenu( ply, cmd, args )

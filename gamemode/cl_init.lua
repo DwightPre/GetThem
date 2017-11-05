@@ -29,7 +29,7 @@ local DrawImage = net.ReadDouble()
 	NotifyPanel:SetLife(2)
 	if NotificationLenght < 6 then NotifyPanel:SetSize( 180, 51.2 )
 	else
-	NotifyPanel:SetSize( 180, 80 )
+	NotifyPanel:SetSize( 180, 100 )
 	NotifyPanel:SetLife(5)
 	end
 
@@ -42,13 +42,13 @@ local DrawImage = net.ReadDouble()
 	local lbl = vgui.Create( "DLabel", Background )
 	lbl:SetPos( 10, -10)
 	lbl:SetAutoStretchVertical()
-	lbl:SetSize( 130, 72 )
+	lbl:SetSize( 130, 80)
 	lbl:SetText( "" )
 	lbl:SetText( Notification )
 	lbl:SetTextColor( Color( 255, 200, 0 ) )
 	lbl:SetFont( "DermaLarge" )
 	lbl:SetWrap( true )	
-	if NotificationLenght < 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 5) end
+	if NotificationLenght < 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 10) lbl:SetSize( 130, 85) end
 	
 	--Images
 	if DrawImage == 2 then
@@ -58,13 +58,22 @@ local DrawImage = net.ReadDouble()
 	DollarIMG:SetImage( "icon16/money_dollar.png" )
 	elseif DrawImage == 3 then
 	local CancelIMG = vgui.Create( "DImage", Background )
-	CancelIMG:SetPos( 136, 20 )	
+	CancelIMG:SetPos( 136, 30 )	
 	CancelIMG:SetSize( 40, 40 )
 	CancelIMG:SetImage( "icon16/cancel.png" )
 	end
 	
 	NotifyPanel:AddItem( Background )	
 end)
+
+local function RecvMyUmsg3( data3 )
+
+--print( "roundTimer" ..data3:ReadString() );
+--put here because [ Warning: Unhandled usermessage 'RoundTimer' ]
+
+
+end
+usermessage.Hook( "RoundTimer", RecvMyUmsg3 );
 
 function RemoveDeadRag( ent )
 

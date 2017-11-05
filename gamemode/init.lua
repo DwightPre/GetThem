@@ -81,7 +81,6 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetModel( "models/player/Group03/Female_04.mdl" )
 	end
 end
-
 //---------------//
 // Change Team	//
 //---------------//
@@ -194,9 +193,10 @@ function GM:DoPlayerDeath (ply , attacker, damage)
 	if ply:GetNWInt("DeathWait") > MaxWaitSeconds then  ply:SetNWInt("DeathWait", MaxWaitSeconds) end
 	--ply:ChatPrint("Dead, Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.Start( "Notification" )
-		net.WriteString("Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		--net.WriteString("Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		net.WriteString("Respawn in " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.WriteDouble(3)
-		net.Send( Entity( 1 ))
+		net.Send(ply)
 	timer.Simple( ply:GetNWInt("DeathWait"), function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
 

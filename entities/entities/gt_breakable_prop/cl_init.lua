@@ -1,5 +1,6 @@
 include("shared.lua")
 
+if CLIENT then
 function ENT:Draw()
 	self.Entity:DrawModel()
 	
@@ -28,3 +29,4 @@ function ENT:Draw()
 	function ENT:DrawTranslucent()
 		self:Draw()
 	end
+end
