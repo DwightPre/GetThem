@@ -395,7 +395,7 @@ if SERVER then
 
 					elseif(Category == "Entity") then
 						ply:ChatPrint("You got a " .. entity[1] .. "!")
-						pply:TakeXp( entity[2] , ply )
+						ply:TakeXp( entity[2] , ply )
 						
 						local GTEntity = entity[1]
 
