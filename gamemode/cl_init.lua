@@ -27,7 +27,7 @@ local DrawImage = net.ReadDouble()
 	NotifyPanel = vgui.Create( "DNotify" )
 	NotifyPanel:SetPos(ScrW()/1.17, ScrH()/8.9)
 	NotifyPanel:SetLife(2)
-	if NotificationLenght < 6 then NotifyPanel:SetSize( 180, 51.2 )
+	if NotificationLenght < 6 or  NotificationLenght == 6 then NotifyPanel:SetSize( 180, 51.2 )
 	else
 	NotifyPanel:SetSize( 180, 100 )
 	NotifyPanel:SetLife(5)
@@ -48,7 +48,7 @@ local DrawImage = net.ReadDouble()
 	lbl:SetTextColor( Color( 255, 200, 0 ) )
 	lbl:SetFont( "DermaLarge" )
 	lbl:SetWrap( true )	
-	if NotificationLenght < 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 10) lbl:SetSize( 130, 85) end
+	if NotificationLenght < 6 or  NotificationLenght == 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 10) lbl:SetSize( 130, 85) end
 	
 	--Images
 	if DrawImage == 2 then

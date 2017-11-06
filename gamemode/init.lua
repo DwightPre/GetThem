@@ -132,7 +132,7 @@ end
 
 function GM:OnNPCKilled( victim, killer, weapon )
 	if victim:GetName() == "SpecialOne" then
-	killer:AddXp( math.random(600, 1000) )
+	killer:AddXp( math.random(600, 1000) , killer )
 	killer:AddToken( math.random(1, 4) )
 	for k,v in pairs(player.GetAll()) do
 		v:PrintMessage( HUD_PRINTTALK, "[GetThem]A Special NPC has been killed.");
@@ -142,21 +142,21 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	killer:TakeXp( math.random(600, 1000) )
+	killer:TakeXp( math.random(600, 1000) , killer )
 	else
 	if killer:Team() == 2 and victim:GetName() == "TEAM2" then
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
-	killer:TakeXp( math.random(600, 1000) )
+	killer:TakeXp( math.random(600, 1000) , killer )
 	end
 
     if killer:Team() == 1 and victim:GetName() == "TEAM2" then
-	killer:AddXp( math.random(60, 100) )
+	killer:AddXp( math.random(60, 100) ,killer )
 	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
-
+	
 	else
 	if killer:Team() == 2 and victim:GetName() == "TEAM1" then
-	killer:AddXp( math.random(60, 100) )
+	killer:AddXp( math.random(60, 100) ,killer )
 	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
 	end
@@ -168,14 +168,13 @@ end
 
 
 function GM:PlayerDeath( victim, inflictor, killer )
-		if(killer:IsPlayer()) then
+	Amount = math.random(60, 500)
+	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
-	killer:AddXp( math.random(60, 500) )
-	--killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+	killer:AddXp( Amount , killer)
 	else
 	if killer:Team() == 2 and victim:Team() == 1 then
-	killer:AddXp( math.random(60, 500) )
-	--killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+	killer:AddXp( Amount , killer )
 	end
 	end
 	end
@@ -193,7 +192,6 @@ function GM:DoPlayerDeath (ply , attacker, damage)
 	if ply:GetNWInt("DeathWait") > MaxWaitSeconds then  ply:SetNWInt("DeathWait", MaxWaitSeconds) end
 	--ply:ChatPrint("Dead, Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.Start( "Notification" )
-		--net.WriteString("Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.WriteString("Respawn in " .. ply:GetNWInt("DeathWait") .. " seconds!")
 		net.WriteDouble(3)
 		net.Send(ply)
@@ -350,21 +348,25 @@ concommand.Add( "spawn_prop1", spawn_prop1 )
 local meta = FindMetaTable("Player")
 util.AddNetworkString( "Notification" )
 
-function meta:AddXp( amount )
-	local current_xp = self:GetXp()
-	self:SetXp( current_xp + amount )
-	
-	if string.find(string.lower(amount), "-") then
+function meta:SendNotification( ply, message )
+	--local ply = Entity( 1 )	
+	if string.find(string.lower(message), "-") then
 		net.Start( "Notification" )
-		net.WriteString("" .. amount)
+		net.WriteString("" .. message)
 		net.WriteDouble(2)
-		net.Send( Entity( 1 ))
+		net.Send( ply)
 	else
 		net.Start( "Notification" )
-		net.WriteString("+ " .. amount)
+		net.WriteString("+ " .. message)
 		net.WriteDouble(2) 
-		net.Send( Entity( 1 ))
+		net.Send( ply )
 	end
+end
+
+function meta:AddXp( amount ,ply )
+	local current_xp = self:GetXp()
+	self:SetXp( current_xp + amount )
+	self:SendNotification( ply, amount )
 end
 
 function meta:SetXp( amount )
@@ -381,8 +383,8 @@ function meta:SaveXpTXT()
 	file.Write( gmod.GetGamemode().Name .."/Xp/".. string.gsub(self:SteamID(), ":", "_") ..".txt", tostring(self:GetXp()) )
 end
 
-function meta:TakeXp( amount )
-   self:AddXp( -amount )
+function meta:TakeXp( amount ,ply )
+   self:AddXp( -amount ,ply )
 end
 
 function meta:GetXp()
@@ -426,10 +428,10 @@ timer.Create( "GivePoints", 600, 0, function() //300
 
 	for k, v in ipairs( player.GetAll() ) do
 		if v:Team() == 1 then
-		v:AddXp( (aliveNPCs1) * 15 )
+		v:AddXp( (aliveNPCs1) * 15 , v)
 		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
 		else
-		v:AddXp( (aliveNPCs2) * 15 )
+		v:AddXp( (aliveNPCs2) * 15 , v )
 		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
 		end
 	end
