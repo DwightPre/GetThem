@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName = "Medkit"
+SWEP.PrintName = "Health Kit"
 SWEP.Author = "Dwight-Pre"
 SWEP.Purpose = "Heal yourself with the secondary."
 
