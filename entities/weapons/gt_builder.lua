@@ -78,6 +78,8 @@ function SWEP:SecondaryAttack()
 --self:SetBlock( "models/hunter/blocks/cube05x05x05.mdl")
 --self:SetBlock( "models/hunter/blocks/cube075x2x1.mdl")
 self:SetBlock( "models/hunter/blocks/cube075x075x075.mdl")
+self:SendWeaponAnim( ACT_VM_HITCENTER ) 
+self:SetAnimation( PLAYER_ATTACK1 ) 
 end
 
 function SWEP:PrimaryAttack()
@@ -194,6 +196,9 @@ end
 	ent:SetMaterial("models/props_pipes/GutterMetal01a")
 	--ent:SetAngles( self.Owner:EyeAngles() )
 	--ent:SetHealth(400) 
+		local effect = EffectData()
+		effect:SetOrigin(ent:GetPos() + Vector(0, 0, -10))
+		util.Effect("StunstickImpact", effect)
 	ent:Spawn()
 
 	local phys = ent:GetPhysicsObject()
