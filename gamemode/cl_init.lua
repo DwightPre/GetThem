@@ -1,6 +1,7 @@
 include( 'shared.lua' )
 include("cl_score.lua")
 include("cl_shop.lua")
+include("cl_tokenshop.lua")
 include("playerInfo.lua")
 include("rounds.lua")
 include("cl_holster.lua")
@@ -22,16 +23,19 @@ net.Receive( "Notification",  function()
 
 local Notification = net.ReadString()
 local NotificationLenght = string.len( Notification )
-local DrawImage = net.ReadDouble()
+local DrawImage = net.ReadDouble() --1:None --2:$ --3:Death --4:Token
 
 	--Panel
 	NotifyPanel = vgui.Create( "DNotify" )
 	NotifyPanel:SetPos(ScrW()/1.17, ScrH()/8.9)
 	NotifyPanel:SetLife(2)
-	if NotificationLenght < 6 or  NotificationLenght == 6 then NotifyPanel:SetSize( 180, 51.2 )
-	else
+	if DrawImage == 2 or DrawImage == 4 then 
+	NotifyPanel:SetSize( 180, 51.2 )
+	elseif DrawImage == 3 then
 	NotifyPanel:SetSize( 180, 100 )
 	NotifyPanel:SetLife(5)
+	end if DrawImage == 4 then
+	NotifyPanel:SetLife(3)
 	end
 
 	--Background
@@ -49,7 +53,15 @@ local DrawImage = net.ReadDouble()
 	lbl:SetTextColor( Color( 255, 200, 0 ) )
 	lbl:SetFont( "DermaLarge" )
 	lbl:SetWrap( true )	
-	if NotificationLenght < 6 or  NotificationLenght == 6 then lbl:SetPos( 10, -10) else lbl:SetPos( 10, 10) lbl:SetSize( 130, 85) end
+	if DrawImage == 2 then 
+	lbl:SetPos( 10, -10) 
+	elseif DrawImage == 3 then
+	lbl:SetPos( 10, 10) 
+	lbl:SetSize( 130, 85)
+	elseif DrawImage == 4 then
+	lbl:SetPos( 10, -10) 
+	lbl:SetTextColor( Color( 255, 114, 0 ) )
+	end
 	
 	--Images
 	if DrawImage == 2 then
@@ -62,6 +74,11 @@ local DrawImage = net.ReadDouble()
 	CancelIMG:SetPos( 136, 30 )	
 	CancelIMG:SetSize( 40, 40 )
 	CancelIMG:SetImage( "icon16/cancel.png" )
+	elseif DrawImage == 4 then
+	local TokenIMG = vgui.Create( "DImage", Background )
+	TokenIMG:SetPos( 136, 5 )	
+	TokenIMG:SetSize( 40, 40 )
+	TokenIMG:SetImage( "icon16/money_yen.png" )
 	end
 	
 	NotifyPanel:AddItem( Background )	

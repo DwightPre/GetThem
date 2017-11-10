@@ -48,19 +48,19 @@ weaponsinfos["stunstick"]={}
 weaponsinfos["stunstick"].Model="models/weapons/w_stunbaton.mdl"
 weaponsinfos["stunstick"].Bone="ValveBiped.Bip01_Spine2"
 weaponsinfos["stunstick"].BoneOffset={Vector(-7,-11,6.5),Angle(0,0,0)}
-
+/*
 weaponsinfos["gt_builder"]={}
 weaponsinfos["gt_builder"].Model="models/weapons/w_crowbar.mdl"
 weaponsinfos["gt_builder"].Bone="ValveBiped.Bip01_Spine1"
 weaponsinfos["gt_builder"].BoneOffset={Vector(3,0,0),Angle(0,0,45)}
+*/
 
-/* 
 weaponsinfos["weapon_357"]={}
 weaponsinfos["weapon_357"].Model="models/weapons/W_357.mdl"
 weaponsinfos["weapon_357"].Bone="ValveBiped.Bip01_Pelvis"
 weaponsinfos["weapon_357"].BoneOffset={Vector(-5,8,0),Angle(0,270,0)}
 weaponsinfos["weapon_357"].Priority="gmod_tool"
-*/ 
+
 
 function LPGB(dotrace)
     if !dotrace then

@@ -86,43 +86,56 @@ function round.End()
 	local BestScore = 0
 	local BestScore1 = 0
 
-for k,v in pairs( player.GetAll() ) do
-	local Frags = v:Frags()	
+for k,ply in pairs( player.GetAll() ) do
+	local Frags = ply:Frags()	
 	
 	if Frags > BestScore or Frags > BestScore1 then
-	if v:Team() == 2  then
+	if ply:Team() == 2  then
 	BestScore = Frags
-	SetGlobalString( "BestPlayer", v:Name())
-	SetGlobalInt( "TotalSpawns", team.TotalFrags( v:Team())) --v:Frags()
-	SetGlobalInt( "Kills", v:GetNWInt("killcounter") )
-	SetGlobalInt( "Earned", v:Frags()*20)		
-	SetGlobalString( "SteamID" , v:SteamID())
-	v:AddXp( v:Frags()*20 )
-	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
+	SetGlobalString( "BestPlayer", ply:Name())
+	SetGlobalInt( "TotalSpawns", team.TotalFrags( ply:Team())) --ply:Frags()
+	SetGlobalInt( "Kills", ply:GetNWInt("killcounter") )
+	SetGlobalInt( "Earned", ply:Frags()*20)		
+	SetGlobalString( "SteamID" , ply:SteamID())
+	ply:AddXp( ply:Frags()*20 , ply )
+	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. ply:Frags()*20 .. " $!");	
 	else 
 	BestScore1 = Frags
-	SetGlobalString( "BestPlayer1", v:Name())
-	SetGlobalInt( "TotalSpawns1", team.TotalFrags( v:Team()))
-	SetGlobalInt( "Kills1", v:GetNWInt("killcounter") )
-	SetGlobalInt( "Earned1", v:Frags()*20)	
-	SetGlobalString( "SteamID1" , v:SteamID())
-	v:AddXp( v:Frags()*20 )
-	v:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. v:Frags()*20 .. " $!");	
+	SetGlobalString( "BestPlayer1", ply:Name())
+	SetGlobalInt( "TotalSpawns1", team.TotalFrags( ply:Team()))
+	SetGlobalInt( "Kills1", ply:GetNWInt("killcounter") )
+	SetGlobalInt( "Earned1", ply:Frags()*20)	
+	SetGlobalString( "SteamID1" , ply:SteamID())
+	ply:AddXp( ply:Frags()*20 , ply )
+	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. ply:Frags()*20 .. " $!");	
 	end
 
 	local AliveTeam1 =  GetGlobalInt("Alive")
 	local AliveTeam2 =  GetGlobalInt("Alive1")
 	
-	if AliveTeam1 > AliveTeam2 then
-	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
-	if v:Team() == 2 then v:AddToken( 1 ) v:AddXp(AliveTeam1*30)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
-	else
-	v:PrintMessage( HUD_PRINTTALK,"[GetThem]Blue has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
-	if v:Team() == 1 then v:AddToken( 1 ) v:AddXp(AliveTeam2*30) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end	
-	end
+	if AliveTeam1 > AliveTeam2 then	
+	ply:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
+	if ply:Team() == 2 then ply:AddXp(AliveTeam1*30 , ply)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
+	timer.Simple( 15, function()
+		ply:AddToken( 1 )
+		net.Start( "Notification" )
+		net.WriteString("+ 1 Token")
+		net.WriteDouble(4)
+		net.Send( ply ) end )
+	
+	else	
+	ply:PrintMessage( HUD_PRINTTALK,"[GetThem]Blue has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
+	if ply:Team() == 1 then ply:AddXp(AliveTeam2*30 , ply) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end	
+	timer.Simple( 15, function()
+		ply:AddToken( 1 )
+		net.Start( "Notification" )
+		net.WriteString("+ 1 Token")
+		net.WriteDouble(4)
+		net.Send( ply ) end )
 	end
 	
-	v:ConCommand("EndStats") --Show EndStatsHud
+	end		
+	ply :ConCommand("EndStats") --Show EndStatsHud
 end
 
 ---------------------------
@@ -163,7 +176,6 @@ end
 end
 
 timer.Create("round.Handle", 1, 0, round.Handle)
-
 
 //---------------//
 // 	CLIENT!		//

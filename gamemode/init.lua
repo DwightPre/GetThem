@@ -1,14 +1,18 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("cl_shop.lua")
+AddCSLuaFile("cl_tokenshop.lua")
 AddCSLuaFile("cl_score.lua")
 AddCSLuaFile("rounds.lua")
 AddCSLuaFile("playerInfo.lua")
+AddCSLuaFile("cl_holster.lua")
 
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
 include("cl_shop.lua")
+include("cl_tokenshop.lua")
 include("cl_score.lua")
+
 resource.AddFile("models/chicken/chicken.mdl")
 resource.AddFile("materials/vgui/background.png")
 
@@ -72,7 +76,6 @@ function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
 	local teamn = math.random(1, 2)
     math.randomseed(os.time())
-	ply:SetNWInt("DeathWait", 2)
     if team.NumPlayers(1) < team.NumPlayers(2) then
     ply:SetTeam(1)
 	ply:SetModel( "models/player/hostage/hostage_02.mdl" )
@@ -80,6 +83,12 @@ function GM:PlayerInitialSpawn(ply)
     ply:SetTeam(2)
 	ply:SetModel( "models/player/Group03/Female_04.mdl" )
 	end
+	
+	ply:SetNWInt("DeathWait", 2)
+	ply:SetNWBool( "CanBuy_Guard", false )
+	ply:SetNWBool( "CanBuy_AmmoBox", false )
+	ply:SetNWBool( "CanBuy_Spike", false )
+	ply:SetNWBool( "CanBuy_Builder", false )
 end
 //---------------//
 // Change Team	//
