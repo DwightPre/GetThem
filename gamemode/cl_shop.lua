@@ -294,7 +294,7 @@ gtObject[22] = {
 }
 gtObject[23] = {
 	"Guard",
-	200,
+	400,
 	"weaponsTab",
 	0,
 	0,

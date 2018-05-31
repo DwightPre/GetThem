@@ -40,7 +40,7 @@ gtObject2[4] = {
 
 gtObject2[5] = {
 	"Get Little",
-	3,
+	1,
 	"Loadout",
 	210,
 	60,
