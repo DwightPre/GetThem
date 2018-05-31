@@ -82,6 +82,14 @@ gtObject2[9] = {
 	60,
 	"You can now buy the GT_builder!"
 }
+gtObject2[10] = {
+	"+1 Token",
+	1000,
+	"Trade",
+	50,
+	10,
+	"You got one token!"
+}
 
 //---------------//
 // Token	Shop!// 
@@ -148,7 +156,7 @@ for key,value in pairs(gtObject2) do
 	elseif(Category == "Entities") then
   	Button = vgui.Create("DButton", EntitiesTab)
 	elseif(Category == "Trade") then
-  	--Button = vgui.Create("DButton", TradeTab)
+  	Button = vgui.Create("DButton", TradeTab)
 	end
 
 Button:SetSize(150, 45)
@@ -211,11 +219,26 @@ function GivePlayerASpecial(ply, cmd, command)
       if(command[1] == gtObject2[key][1]) then
         local entity = gtObject2[key]
 				local current_token = ply:GetToken()
+				local current_money = ply:GetXp()
 				
 				local Special = entity[1]
 				local Price = entity[2]
 				local Message = entity[6]
 				
+				
+				if(Special == "+1 Token") and current_money > entity[2] then 
+				ply:TakeXp ( Price , ply )
+				
+				timer.Simple( 3, function()
+				ply:AddToken( 1 )
+				
+				net.Start( "Notification" )
+				net.WriteString("+ 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply ) end )
+				return end 
+						
+						
 				if(current_token > entity[2]) then
 				ply:TakeToken(Price)
 				ply:ChatPrint(Message)
