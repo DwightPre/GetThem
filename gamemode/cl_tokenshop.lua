@@ -227,11 +227,9 @@ function GivePlayerASpecial(ply, cmd, command)
 				
 				
 				if(Special == "+1 Token") and current_money > entity[2] then 
-				ply:TakeXp ( Price , ply )
-				
+				ply:TakeXp ( Price , ply )				
 				timer.Simple( 3, function()
-				ply:AddToken( 1 )
-				
+				ply:AddToken( 1 )				
 				net.Start( "Notification" )
 				net.WriteString("+ 1 Token")
 				net.WriteDouble(4)
