@@ -309,12 +309,12 @@ gtObject[24] = {
 	"Health Kit",
 	200,
 	"weaponsTab",
-	0,
-	0,
+	100,
+	50,
 	210,
 	110,
 	"gt_medkit",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/HealthKit.mdl",
 	"Weapon",
 	0
 }
