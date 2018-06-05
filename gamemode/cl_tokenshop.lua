@@ -91,12 +91,36 @@ gtObject2[10] = {
 	"You got one token!"
 }
 gtObject2[11] = {
+	"+1000 $",
+	1,
+	"Trade",
+	210,
+	10,
+	"You got 1000$!"
+}
+gtObject2[12] = {
 	"Knife", 			
 	2, 					
 	"Weapons",			
 	50,					
 	10,					
 	"You got the Speedrun Knife!"	
+}
+gtObject2[13] = {
+	"Spawn with Pistol", 			
+	2, 					
+	"Weapons",			
+	50,					
+	60,					
+	"You now spawn with a Pistol!"	
+}
+gtObject2[14] = {
+	"Spawn with SMG", 			
+	2, 					
+	"Weapons",			
+	210,					
+	60,					
+	"You now spawn with a SMG!"	
 }
 
 //---------------//
@@ -174,7 +198,7 @@ for key,value in pairs(gtObject2) do
 	elseif(Category == "Entities") then
   	Button = vgui.Create("DButton", EntitiesTab)
 	elseif(Category == "Weapons") then
-  	Button = vgui.Create("DButton", WeaponTab)
+  	Button = vgui.Create("DButton", WeaponTab)	
 	elseif(Category == "Trade") then
   	Button = vgui.Create("DButton", TradeTab)
 	end
@@ -185,7 +209,6 @@ Button:SetText(entity[1])
 Button:SetColor( Color( 0, 0, 255 ) )
 Button:SetFont("ButtonLayout")
 Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFrame2:Close() end
-
 
 	if Button:GetText() == "Enable Ammobox" then 
 	if (LocalPlayer():GetNWBool( "CanBuy_AmmoBox") == true) then 
@@ -209,6 +232,18 @@ Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFr
 	if (LocalPlayer():GetNWBool( "CanBuy_Builder") == true) then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetText("Builder Enabled")
+	end
+	
+	elseif Button:GetText() == "Spawn with Pistol" then 
+	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_pistol") then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetText("[Pistol]")
+	end
+	
+	elseif Button:GetText() == "Spawn with SMG" then 
+	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_smg1") then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetText("[ SMG ]")
 	end 
 	
 end
@@ -293,7 +328,11 @@ function GivePlayerASpecial(ply, cmd, command)
 
 				if(Special == "Knife") then
 				ply:Give("gt_knife")
-				end								
+				end		
+
+				if (Special == "+1000 $") then
+				timer.Simple( 3, function() ply:AddXp( 1000 , ply ) end )
+				end
 
 				if(Special == "Get Little") then
 				
@@ -350,9 +389,25 @@ function GivePlayerASpecial(ply, cmd, command)
 				ply:ChatPrint("Already Bought!")
 				end
 				end
-					
-					
 
+				if (Special == "Spawn with Pistol") then
+				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_smg1") then
+				ply:SetNWString("SpawnWith" , "weapon_pistol")
+				else
+				ply:AddToken(Price)
+				ply:ChatPrint("Already Bought!")
+				end
+				end
+				
+				if (Special == "Spawn with SMG") then
+				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_pistol") then
+				ply:SetNWString("SpawnWith" , "weapon_smg1")
+				else
+				ply:AddToken(Price)
+				ply:ChatPrint("Already Bought!")
+				end
+				end
+				
 				else				
 				ply:ChatPrint ( "Not Enough Tokens!")
 				end

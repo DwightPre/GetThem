@@ -89,6 +89,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_AmmoBox", false )
 	ply:SetNWBool( "CanBuy_Spike", false )
 	ply:SetNWBool( "CanBuy_Builder", false )
+	ply:SetNWString("SpawnWith" , "none")
 end
 //---------------//
 // Change Team	//
@@ -100,8 +101,17 @@ function GM:PlayerLoadout(ply)
     else
         ply:Give("gt_spawner")
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
-end
 	end
+	
+	if (ply:GetNWString("SpawnWith") == "weapon_pistol") then
+	ply:Give("weapon_pistol")
+	ply:GiveAmmo( 40, "Pistol", true )
+	else if (ply:GetNWString("SpawnWith") == "weapon_smg1") then
+	ply:Give("weapon_smg1")
+	ply:GiveAmmo( 70, "smg1", true )
+	end
+	end
+end
 	
 //---------------//
 // Healthgain	//
