@@ -90,6 +90,14 @@ gtObject2[10] = {
 	10,
 	"You got one token!"
 }
+gtObject2[11] = {
+	"Knife", 			
+	2, 					
+	"Weapons",			
+	50,					
+	10,					
+	"You got the Speedrun Knife!"	
+}
 
 //---------------//
 // Token	Shop!// 
@@ -140,10 +148,20 @@ EntitiesTab:Dock( FILL )
 EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) CostPanel2:Show() CostText2:Show() end
 sheet:AddSheet( "Entities", EntitiesTab, "icon16/ruby_key.png" )
 
+local WeaponTab = vgui.Create( "DPanel", sheet )
+WeaponTab:Dock( FILL )
+WeaponTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) CostPanel2:Show() CostText2:Show()end
+sheet:AddSheet( "Weapons", WeaponTab, "icon16/lightning_go.png" )
+
 local TradeTab = vgui.Create( "DPanel", sheet )
 TradeTab:Dock( FILL )
-TradeTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) CostPanel2:Hide() CostText2:Hide() end
+TradeTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) CostPanel2:Show() CostText2:Show() end
 sheet:AddSheet( "Trade", TradeTab, "icon16/money_dollar.png" )
+
+local BackTab = vgui.Create( "DPanel", sheet )
+BackTab:Dock( FILL )
+BackTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) WeaponFrame2:Close() RunConsoleCommand("shop") end
+sheet:AddSheet( "Go Back", BackTab, "icon16/arrow_undo.png" )
 
 for key,value in pairs(gtObject2) do
   local entity = gtObject2[key]
@@ -155,6 +173,8 @@ for key,value in pairs(gtObject2) do
   	Button = vgui.Create("DButton", SpecialsTab)
 	elseif(Category == "Entities") then
   	Button = vgui.Create("DButton", EntitiesTab)
+	elseif(Category == "Weapons") then
+  	Button = vgui.Create("DButton", WeaponTab)
 	elseif(Category == "Trade") then
   	Button = vgui.Create("DButton", TradeTab)
 	end
@@ -194,10 +214,15 @@ Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFr
 end
 
 Button.OnCursorEntered = function()
+	if entity[2] > 100 then
+	CostText2:SetText( "Cost: " .. tostring(entity[2]) .. " $")
+	else
+	
 	if entity[2] == 1 then
     CostText2:SetText( "Cost: " .. tostring(entity[2]) .. " Token")
 	else
 	CostText2:SetText( "Cost: " .. tostring(entity[2]) .. " Tokens")
+	end
 	end
 end
 
@@ -264,7 +289,11 @@ function GivePlayerASpecial(ply, cmd, command)
 				
 				if(Special == "- Respawn wait") then
 				ply:SetNWInt("DeathWait", 2)
-				end				
+				end	
+
+				if(Special == "Knife") then
+				ply:Give("gt_knife")
+				end								
 
 				if(Special == "Get Little") then
 				
