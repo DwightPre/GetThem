@@ -39,12 +39,14 @@ end
 
 function ENT:OnKilled( dmg )
 
+	self:EmitSound( "chicken/chicken_death_0"..math.random( 1, 3 )..".wav" );
+
 	local effect = EffectData()
 	effect:SetOrigin(self:GetPos() + Vector(0, 0, -10))
 	util.Effect("ManhackSparks", effect)
 
-hook.Call( "OnNPCKilled", GAMEMODE, self, dmg:GetAttacker(), dmg:GetInflictor() )
-self:Remove()
+	hook.Call( "OnNPCKilled", GAMEMODE, self, dmg:GetAttacker(), dmg:GetInflictor() )
+	self:Remove()
 
 end
 
