@@ -90,6 +90,9 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_Spike", false )
 	ply:SetNWBool( "CanBuy_Builder", false )
 	ply:SetNWString("SpawnWith" , "none")
+	
+	ply:SetJumpLevel(0)
+	ply:SetMaxJumpLevel(1)
 end
 //---------------//
 // Change Team	//
@@ -442,6 +445,22 @@ end
 function meta:GetToken()
 	return self:GetNetworkedInt( "Token" )
 end
+--
+function meta:GetJumpLevel()
+	return self:GetDTInt(23)
+end
+
+function meta:SetJumpLevel(level)
+	self:SetDTInt(23, level)
+end
+
+function meta:GetMaxJumpLevel(level)
+	return self:GetDTInt(24)
+end
+
+function meta:SetMaxJumpLevel(level)
+	self:SetDTInt(24, level)
+end
 
 
 //---------------//
@@ -461,3 +480,57 @@ timer.Create( "GivePoints", 600, 0, function() //300
 		end
 	end
 end )
+
+//---------------//
+// 	DoubleJump 	//
+//---------------//
+local function GetMoveVector(mv)
+	local ang = mv:GetAngles()
+	local max_speed = mv:GetMaxSpeed()
+
+	local forward = math.Clamp(mv:GetForwardSpeed(), -max_speed, max_speed)
+	local side = math.Clamp(mv:GetSideSpeed(), -max_speed, max_speed)
+	local abs_xy_move = math.abs(forward) + math.abs(side)
+
+	if abs_xy_move == 0 then
+		return Vector(0, 0, 0)
+	end
+
+	local mul = max_speed / abs_xy_move
+	local vec = Vector()
+
+	vec:Add(ang:Forward() * forward)
+	vec:Add(ang:Right() * side)
+	vec:Mul(mul)
+
+	return vec
+end
+
+hook.Add("SetupMove", "Double Jump", function(ply, mv)
+	-- Let the engine handle movement from the ground
+	if ply:OnGround() then
+		ply:SetJumpLevel(0)
+		return
+	end	
+	-- Don't do anything if not jumping
+	if not mv:KeyPressed(IN_JUMP) then
+		return
+	end
+
+	ply:SetJumpLevel(ply:GetJumpLevel() + 1)
+
+	if ply:GetJumpLevel() > ply:GetMaxJumpLevel() then
+		return
+	end
+
+	local vel = GetMoveVector(mv)
+
+	vel.z = ply:GetJumpPower() * 1
+
+	mv:SetVelocity(vel)
+	ply:DoCustomAnimEvent(PLAYERANIMEVENT_JUMP , -1)
+
+	/*for i = 1, 4 do
+		ParticleEffect("manhacksparks", ply:GetPos() + Vector(0, 0, 10), ply:GetAngles(), ply)
+	end*/
+end)
