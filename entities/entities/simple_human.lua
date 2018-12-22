@@ -5,6 +5,7 @@ ENT.Spawnable = true
 
 function ENT:Initialize()
 	self:SetModel( "models/chicken/chicken.mdl" )
+	--self:SetMaterial("models/props_farm/chicken_brown")
 	self:SetSolid(  SOLID_BBOX )
 	self:SetHealth(100)	
 end
