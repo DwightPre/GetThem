@@ -74,6 +74,7 @@ hook.Add("ShowHelp", "MyHook", Shop)
 //---------------//
 function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
+	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Errors? Subscribe to content! https://steamcommunity.com/sharedfiles/filedetails/?id=1596083790" )
 	local teamn = math.random(1, 2)
     math.randomseed(os.time())
     if team.NumPlayers(1) < team.NumPlayers(2) then
@@ -165,10 +166,12 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
 	killer:TakeXp( math.random(600, 1000) , killer )
+	killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
 	else
 	if killer:Team() == 2 and victim:GetName() == "TEAM2" then
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
 	killer:TakeXp( math.random(600, 1000) , killer )
+	killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
 	end
 
     if killer:Team() == 1 and victim:GetName() == "TEAM2" then
@@ -303,8 +306,9 @@ function GM:PlayerNoClip(ply, on)
 	return false
 end
 
+/*
 function RestartMap(ply)
-if ply:IsAdmin() then
+--if ply:IsAdmin() then
 game.CleanUpMap()
 SetGlobalInt("NPCteam1", 0)
 SetGlobalInt("NPCteam2", 0)
@@ -313,9 +317,10 @@ SetGlobalInt("NPCteam2", 0)
 		v:Spawn()
 		--v:PrintMessage( HUD_PRINTTALK, "[GetThem]The map has been cleaned!");
 	end
-end
+--end
 end
 concommand.Add( "clean_map", RestartMap )
+*/
 
 function SpecialOne(ply)
 if ply:IsAdmin() then

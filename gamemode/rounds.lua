@@ -145,8 +145,15 @@ end
 	round.TimeLeft = round.Break
 
 	if round.Clean == true then
-	RunConsoleCommand("clean_map");
+	--RunConsoleCommand("clean_map");
+	
+	game.CleanUpMap() --server fix
+	
+	SetGlobalInt( "NPCteam2", 0 )
+	SetGlobalInt( "NPCteam1", 0 )
+	
 	for k,v in pairs( player.GetAll() ) do
+		v:Spawn()
 		v:SetFrags( 0 )
 		v:SetNWInt("killcounter", 0)
 		v:ConCommand("CloseEndStats")

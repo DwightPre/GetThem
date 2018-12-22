@@ -95,6 +95,7 @@ if (ply:Team() == 1) then
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM1")
+	--npc:SetMaterial("models/props_farm/chicken_brown")
 
 else
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
@@ -107,6 +108,7 @@ else
 	npc:SetName("TEAM2")
 	npc:DrawShadow( false )
 	npc:SetColor(255, 0, 0, 255)
+	--npc:SetMaterial("models/props_farm/chicken_white")
 
 	end
 		end

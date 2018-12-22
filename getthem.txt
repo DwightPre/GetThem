@@ -2,9 +2,9 @@
 {
 	"base"		"base"
 	"title"		"GetThem"
-	"maps"		"a_first_getthem_gamemode_map_V1.bsp"//Gamemode map prefix
+	"maps"		"a_first_getthem_gamemode_map.bsp"//Gamemode map prefix
 	"menusystem"	"1"
-	"workshopid"	""
+	"workshopid"	"1595223421"
 	"settings"
 {
 		1
