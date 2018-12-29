@@ -14,7 +14,16 @@ include("cl_tokenshop.lua")
 include("cl_score.lua")
 
 resource.AddFile("models/chicken/chicken.mdl")
+resource.AddFile("models/chicken/chicken.phy")
+resource.AddFile("models/chicken/chicken.vvd")
+resource.AddFile("models/chicken/chicken.dx90.vtx")
+resource.AddFile("materials/models/props_farm/chicken_brown.vmt")
+resource.AddFile("materials/models/props_farm/chicken_brown.vtf")
+resource.AddFile("materials/models/props_farm/chicken_white.vmt")
+resource.AddFile("materials/models/props_farm/chicken_white.vtf")
 resource.AddFile("materials/vgui/background.png")
+
+util.PrecacheModel( "models/chicken/chicken.mdl" );
 
 /*
   ________        __ ___________.__
@@ -62,6 +71,7 @@ if ( SERVER ) then
 		ply:SaveToken()
 		ply:SaveTokenTXT()
 	end
+
 end
 
 function Shop( ply )

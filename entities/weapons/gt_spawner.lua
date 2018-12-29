@@ -79,11 +79,12 @@ end
 
 
 function SWEP:spawn_humans ()
-local tr = self.Owner:GetEyeTrace()
+
 
 --We now exit if this function is not running serverside
 if (!SERVER) then return end
 local ply = self:GetOwner()
+local tr = self.Owner:GetEyeTrace()
 if (ply:Health()>10) then
 if (ply:Team() == 1) then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
