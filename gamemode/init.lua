@@ -101,6 +101,8 @@ function GM:PlayerInitialSpawn(ply)
 	end
 	
 	ply:SetNWInt("DeathWait", 2)
+	ply:SetNWInt("AliveChickens", 0)
+	ply:SetNWInt("ChickensBonus", 0)
 	ply:SetNWBool( "CanBuy_Guard", false )
 	ply:SetNWBool( "CanBuy_AmmoBox", false )
 	ply:SetNWBool( "CanBuy_Spike", false )
@@ -143,6 +145,7 @@ if ply:Health() < ply:GetMaxHealth() then
 	end
 	end
 	end)
+	
 end
 
 hook.Add("PlayerCanPickupWeapon","NoNPCPickups", function(ply,wep)
@@ -161,7 +164,6 @@ function GM:Think()
 		end
 
 	end
-
 end
 
 //----------------//
@@ -169,6 +171,9 @@ end
 //---------------//
 
 function GM:OnNPCKilled( victim, killer, weapon )
+
+	local plyvictim = victim:GetOwner()
+
 	if victim:GetName() == "SpecialOne" then
 	killer:AddXp( math.random(600, 1000) , killer )
 	killer:AddToken( math.random(1, 4) )
@@ -178,28 +183,33 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	end
 
 	if(killer:IsPlayer()) then
-	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	killer:TakeXp( math.random(600, 1000) , killer )
-	killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+		if killer:Team() == 1 and victim:GetName() == "TEAM1" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
+			killer:TakeXp( math.random(600, 1000) , killer )
+			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
 	else
-	if killer:Team() == 2 and victim:GetName() == "TEAM2" then
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
-	killer:TakeXp( math.random(600, 1000) , killer )
-	killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+		if killer:Team() == 2 and victim:GetName() == "TEAM2" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
+			killer:TakeXp( math.random(600, 1000) , killer )
+			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
 	end
 
-    if killer:Team() == 1 and victim:GetName() == "TEAM2" then
-	killer:AddXp( math.random(60, 100) ,killer )
-	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
+		if killer:Team() == 1 and victim:GetName() == "TEAM2" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			killer:AddXp( math.random(60, 100) ,killer )
+			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
 	
 	else
-	if killer:Team() == 2 and victim:GetName() == "TEAM1" then
-	killer:AddXp( math.random(60, 100) ,killer )
-	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	end
+		if killer:Team() == 2 and victim:GetName() == "TEAM1" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			killer:AddXp( math.random(60, 100) ,killer )
+			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
+		end
+	
 	end
 end
 	hook.Call("HUDPaint");

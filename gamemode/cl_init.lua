@@ -101,7 +101,7 @@ function RemoveDeadRag( ent )
 			SafeRemoveEntityDelayed(ent, 5)
 		end
 	end
-
+	
 end
 hook.Add("OnEntityCreated", "RemoveDeadRag", RemoveDeadRag)
 

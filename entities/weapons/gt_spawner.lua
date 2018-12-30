@@ -85,24 +85,28 @@ function SWEP:spawn_humans ()
 if (!SERVER) then return end
 local ply = self:GetOwner()
 local tr = self.Owner:GetEyeTrace()
+
 if (ply:Health()>10) then
 if (ply:Team() == 1) then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
+	npc:SetOwner(ply)
 	--npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM1")
 	npc:SetMaterial("models/props_farm/chicken_brown")
-
+	GiveBonus( ply )
 else
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
+	npc:SetOwner(ply)
 	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
@@ -110,9 +114,46 @@ else
 	npc:DrawShadow( false )
 	npc:SetColor(255, 0, 0, 255)
 	npc:SetMaterial("models/props_farm/chicken_white")
-
+	GiveBonus( ply )
 	end
 		end
+
+end
+
+function GiveBonus (ply)
+
+	if (ply:Team() == 2
+			and ( (ply:GetNWInt("AliveChickens") == 25 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 60 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))) 
+			or (ply:GetNWInt("AliveChickens") == 80 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 100) and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))	) 
+			) 
+	then
+	ply:SetNWInt("ChickensBonus", ply:GetNWInt("AliveChickens") )
+		ply:AddToken( 1 )				
+				net.Start( "Notification" )
+				net.WriteString("+ 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
+		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Bonus: ".. ply:GetNWInt("AliveChickens") .. " Alive chickens! +1 Token")
+	else
+	if (ply:Team() == 1
+			and ( (ply:GetNWInt("AliveChickens") == 25 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 60 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))) 
+			or (ply:GetNWInt("AliveChickens") == 80 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 100) and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))	) 
+			) 
+	then
+		ply:AddToken( 1 )				
+				net.Start( "Notification" )
+				net.WriteString("+ 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
+		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Bonus: ".. ply:GetNWInt("AliveChickens") .. " Alive chickens! +1 Token")
+	end
+	
+	end
+
 end
 
 function SWEP:PrimaryAttack()
