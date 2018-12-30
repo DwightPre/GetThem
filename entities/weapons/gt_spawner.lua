@@ -89,6 +89,7 @@ local tr = self.Owner:GetEyeTrace()
 if (ply:Health()>10) then
 if (ply:Team() == 1) then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
