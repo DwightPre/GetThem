@@ -502,6 +502,8 @@ end
 
 elseif CLIENT then
 
+CreateClientConVar( "AutoCloseShop", "0", true, false )
+
 function WeaponSelectorDerma()
 
 local WeaponFrame = vgui.Create("DFrame")
@@ -564,6 +566,14 @@ TokenTab:Dock(  BOTTOM  )
 TokenTab.Paint = function( self, w, h ) WeaponFrame:Close() RunConsoleCommand("tokenshop") end -- draw.RoundedBox( 4, 0, 0, w, h, Color( 240, 99, 0, 175 ) ) end
 sheet:AddSheet( "Token Shop", TokenTab, "icon16/money_yen.png" )
 
+local CloseCheckbox = vgui.Create( "DCheckBoxLabel" ) 
+CloseCheckbox:SetParent( WeaponFrame )
+CloseCheckbox:SetPos( 130, 500 )						
+CloseCheckbox:SetText( "Auto Close" )					
+CloseCheckbox:SetValue( GetConVar( "AutoCloseShop" ) )
+CloseCheckbox:SetConVar("AutoCloseShop" )
+CloseCheckbox:SizeToContents()					
+
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
 PrevPanel:SetPos( 300, 320 )
 PrevPanel:SetSize( 250, 250 )
@@ -606,7 +616,7 @@ Button:SetSize(150, 45)
 Button:SetPos(entity[6], entity[7])
 Button:SetText(entity[1])
 Button:SetFont("ButtonLayout")
-Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) WeaponFrame:Close() end
+Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if CloseCheckbox:GetChecked() then WeaponFrame:Close() end end
 
 Button.OnCursorEntered = function()
   local icon = vgui.Create( "DModelPanel", PrevPanel )

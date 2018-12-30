@@ -79,6 +79,11 @@ function Shop( ply )
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
+function TokenShop( ply )
+	ply:ConCommand("tokenshop")
+end
+hook.Add("ShowTeam", "MyHook", TokenShop)
+
 //---------------//
 // Player Spawn	//
 //---------------//
