@@ -66,6 +66,7 @@ if ( SERVER ) then
 	
 	function GM:PlayerDisconnected( ply )
 		print("Player Disconnect: Tokens and Cash are saved to TXT")
+		PrintMessage( HUD_PRINTTALK, ply:Name().. " has left the server." )
 		ply:SaveXp()
 		ply:SaveXpTXT()
 		ply:SaveToken()
@@ -423,8 +424,20 @@ end
 
 function meta:AddXp( amount ,ply )
 	local current_xp = self:GetXp()
-	self:SetXp( current_xp + amount )
-	self:SendNotification( ply, amount )
+	local TotalEarndxp = ( current_xp + amount )
+	self:SendNotification( ply, amount )	
+		
+	if string.find(string.lower(amount), "-") then
+		self:SetXp( current_xp + amount )
+	else	
+		timer.Create( "counting", 0.09, amount, function()
+		self:SetXp(self:GetXp() +1)
+	end)
+	
+	if current_xp == TotalEarndxp then
+		timer.Stop( "counting")
+	end	
+	end	
 end
 
 function meta:SetXp( amount )
