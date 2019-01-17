@@ -430,7 +430,7 @@ function meta:AddXp( amount ,ply )
 	if string.find(string.lower(amount), "-") then
 		self:SetXp( current_xp + amount )
 	else	
-		timer.Create( "counting", 0.09, amount, function()
+		timer.Create( "counting", 0.04, amount, function()
 		self:SetXp(self:GetXp() +1)
 	end)
 	
@@ -577,3 +577,5 @@ hook.Add("SetupMove", "Double Jump", function(ply, mv)
 		ParticleEffect("manhacksparks", ply:GetPos() + Vector(0, 0, 10), ply:GetAngles(), ply)
 	end*/
 end)
+
+

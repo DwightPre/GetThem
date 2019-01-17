@@ -112,6 +112,7 @@ else
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM2")
+	--npc:SetSolid( SOLID_VPHYSICS  )
 	npc:DrawShadow( false )
 	npc:SetColor(255, 0, 0, 255)
 	npc:SetMaterial("models/props_farm/chicken_white")
@@ -211,9 +212,11 @@ function SWEP:DrawHUD()
 		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
 	end
 	
+	if (self:CalcDestination() != NULL) then
 	self.destinationModel:SetPos(self:CalcDestination())
 	local textPos = self.destinationModel:GetPos():ToScreen()
 	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+	end
 end
 
 function SWEP:OnRemove()
