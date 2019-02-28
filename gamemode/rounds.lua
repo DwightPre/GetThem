@@ -194,7 +194,6 @@ elseif CLIENT then
 local ourMat = Material( "background.png" ) 
 
 hook.Add( "HUDPaint", "RoundHud", function()
-
 	surface.SetDrawColor( 255, 255, 255, 255 )
 	surface.SetMaterial( ourMat	)
 	surface.DrawTexturedRect( ScrW() /2 - 160, 5, 320, 75 )
@@ -219,8 +218,7 @@ hook.Add( "HUDPaint", "RoundHud", function()
 	end
 	end
 
-	draw.WordBox( 12, ScrW() /2 - 48, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))
-
+	draw.WordBox( 12, ScrW() /2 - 48, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))	
 end )
 
 function EndStatsHud()

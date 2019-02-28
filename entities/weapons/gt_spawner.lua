@@ -124,6 +124,9 @@ end
 
 function GiveBonus (ply)
 
+	ply:AddLevelXP(1)
+	ply:CanLevelUp(ply:GetNetworkedInt("level"), ply:GetNetworkedInt("levelxp"))
+	
 	if (ply:Team() == 2
 			and ( (ply:GetNWInt("AliveChickens") == 25 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
 			or (ply:GetNWInt("AliveChickens") == 60 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))) 

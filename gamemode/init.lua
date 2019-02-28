@@ -4,14 +4,18 @@ AddCSLuaFile("cl_shop.lua")
 AddCSLuaFile("cl_tokenshop.lua")
 AddCSLuaFile("cl_score.lua")
 AddCSLuaFile("rounds.lua")
+AddCSLuaFile("currencies.lua")
 AddCSLuaFile("playerInfo.lua")
 AddCSLuaFile("cl_holster.lua")
 
+
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
+include("currencies.lua")
 include("cl_shop.lua")
 include("cl_tokenshop.lua")
 include("cl_score.lua")
+
 
 resource.AddFile("models/chicken/chicken.mdl")
 resource.AddFile("models/chicken/chicken.phy")
@@ -38,10 +42,15 @@ if ( SERVER ) then
 
 	XP_STARTAMOUNT = 0
 	TOKEN_STARTAMOUNT = 0
+	LEVEL_STARTAMOUNT = 1
+	LEVELXP_STARTAMOUNT = 0
+	
 
 	function xFirstSpawn( ply )
 		local experience = ply:GetPData( "xp" )
 		local cash = ply:GetPData( "token" )
+		local level = ply:GetPData( "level" )
+		local levelXP = ply:GetPData( "levelXP" )
 		
 		if experience == nil then
 			ply:SetPData("xp", XP_STARTAMOUNT)
@@ -56,7 +65,23 @@ if ( SERVER ) then
 		else
 		ply:SetToken( cash )
 	end
+	
+	
+	if level == nil then
+		ply:SetPData("level", LEVEL_STARTAMOUNT)
+		ply:SetLevel( LEVEL_STARTAMOUNT )
+		else
+		ply:SetLevel( level )
 	end
+	
+	if levelXP == nil then
+		ply:SetPData("levelXP", LEVELXP_STARTAMOUNT)
+		ply:SetLevelExp( LEVELXP_STARTAMOUNT )
+		else
+		ply:SetLevelExp( levelXP )
+	end
+	end
+	
 	hook.Add( "PlayerInitialSpawn", "xPlayerInitialSpawn", xFirstSpawn )
 
 	function PrintXp( ply )
@@ -71,6 +96,10 @@ if ( SERVER ) then
 		ply:SaveXpTXT()
 		ply:SaveToken()
 		ply:SaveTokenTXT()
+		ply:SaveLevel()
+		ply:SaveLevelTXT()
+		ply:SaveLevelExp()
+		ply:SaveLevelXPTXT()
 	end
 
 end
@@ -109,19 +138,24 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_Spike", false )
 	ply:SetNWBool( "CanBuy_Builder", false )
 	ply:SetNWString("SpawnWith" , "none")
-	
+	--ply:SetNetworkedString("level", 1)
+	--ply:SetNetworkedString("levelXP", 0)
 	ply:SetJumpLevel(0)
 	ply:SetMaxJumpLevel(1)
+	
+	--hook.Call("HUDPaint");
+	
 end
+
 //---------------//
 // Change Team	//
 //---------------//
 function GM:PlayerLoadout(ply)
     if (ply:Team() == 1) then
-        ply:Give("gt_spawner")
+	timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Blue!");
     else
-        ply:Give("gt_spawner")
+    timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
 	end
 	
@@ -146,7 +180,6 @@ if ply:Health() < ply:GetMaxHealth() then
 	end
 	end
 	end)
-	
 end
 
 hook.Add("PlayerCanPickupWeapon","NoNPCPickups", function(ply,wep)
@@ -189,12 +222,14 @@ function GM:OnNPCKilled( victim, killer, weapon )
 			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
 			killer:TakeXp( math.random(600, 1000) , killer )
 			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+			--killer:TakeLevelXP(2)
 	else
 		if killer:Team() == 2 and victim:GetName() == "TEAM2" then
 			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
 			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
 			killer:TakeXp( math.random(600, 1000) , killer )
 			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+			--killer:TakeLevelXP(2)
 	end
 
 		if killer:Team() == 1 and victim:GetName() == "TEAM2" then
@@ -202,13 +237,16 @@ function GM:OnNPCKilled( victim, killer, weapon )
 			killer:AddXp( math.random(60, 100) ,killer )
 			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
-	
+			killer:AddLevelXP(2)
+			killer:CanLevelUp(killer:GetNetworkedInt("level"), killer:GetNetworkedInt("levelxp"))
 	else
 		if killer:Team() == 2 and victim:GetName() == "TEAM1" then
 			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
 			killer:AddXp( math.random(60, 100) ,killer )
 			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
+			killer:AddLevelXP(2)
+			killer:CanLevelUp(killer:GetNetworkedInt("level"), killer:GetNetworkedInt("levelxp"))
 		end
 	
 	end
@@ -223,9 +261,11 @@ function GM:PlayerDeath( victim, inflictor, killer )
 	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
 	killer:AddXp( Amount , killer)
+	killer:AddLevelXP(3)
 	else
 	if killer:Team() == 2 and victim:Team() == 1 then
 	killer:AddXp( Amount , killer )
+	killer:AddLevelXP(3)
 	end
 	end
 	end
@@ -366,6 +406,16 @@ end
 end
 concommand.Add( "spawn_special", SpecialOne )
 
+function ResetXP(ply)
+if ply:IsAdmin() then
+	for k,v in pairs(player.GetAll()) do
+	v:SetNetworkedString("level", 1)
+	v:SetNetworkedString("levelXP", 0)
+	end
+end
+end
+concommand.Add( "reset_xp", ResetXP )
+
 function PhysgunGive(ply)
 if ply:IsAdmin() then
 ply:Give("weapon_physgun")
@@ -400,111 +450,16 @@ barrel:Spawn()
 end
 end
 concommand.Add( "spawn_prop1", spawn_prop1 )
-
-//---------------//
-// 	XP&TOKEN	//
-//--------------//
-local meta = FindMetaTable("Player")
-util.AddNetworkString( "Notification" )
-
-function meta:SendNotification( ply, message )
-	--local ply = Entity( 1 )	
-	if string.find(string.lower(message), "-") then
-		net.Start( "Notification" )
-		net.WriteString("" .. message)
-		net.WriteDouble(2)
-		net.Send( ply)
-	else
-		net.Start( "Notification" )
-		net.WriteString("+ " .. message)
-		net.WriteDouble(2) 
-		net.Send( ply )
-	end
+/*
+function spawn_bot(ply)
+if ply:IsAdmin() then
+bot= player.CreateNextBot( "unique human" )
+bot:SetPos(ply:GetEyeTrace().HitPos)
+bot:Spawn()
 end
-
-function meta:AddXp( amount ,ply )
-	local current_xp = self:GetXp()
-	local TotalEarndxp = ( current_xp + amount )
-	self:SendNotification( ply, amount )	
-		
-	if string.find(string.lower(amount), "-") then
-		self:SetXp( current_xp + amount )
-	else	
-		timer.Create( "counting", 0.04, amount, function()
-		self:SetXp(self:GetXp() +1)
-	end)
-	
-	if current_xp == TotalEarndxp then
-		timer.Stop( "counting")
-	end	
-	end	
 end
-
-function meta:SetXp( amount )
-	self:SetNetworkedInt( "Xp", amount )
-	self:SaveXp()
-end
-
-function meta:SaveXp()
-	local experience = self:GetXp()
-	self:SetPData( "xp", experience )
-end
-
-function meta:SaveXpTXT()
-	file.Write( gmod.GetGamemode().Name .."/Xp/".. string.gsub(self:SteamID(), ":", "_") ..".txt", tostring(self:GetXp()) )
-end
-
-function meta:TakeXp( amount ,ply )
-   self:AddXp( -amount ,ply )
-end
-
-function meta:GetXp()
-	return self:GetNetworkedInt( "Xp" )
-end
---
-function meta:AddToken( amount )
-	local current_token = self:GetToken()
-	self:SetToken( current_token + amount )
-end
-
-function meta:SetToken( amount )
-	self:SetNetworkedInt( "Token", amount )
-	self:SaveToken()
-end
-
-function meta:SaveToken()
-	local cash = self:GetToken()
-	self:SetPData( "token", cash )
-end
-
-function meta:SaveTokenTXT()
-	file.Write( gmod.GetGamemode().Name .."/Token/".. string.gsub(self:SteamID(), ":", "_") ..".txt", tostring(self:GetToken()) )
-end
-
-function meta:TakeToken( amount )
-   self:AddToken( -amount )
-end
-
-function meta:GetToken()
-	return self:GetNetworkedInt( "Token" )
-end
---
-function meta:GetJumpLevel()
-	return self:GetDTInt(23)
-end
-
-function meta:SetJumpLevel(level)
-	self:SetDTInt(23, level)
-end
-
-function meta:GetMaxJumpLevel(level)
-	return self:GetDTInt(24)
-end
-
-function meta:SetMaxJumpLevel(level)
-	self:SetDTInt(24, level)
-end
-
+concommand.Add( "spawn_bot", spawn_bot )
+*/
 
 //---------------//
 // 	PAYDAY		//
@@ -527,6 +482,24 @@ end )
 //---------------//
 // 	DoubleJump 	//
 //---------------//
+local meta = FindMetaTable("Player")
+
+function meta:GetJumpLevel()
+	return self:GetDTInt(23)
+end
+
+function meta:SetJumpLevel(level)
+	self:SetDTInt(23, level)
+end
+
+function meta:GetMaxJumpLevel(level)
+	return self:GetDTInt(24)
+end
+
+function meta:SetMaxJumpLevel(level)
+	self:SetDTInt(24, level)
+end
+
 local function GetMoveVector(mv)
 	local ang = mv:GetAngles()
 	local max_speed = mv:GetMaxSpeed()
@@ -577,5 +550,4 @@ hook.Add("SetupMove", "Double Jump", function(ply, mv)
 		ParticleEffect("manhacksparks", ply:GetPos() + Vector(0, 0, 10), ply:GetAngles(), ply)
 	end*/
 end)
-
 

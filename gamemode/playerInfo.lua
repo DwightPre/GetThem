@@ -113,9 +113,13 @@ local function HUDPaint( )
 	by = by + vars.bar_height + vars.bar_spacing;			
 	local text = string.format( "Killed: %i", LocalPlayer():GetNWInt("killcounter") );	
 	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	
+	
 	by = by + vars.bar_height + vars.bar_spacing;			
-	by = by + vars.bar_height + vars.bar_spacing;			
-	local text = string.format( "Spawned: %i", LocalPlayer():Frags() );	
+	by = by + vars.bar_height + vars.bar_spacing;	
+	local levelPlayer = LocalPlayer():GetNetworkedInt("level")
+	local xpPlayer = LocalPlayer():GetNetworkedInt("levelXP")
+	local nextLevelXp = LocalPlayer():GetTotalLevelXp(levelPlayer)
+	local text = string.format( "Level: %i		[%i/%i]", levelPlayer , xpPlayer , nextLevelXp );	
 	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	
 
 end
@@ -176,4 +180,5 @@ function good_hud:TextSize( text, font )
 	return surface.GetTextSize( text );
 
 end
+
 end

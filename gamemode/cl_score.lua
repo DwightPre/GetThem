@@ -38,11 +38,12 @@ if CLIENT then
 
 	local 	Columns = {}
 			Columns[1] = {name="Name", command=function(self, arg) return tostring(arg:Name()) end}
-			Columns[2] = {name="Team", command=function(self, arg) return tostring(arg:Team()) end}
-			Columns[3] = {name="Spawns", command=function(self, arg) return tostring(arg:Frags()) end}
-			Columns[4] = {name="Kills", command=function(self, arg) return tostring(arg:GetNWInt("killcounter"))end}
-			Columns[5] = {name="Tokens", command=function(self, arg) return tostring(arg:GetToken())end}
-			Columns[6] = {name="Cash", command=function(self, arg) return tostring(arg:GetXp())end}
+			Columns[2] = {name="Level", command=function(self, arg) return tostring(arg:GetNetworkedInt("level")) end}
+			Columns[3] = {name="Team", command=function(self, arg) return tostring(arg:Team()) end}
+			Columns[4] = {name="Spawns", command=function(self, arg) return tostring(arg:Frags()) end}
+			Columns[5] = {name="Kills", command=function(self, arg) return tostring(arg:GetNWInt("killcounter"))end}
+			Columns[6] = {name="Tokens", command=function(self, arg) return tostring(arg:GetToken())end}
+			Columns[7] = {name="Cash", command=function(self, arg) return tostring(arg:GetXp())end}
 
 	surface.CreateFont("ScoreboardTitleFont", {
 		font		= "CloseCaption_Normal",
