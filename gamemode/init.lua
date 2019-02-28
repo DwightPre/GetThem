@@ -101,7 +101,6 @@ if ( SERVER ) then
 		ply:SaveLevelExp()
 		ply:SaveLevelXPTXT()
 	end
-
 end
 
 function Shop( ply )
@@ -142,9 +141,7 @@ function GM:PlayerInitialSpawn(ply)
 	--ply:SetNetworkedString("levelXP", 0)
 	ply:SetJumpLevel(0)
 	ply:SetMaxJumpLevel(1)
-	
 	--hook.Call("HUDPaint");
-	
 end
 
 //---------------//
@@ -166,6 +163,22 @@ function GM:PlayerLoadout(ply)
 	ply:Give("weapon_smg1")
 	ply:GiveAmmo( 70, "smg1", true )
 	end
+	end
+	
+	local PlayerLevel = ply:GetLevel()	
+	if (PlayerLevel >= 6) then
+	ply:SetArmor( 30 )
+	elseif (PlayerLevel >= 5) then
+	ply:SetArmor( 25 )
+	elseif (PlayerLevel >= 4) then
+	ply:SetArmor( 20 )
+	elseif (PlayerLevel >= 3) then
+	ply:SetArmor( 15 )
+	ply:AllowFlashlight( true )
+	elseif (PlayerLevel >= 2) then
+	ply:SetArmor( 10 )
+	elseif (PlayerLevel >= 1) then
+	ply:SetArmor( 5 )
 	end
 end
 	
