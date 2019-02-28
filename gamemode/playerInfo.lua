@@ -111,7 +111,7 @@ local function HUDPaint( )
 	
 	by = by + vars.bar_height + vars.bar_spacing;			
 	by = by + vars.bar_height + vars.bar_spacing;			
-	local text = string.format( "Killed: %i", LocalPlayer():GetNWInt("killcounter") );	
+	local text = string.format( "Spawns: %i			Killed: %i", LocalPlayer():Frags() , LocalPlayer():GetNWInt("killcounter")  );	
 	good_hud:PaintText( cx, cy + by, text, vars.font, colors.text );	
 	
 	by = by + vars.bar_height + vars.bar_spacing;			

@@ -273,10 +273,12 @@ function GM:PlayerDeath( victim, inflictor, killer )
 	Amount = math.random(60, 500)
 	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
+	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	killer:AddXp( Amount , killer)
 	killer:AddLevelXP(3)
 	else
 	if killer:Team() == 2 and victim:Team() == 1 then
+	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
 	killer:AddXp( Amount , killer )
 	killer:AddLevelXP(3)
 	end
