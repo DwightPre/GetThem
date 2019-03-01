@@ -277,6 +277,7 @@ gtObject[21] = {
 	"",
 	"models/player/zombie_classic.mdl",
 	"Model",
+	0
 }
 gtObject[22] = {
 	"Ammo crate",
@@ -289,10 +290,11 @@ gtObject[22] = {
 	"",
 	"models/weapons/w_IRifle.mdl",
 	"Entity",
+	0
 }
 gtObject[23] = {
 	"Guard",
-	200,
+	400,
 	"weaponsTab",
 	0,
 	0,
@@ -301,30 +303,74 @@ gtObject[23] = {
 	"",
 	"models/weapons/w_IRifle.mdl",
 	"Entity",
+	0
 }
 gtObject[24] = {
 	"Health Kit",
 	200,
 	"weaponsTab",
-	0,
-	0,
+	100,
+	50,
 	210,
 	110,
 	"gt_medkit",
-	"models/weapons/w_IRifle.mdl",
+	"models/Items/HealthKit.mdl",
 	"Weapon",
+	0
 }
 gtObject[25] = {
-	"GT_Builder",
+	"GT Builder",
 	200,
 	"weaponsTab",
 	0,
 	0,
-	370,
-	110,
+	50,
+	160,
 	"gt_builder",
 	"models/weapons/w_IRifle.mdl",
 	"Weapon",
+	0
+}
+gtObject[26] = {
+	"Spike",
+	400,
+	"weaponsTab",
+	50,
+	120,
+	370,
+	10,
+	"",
+	"models/props_junk/TrafficCone001a.mdl",
+	"Entity",
+	0
+}
+
+gtObject[27] = {
+	"Magnum.357",
+	1000,
+	"weaponsTab",
+	100,
+	100,
+	370,
+	110,
+	"weapon_357",
+	"models/weapons/w_357.mdl",
+	"Weapon",
+	0
+}
+
+gtObject[28] = {
+	".357 ammo",
+	400,
+	"weaponsTab",
+	0,
+	0,
+	50,
+	110,
+	"",
+	"models/Items/357ammobox.mdl",
+	"Ammo",
+	"357",
 }
 
 //---------------//
@@ -340,48 +386,80 @@ if SERVER then
         local entity = gtObject[key]
 				local current_xp = ply:GetXp()
 				if(current_xp > entity[2]) then
-
 					local Category = entity[10]
-
-					if(Category == "Weapon") then
-          	ply:Give(entity[8])
-          	ply:ChatPrint("You got a " .. entity[1] .. "!")
-          	ply:SetXp( current_xp - entity[2] )
+					
+						if(entity[1] == "GT Builder") then
+						if ply:GetNWBool("CanBuy_Builder") then
+						ply:Give(entity[8])
+						ply:ChatPrint("You got a " .. entity[1] .. "!")
+						ply:TakeXp( entity[2] , ply )
+						else
+						ply:ChatPrint("You need to enable " .. entity[1] .. " in Token Shop!")
+						end
+						end
+						
+					if(Category == "Weapon") and !(entity[1] == "GT Builder") then
+					ply:Give(entity[8])
+					ply:ChatPrint("You got a " .. entity[1] .. "!")
+					ply:TakeXp( entity[2] , ply )
+			
 						if(entity[1] == "Frag") then
 							ply:GiveAmmo(1, "Grenade")
 						end
 
 					elseif(Category == "Ammo") then
 						ply:GiveAmmo(50, entity[11])
-
+						ply:ChatPrint("You got " .. entity[1] .. "!")
+						ply:TakeXp( entity[2] , ply )
 					elseif(Category == "Ability") then
 						local Ability = entity[1]
 						if(Ability == "Flashlight") then
 							ply:AllowFlashlight( true )
+							ply:ChatPrint("You got a " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
 						elseif(Ability == "HP") then
 							ply:SetMaxHealth( 150 )
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
 						elseif(Ability == "Armor") then
 							ply:SetArmor( 100 )
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
 						elseif(Ability == "Sprint") then
-							ply:SetRunSpeed(720)
+							ply:SetRunSpeed(500)
+							ply:ChatPrint("You got " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
 						end
 
 					elseif(Category == "Model") then
 						ply:SetModel(entity[9])
+						ply:ChatPrint("You are a " .. entity[1] .. "!")
+						ply:TakeXp( entity[2] , ply )
 
 					elseif(Category == "Entity") then
-
+						--ply:ChatPrint("You got a " .. entity[1] .. "!")
+						--ply:TakeXp( entity[2] , ply )
+						
 						local GTEntity = entity[1]
 
 						if(GTEntity == "Ammo crate") then
+						if ply:GetNWBool("CanBuy_AmmoBox") then
+							ply:ChatPrint("You got a " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
+						
 							local ammo_crate1 = ents.Create("simple_ammo_crate")
 							ammo_crate1:SetPos(ply:GetEyeTrace().HitPos + Vector(0,0,17))
 							ammo_crate1:SetHealth(200)
 							ammo_crate1:Spawn()
 							ammo_crate1:SetName("ammo_crate1")
-
+							else
+							ply:ChatPrint("You need to enable " .. entity[1] .. " in Token Shop!")
+						end
 						elseif(GTEntity == "Guard") then
-							if(ply:IsAdmin()) then
+						if ply:GetNWBool("CanBuy_Guard") then
+							ply:ChatPrint("You got a " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
+						
 								local i = 0
 								local Guard1 = ents.Create("simple_nextbot")
 								Guard1:SetPos(ply:GetEyeTrace().HitPos)
@@ -391,8 +469,26 @@ if SERVER then
 								Guard1:GiveWeapon("weapon_smg1")
 								i = i + 1
 								Guard1:SetName("Guard %i")
-							end
+								else
+								ply:ChatPrint("You need to enable " .. entity[1] .. " in Token Shop!")
 						end
+						--end
+						elseif(GTEntity == "Spike") then
+						if ply:GetNWBool("CanBuy_Spike") then
+							ply:ChatPrint("You got a " .. entity[1] .. "!")
+							ply:TakeXp( entity[2] , ply )
+							
+							local i = 0
+							local Spike = ents.Create("gt_spike")
+							Spike:SetPos(ply:GetEyeTrace().HitPos + Vector(0,0,17))
+							Spike:SetHealth(500)
+							Spike:Spawn()
+							i = i + 1
+							Spike:SetName("Spike %i")
+							else
+							ply:ChatPrint("You need to enable " .. entity[1] .. " in Token Shop!")
+							end
+						end						
 					end
     	else
 
@@ -405,6 +501,8 @@ end
   concommand.Add("weapon_take", GivePlayerAWeapon)
 
 elseif CLIENT then
+
+CreateClientConVar( "AutoCloseShop", "0", true, false )
 
 function WeaponSelectorDerma()
 
@@ -457,6 +555,24 @@ local EntitiesTab = vgui.Create( "DPanel", sheet )
 EntitiesTab:Dock( FILL )
 EntitiesTab.Paint = function( self, w, h ) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 sheet:AddSheet( "Entities", EntitiesTab, "icon16/ruby.png" )
+/*
+local spacer = vgui.Create( "DLabel", sheet )
+spacer:SetPos( 0, 0 )
+spacer:SetText( "" )
+sheet:AddSheet( "__________", spacer )
+*/
+local TokenTab = vgui.Create( "DPanel", sheet )
+TokenTab:Dock(  BOTTOM  )
+TokenTab.Paint = function( self, w, h ) WeaponFrame:Close() RunConsoleCommand("tokenshop") end -- draw.RoundedBox( 4, 0, 0, w, h, Color( 240, 99, 0, 175 ) ) end
+sheet:AddSheet( "Token Shop", TokenTab, "icon16/money_yen.png" )
+
+local CloseCheckbox = vgui.Create( "DCheckBoxLabel" ) 
+CloseCheckbox:SetParent( WeaponFrame )
+CloseCheckbox:SetPos( 130, 500 )						
+CloseCheckbox:SetText( "Auto Close" )					
+CloseCheckbox:SetValue( GetConVar( "AutoCloseShop" ) )
+CloseCheckbox:SetConVar("AutoCloseShop" )
+CloseCheckbox:SizeToContents()					
 
 local PrevPanel = vgui.Create( "DPanel" , WeaponFrame )
 PrevPanel:SetPos( 300, 320 )
@@ -500,7 +616,7 @@ Button:SetSize(150, 45)
 Button:SetPos(entity[6], entity[7])
 Button:SetText(entity[1])
 Button:SetFont("ButtonLayout")
-Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) WeaponFrame:Close() end
+Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if CloseCheckbox:GetChecked() then WeaponFrame:Close() end end
 
 Button.OnCursorEntered = function()
   local icon = vgui.Create( "DModelPanel", PrevPanel )

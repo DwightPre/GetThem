@@ -2,9 +2,9 @@
 {
 	"base"		"base"
 	"title"		"GetThem"
-	"maps"		"a_first_getthem_gamemode_map_V1.bsp"//Gamemode map prefix
+	"maps"		"a_first_getthem_gamemode_map.bsp"//Gamemode map prefix
 	"menusystem"	"1"
-	"workshopid"	""
+	"workshopid"	"1595223421"
 	"settings"
 {
 		1
@@ -13,7 +13,7 @@
 			"text"		"Round Time"
 			"help"		"The maxiumum number of seconds before a map clean"
 			"type"		"Numeric"
-			"default"	"304"
+			"default"	"800"
 		}
 
 
@@ -23,11 +23,11 @@
 			"text"		"Round Break"
 			"help"		"Number of seconds to break round"
 			"type"		"Numeric"
-			"default"	"60"
+			"default"	"40"
 		}
 		3
 		{
-			"name"		"round.Break"
+			"name"		"round.Break2"
 			"text"		"Round Blub"
 			"help"		"Number of seconds to break round"
 			"type"		"Numeric"

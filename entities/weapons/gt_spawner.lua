@@ -79,37 +79,89 @@ end
 
 
 function SWEP:spawn_humans ()
-local tr = self.Owner:GetEyeTrace()
+
 
 --We now exit if this function is not running serverside
 if (!SERVER) then return end
 local ply = self:GetOwner()
+local tr = self.Owner:GetEyeTrace()
+
 if (ply:Health()>10) then
 if (ply:Team() == 1) then
 	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
-	npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetOwner(ply)
+	--npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM1")
-
+	npc:SetMaterial("models/props_farm/chicken_brown")
+	GiveBonus( ply )
 else
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
-	npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetOwner(ply)
+	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
 	npc:Spawn()
 	npc:SetName("TEAM2")
+	--npc:SetSolid( SOLID_VPHYSICS  )
 	npc:DrawShadow( false )
 	npc:SetColor(255, 0, 0, 255)
-
+	npc:SetMaterial("models/props_farm/chicken_white")
+	GiveBonus( ply )
 	end
 		end
+
 end
+
+function GiveBonus (ply)
+
+	ply:AddLevelXP(1)
+	ply:CanLevelUp(ply:GetNetworkedInt("level"), ply:GetNetworkedInt("levelxp"))
+	
+	if (ply:Team() == 2
+			and ( (ply:GetNWInt("AliveChickens") == 25 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 60 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))) 
+			or (ply:GetNWInt("AliveChickens") == 80 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 100) and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))	) 
+			) 
+	then
+		ply:SetNWInt("ChickensBonus", ply:GetNWInt("AliveChickens") )
+		ply:AddToken( 1 )				
+				net.Start( "Notification" )
+				net.WriteString("+ 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
+		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Bonus: ".. ply:GetNWInt("AliveChickens") .. " Alive chickens! +1 Token")
+	else
+	if (ply:Team() == 1
+			and ( (ply:GetNWInt("AliveChickens") == 25 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 60 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))) 
+			or (ply:GetNWInt("AliveChickens") == 80 and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus")) ) 
+			or (ply:GetNWInt("AliveChickens") == 100) and (ply:GetNWInt("AliveChickens") != ply:GetNWInt("ChickensBonus"))	) 
+			) 
+	then
+		ply:SetNWInt("ChickensBonus", ply:GetNWInt("AliveChickens") )
+		ply:AddToken( 1 )				
+				net.Start( "Notification" )
+				net.WriteString("+ 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
+		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Bonus: ".. ply:GetNWInt("AliveChickens") .. " Alive chickens! +1 Token")
+	end
+	
+	end
+
+end
+
 function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire(CurTime() + self.Delay)
@@ -147,7 +199,63 @@ function SWEP:PrimaryAttack()
 
 
 end
---Throw a wooden chair on secondary attack
+
 function SWEP:SecondaryAttack()
 self:spawn_humans()
+end
+
+function SWEP:DrawHUD()
+	if not self.destinationModel then
+		self.destinationModel = ClientsideModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetMaterial("models/props_farm/chicken_white")
+		self.destinationModel:SetupBones()
+
+		self.destinationModel:SetColor(Color( 70, 70, 70, 200))
+		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
+	end
+	
+	if (self:CalcDestination() != NULL) then
+	self.destinationModel:SetPos(self:CalcDestination())
+	local textPos = self.destinationModel:GetPos():ToScreen()
+	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+	end
+end
+
+function SWEP:OnRemove()
+	if self.destinationModel then
+		SafeRemoveEntity(self.destinationModel)
+	end
+end
+
+function SWEP:CalcDestination()
+	local forwardWithoutZ = self.Owner:GetForward()
+	forwardWithoutZ.z = 0
+	local eyeTrace = util.TraceLine( {
+		start = self.Owner:GetPos() + Vector(0, 0, 110),
+		endpos = self.Owner:GetPos() + Vector(0, 0, 110) +  forwardWithoutZ * 1500
+	} )
+
+	local tpDistance = 1000 -- max dis.
+
+	if eyeTrace.Hit then
+	tpDistance = math.Clamp((eyeTrace.HitPos - self.Owner:GetPos()):Length(), 110, 1500) + 1200
+	end
+
+	local aimVector = self.Owner:GetAimVector()
+
+	local trace = util.TraceLine( {
+		start = self.Owner:GetPos() + Vector(0, 0, 110),
+		endpos = self.Owner:GetPos() + Vector(0, 0, 110) + aimVector * tpDistance
+	} )
+
+	--No spawn in wall
+	local secondTraceStart = trace.HitPos - (trace.Normal * 21) 
+
+	local secondTrace = util.TraceLine( {
+		start = secondTraceStart,
+		endpos = secondTraceStart - Vector(0, 0, 1000)
+	} )
+
+	return secondTrace.HitPos
 end

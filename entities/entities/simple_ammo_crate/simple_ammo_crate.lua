@@ -19,7 +19,19 @@ function ENT:Use(activator, caller)
 	local ammo = self.Entity:Health()
 	
 	if CurTime() < delay then return end
+	
+	if activator:GetActiveWeapon():GetClass() == ("weapon_frag") then
+	caller:GiveAmmo(3,activator:GetActiveWeapon():GetPrimaryAmmoType())
+	else 
+
+	if activator:GetActiveWeapon():GetClass() == ("weapon_crossbow") then
+	caller:GiveAmmo(5,activator:GetActiveWeapon():GetPrimaryAmmoType())
+	else
+	
 	caller:GiveAmmo(30,activator:GetActiveWeapon():GetPrimaryAmmoType())
+	end
+	end
+	
 	delay = CurTime() + 0.7
 	
 	if ammo > 1 then
