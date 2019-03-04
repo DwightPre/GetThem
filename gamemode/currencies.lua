@@ -115,7 +115,10 @@ end
 
 function meta:LevelUp( amount )
 	self:SetNetworkedInt( "level", amount + 1 )
-	self:PrintMessage( HUD_PRINTTALK, "[GetThem]Level up! ")
+	local bonus_amount = 250*amount
+	self:PrintMessage( HUD_PRINTTALK, "[GetThem]Level up! \n +1 Token and " ..bonus_amount .. "$! " )
+	self:AddXp(bonus_amount ,self)
+	self:AddToken( 1 )
 	self:SaveLevel()
 end
 
