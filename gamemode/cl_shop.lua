@@ -340,6 +340,7 @@ gtObject[26] = {
 	370,
 	10,
 	"",
+	
 	"models/props_junk/TrafficCone001a.mdl",
 	"Entity",
 	0

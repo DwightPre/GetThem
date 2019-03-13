@@ -1,7 +1,6 @@
 AddCSLuaFile()
 gtObject2 = {}
 
-
 gtObject2[1] = {
 	"++ HP", 			--Name
 	2, 					--Price
@@ -273,9 +272,9 @@ end
 elseif (SERVER) then
 
 function GivePlayerASpecial(ply, cmd, command)
-
-    for key, value in pairs(gtObject2) do
-
+    
+	for key, value in pairs(gtObject2) do
+		
       if(command[1] == gtObject2[key][1]) then
         local entity = gtObject2[key]
 				local current_token = ply:GetToken()

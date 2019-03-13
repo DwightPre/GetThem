@@ -7,7 +7,7 @@ function ENT:Initialize()
     self:SetModel( "models/chicken/chicken.mdl" )
 	self:SetSkin( math.random(0, 1) );
     self:SetMaterial("models/props_farm/chicken_brown")
-  --  self:SetSolid( SOLID_VPHYSICS  )
+    --self:SetSolid( SOLID_VPHYSICS  )
     self:SetHealth(100)    
 end
 
@@ -33,6 +33,11 @@ function ENT:OnKilled( dmg )
     hook.Call( "OnNPCKilled", GAMEMODE, self, dmg:GetAttacker(), dmg:GetInflictor() )
     self:Remove()
 end
+
+function ENT:OnTakeDamage(dmginfo)
+	self:SetHealth(self:Health() - dmginfo:GetDamage())
+end
+
 
 list.Set( "NPC", "simple_human",
 {    Name = "Simple Human",

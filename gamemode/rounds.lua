@@ -156,7 +156,7 @@ end
 		v:Spawn()
 		v:SetFrags( 0 )
 		v:SetNWInt("AliveChickens", 0)
-	    v:SetNWInt("ChickensBonus", 0)
+    v:SetNWInt("ChickensBonus", 0)
 		v:SetNWInt("killcounter", 0)
 		v:ConCommand("CloseEndStats")
 	end
@@ -311,6 +311,7 @@ function EndStatsHud()
 	function CloseEndStatsHud()
 	timer.Create( "CloseStats", 15, 1, function() 
 	if show == true then Frame:Close() end 
+	RunConsoleCommand( "MiniGame" ) 
 	end)
 	end
 	concommand.Add("CloseEndStats", CloseEndStatsHud)

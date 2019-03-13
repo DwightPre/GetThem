@@ -1,4 +1,3 @@
-
 GM.Name 	= "GetThem"
 GM.Author 	= "Dwight M."
 GM.Email 	= ""

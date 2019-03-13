@@ -7,6 +7,8 @@ AddCSLuaFile("rounds.lua")
 AddCSLuaFile("currencies.lua")
 AddCSLuaFile("playerInfo.lua")
 AddCSLuaFile("cl_holster.lua")
+AddCSLuaFile("minigame.lua")
+AddCSLuaFile("tutorialframe.lua")
 
 
 include( "shared.lua" )
@@ -15,6 +17,9 @@ include("currencies.lua")
 include("cl_shop.lua")
 include("cl_tokenshop.lua")
 include("cl_score.lua")
+include("minigame.lua")
+include("minigame.lua")
+include("tutorialframe.lua")
 
 
 resource.AddFile("models/chicken/chicken.mdl")
@@ -28,6 +33,8 @@ resource.AddFile("materials/models/props_farm/chicken_white.vtf")
 resource.AddFile("materials/vgui/background.png")
 
 util.PrecacheModel( "models/chicken/chicken.mdl" );
+util.AddNetworkString( "PlayMiniGame" )
+util.AddNetworkString( "ShowTutorial" )
 
 /*
   ________        __ ___________.__
@@ -143,6 +150,9 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetJumpLevel(0)
 	ply:SetMaxJumpLevel(1)
 	--hook.Call("HUDPaint");
+	
+	net.Start("ShowTutorial")
+	net.Send(ply)
 end
 
 //---------------//
@@ -169,10 +179,13 @@ function GM:PlayerLoadout(ply)
 	local PlayerLevel = ply:GetLevel()	
 	if (PlayerLevel >= 6) then
 	ply:SetArmor( 30 )
+	ply:AllowFlashlight( true )
 	elseif (PlayerLevel >= 5) then
 	ply:SetArmor( 25 )
+	ply:AllowFlashlight( true )
 	elseif (PlayerLevel >= 4) then
 	ply:SetArmor( 20 )
+	ply:AllowFlashlight( true )
 	elseif (PlayerLevel >= 3) then
 	ply:SetArmor( 15 )
 	ply:AllowFlashlight( true )
@@ -181,6 +194,7 @@ function GM:PlayerLoadout(ply)
 	elseif (PlayerLevel >= 1) then
 	ply:SetArmor( 5 )
 	end
+
 end
 	
 //---------------//
@@ -288,7 +302,7 @@ function GM:PlayerDeath( victim, inflictor, killer )
 end
 
 function GM:DoPlayerDeath (ply , attacker, damage)
-	MaxWaitSeconds = 15
+	MaxWaitSeconds = 5
 	local wep = ply:GetActiveWeapon()
 	if (wep:IsValid()) then ply:DropWeapon(wep) end	
 	ply:SetNWInt("DeathWait", ply:GetNWInt("DeathWait")+1)
@@ -347,7 +361,7 @@ end )
 //---------------//
 function ISaid( ply, text, team )
 
-	local SpecialOne = #ents.FindByName( "SpecialOne" )
+	local SpecialOne = #ents.FindByClass( "npc_pigeon" )
 
     if (string.sub(text, 1, 2) == "//") then
 	for k, v in ipairs( player.GetAll() ) do
@@ -362,12 +376,9 @@ hook.Add( "PlayerSay", "ISaid", ISaid );
 // 	ADMIN		//
 //---------------//
 
-function NoSuicide( ply )
-if !ply:IsAdmin() then
-	return false
+function GM:CanPlayerSuicide( ply )
+	return ply:IsSuperAdmin()
 end
-end
-hook.Add( "CanPlayerSuicide", "Suicide", NoSuicide )
 
 function change_team( ply )
 if (ply:Team() == 1) then
@@ -387,30 +398,13 @@ function GM:PlayerNoClip(ply, on)
 	end
 	return false
 end
-
-/*
-function RestartMap(ply)
---if ply:IsAdmin() then
-game.CleanUpMap()
-SetGlobalInt("NPCteam1", 0)
-SetGlobalInt("NPCteam2", 0)
-
-	for k,v in pairs(player.GetAll()) do
-		v:Spawn()
-		--v:PrintMessage( HUD_PRINTTALK, "[GetThem]The map has been cleaned!");
-	end
---end
-end
-concommand.Add( "clean_map", RestartMap )
-*/
-
 function SpecialOne(ply)
 if ply:IsAdmin() then
 	for k,v in pairs(player.GetAll()) do
 		v:PrintMessage( HUD_PRINTTALK, "[GetThem]A special NPC has spawned!");
 	end
 	local npc = ents.Create("npc_pigeon")
-	npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
+	--npc:AddEntityRelationship(player.GetByID(1), D_NU, 99 )
 	npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetHealth(99)
 	npc:Spawn()
@@ -561,9 +555,4 @@ hook.Add("SetupMove", "Double Jump", function(ply, mv)
 
 	mv:SetVelocity(vel)
 	ply:DoCustomAnimEvent(PLAYERANIMEVENT_JUMP , -1)
-
-	/*for i = 1, 4 do
-		ParticleEffect("manhacksparks", ply:GetPos() + Vector(0, 0, 10), ply:GetAngles(), ply)
-	end*/
 end)
-

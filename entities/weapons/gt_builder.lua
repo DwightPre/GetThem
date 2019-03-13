@@ -12,7 +12,7 @@ end
 if CLIENT then
 
 SWEP.PrintName				    = "GT Builder"
---SWEP.Instructions 				= "Mouse 2 to place prop"
+--SWEP.Instructions 				= "Mouse 2 - place prop, E - remove prop"
 
 SWEP.Slot = 5
 SWEP.SlotPos = 1
@@ -101,7 +101,7 @@ self:GetOwner():SetNWString("BlockModel" , "models/hunter/blocks/cube075x075x075
 end
 
 function SWEP:PrimaryAttack()
-self:GivePrimaryAmmo( 3 )
+--self:GivePrimaryAmmo( 3 )
 end
 
 /*
@@ -117,6 +117,7 @@ RunConsoleCommand("gt_propmenu");
 end
 
 function SWEP:Think()
+if self:Clip1() == 0 then self:GivePrimaryAmmo( 3 ) end 
 end
 
 if (SERVER) then
@@ -296,7 +297,7 @@ function openPropMenu( ply, cmd, args )
 
 	if not IsValid(frame) then	
     frame = vgui.Create( "DFrame" )
-	frame:SetSize(400, 300)
+	frame:SetSize(270, 300)
 	frame:Center()
 	frame:SetTitle("Prop Menu")
 	frame:SetDraggable(true)
@@ -306,52 +307,52 @@ function openPropMenu( ply, cmd, args )
 	frame.Paint = function(self, w, h) draw.RoundedBox( 4, 0, 0, w, h, Color( 0, 0, 0, 175 ) ) end
 	
 	
-	
-	//create Panel
-	prop_1 = vgui.Create("DButton", frame)
+	local prop_1 = vgui.Create( "SpawnIcon" , frame ) 
 	local border = 5
-	prop_1:SetParent( frame )  
-	prop_1:SetPos( 60+border, 60+border )
-	prop_1:SetSize(100,50)
-	prop_1:PerformLayout() 
-	prop_1:SetText("Prop1")
+	prop_1:SetParent( frame ) 
+	prop_1:SetPos( 20+border, 40+border )
+	prop_1:SetSize(110,110)
+	prop_1:SetModel( "models/hunter/blocks/cube075x075x075.mdl", 0 )
+	prop_1:Refresh() 
 	prop_1.DoClick = function()
 	frame:Close()
 	RunConsoleCommand("SetBlockModel", "models/hunter/blocks/cube075x075x075.mdl")
 	end
 	
-	prop_2 = vgui.Create("DButton", frame)
+	prop_2 = vgui.Create( "SpawnIcon" , frame )
 	prop_2:SetParent( frame )  
-	prop_2:SetPos( 180+border, 60+border )
-	prop_2:SetSize(100,50)
-	prop_2:PerformLayout() 
-	prop_2:SetText("Prop2")
+	prop_2:SetPos( 140+border, 40+border )
+	prop_2:SetSize(110,110)
+	prop_2:SetModel( "models/Items/item_item_crate.mdl", 0 )
+	prop_2:Refresh() 
 	prop_2.DoClick = function()
 	frame:Close()
 	RunConsoleCommand("SetBlockModel", "models/Items/item_item_crate.mdl")
 	end
 	
-	prop_3 = vgui.Create("DButton", frame)
+	
+	prop_3 = vgui.Create( "SpawnIcon" , frame )
 	prop_3:SetParent( frame )  
-	prop_3:SetPos( 60+border, 180+border )
-	prop_3:SetSize(100,50)
-	prop_3:PerformLayout() 
-	prop_3:SetText("Prop3")
+	prop_3:SetPos( 20+border, 170+border )
+	prop_3:SetSize(110,110)
+	prop_3:SetModel( "models/props_junk/wood_crate001a.mdl", 0 )
+	prop_3:Refresh() 
 	prop_3.DoClick = function()
 	frame:Close()
 	RunConsoleCommand("SetBlockModel", "models/props_junk/wood_crate001a.mdl")
 	end
 	
-	prop_4 = vgui.Create("DButton", frame)
+	prop_4 = vgui.Create( "SpawnIcon" , frame )
 	prop_4:SetParent( frame )  
-	prop_4:SetPos( 180+border, 180+border )
-	prop_4:SetSize(100,50)
-	prop_4:PerformLayout() 
-	prop_4:SetText("Prop4")
+	prop_4:SetPos( 140+border, 170+border )
+	prop_4:SetSize(110,110)
+	prop_4:SetModel( "models/props_borealis/bluebarrel001.mdl", 0 )
+	prop_4:Refresh() 
 	prop_4.DoClick = function()
 	frame:Close()
 	RunConsoleCommand("SetBlockModel", "models/props_borealis/bluebarrel001.mdl")
 	end
+	
 end
 	end
 concommand.Add("gt_propmenu", openPropMenu )

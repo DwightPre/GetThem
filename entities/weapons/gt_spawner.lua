@@ -77,51 +77,6 @@ end
 function SWEP:Think()
 end
 
-
-function SWEP:spawn_humans ()
-
-
---We now exit if this function is not running serverside
-if (!SERVER) then return end
-local ply = self:GetOwner()
-local tr = self.Owner:GetEyeTrace()
-
-if (ply:Health()>10) then
-if (ply:Team() == 1) then
-	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
-	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
-	ply:SetHealth( ply:Health() - 10 )
-	ply:AddFrags( 1 )
-	local npc = ents.Create("simple_human")
-	npc:SetOwner(ply)
-	--npc:SetPos(ply:GetEyeTrace().HitPos)
-	npc:SetPos(self:CalcDestination())
-	npc:SetHealth(99)
-	npc:Spawn()
-	npc:SetName("TEAM1")
-	npc:SetMaterial("models/props_farm/chicken_brown")
-	GiveBonus( ply )
-else
-	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
-	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
-	ply:SetHealth( ply:Health() - 10 )
-	ply:AddFrags( 1 )
-	local npc = ents.Create("simple_human")
-	npc:SetOwner(ply)
-	npc:SetPos(self:CalcDestination())
-	npc:SetHealth(99)
-	npc:Spawn()
-	npc:SetName("TEAM2")
-	--npc:SetSolid( SOLID_VPHYSICS  )
-	npc:DrawShadow( false )
-	npc:SetColor(255, 0, 0, 255)
-	npc:SetMaterial("models/props_farm/chicken_white")
-	GiveBonus( ply )
-	end
-		end
-
-end
-
 function GiveBonus (ply)
 
 	ply:AddLevelXP(1)
@@ -200,28 +155,6 @@ function SWEP:PrimaryAttack()
 
 end
 
-function SWEP:SecondaryAttack()
-self:spawn_humans()
-end
-
-function SWEP:DrawHUD()
-	if not self.destinationModel then
-		self.destinationModel = ClientsideModel("models/chicken/chicken.mdl")
-		self.destinationModel:SetModel("models/chicken/chicken.mdl")
-		self.destinationModel:SetMaterial("models/props_farm/chicken_white")
-		self.destinationModel:SetupBones()
-
-		self.destinationModel:SetColor(Color( 70, 70, 70, 200))
-		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
-	end
-	
-	if (self:CalcDestination() != NULL) then
-	self.destinationModel:SetPos(self:CalcDestination())
-	local textPos = self.destinationModel:GetPos():ToScreen()
-	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-	end
-end
-
 function SWEP:OnRemove()
 	if self.destinationModel then
 		SafeRemoveEntity(self.destinationModel)
@@ -258,4 +191,74 @@ function SWEP:CalcDestination()
 	} )
 
 	return secondTrace.HitPos
+end
+
+function SWEP:SecondaryAttack()
+self:spawn_humans()
+end
+
+function SWEP:spawn_humans ()
+
+--We now exit if this function is not running serverside
+if (!SERVER) then return end
+local ply = self:GetOwner()
+local tr = self.Owner:GetEyeTrace()
+local ent = ply:GetEyeTrace().Entity
+
+if (ply:Health()>10) then
+if (ply:Team() == 1) then
+	SetGlobalInt("NPCteam1", GetGlobalInt("NPCteam1") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
+	ply:SetHealth( ply:Health() - 10 )
+	ply:AddFrags( 1 )
+	local npc = ents.Create("simple_human")
+	--ent:SetOwner(ply)
+	--npc:SetPos(ply:GetEyeTrace().HitPos)
+	npc:SetPos(self:CalcDestination())
+	npc:SetHealth(99)
+	ent:SetSolid( SOLID_VPHYSICS  )
+	npc:SetName("TEAM1")
+	npc:DrawShadow( false )
+	npc:SetColor(Color( 0, 51, 255, 255 ))
+	npc:SetMaterial("models/props_farm/chicken_white")
+	--npc:SetMaterial("models/props_farm/chicken_brown")
+	npc:Spawn()
+	GiveBonus( ply )
+else
+	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
+	ply:SetNWInt("AliveChickens" , ply:GetNWInt("AliveChickens") + 1 )
+	ply:SetHealth( ply:Health() - 10 )
+	ply:AddFrags( 1 )
+	local npc2 = ents.Create("simple_human")
+	--ent:SetOwner(ply)
+	npc2:SetPos(self:CalcDestination())
+	npc2:SetHealth(99)
+	npc2:SetName("TEAM2")
+	ent:SetSolid( SOLID_VPHYSICS  )
+	npc2:DrawShadow( false )
+	npc2:SetColor(Color( 255, 0, 0, 255 ))
+	npc2:SetMaterial("models/props_farm/chicken_white")
+	npc2:Spawn()
+	GiveBonus( ply )
+	end
+		end
+
+end
+
+function SWEP:DrawHUD()
+	if not self.destinationModel then
+		self.destinationModel = ClientsideModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetModel("models/chicken/chicken.mdl")
+		self.destinationModel:SetMaterial("models/props_farm/chicken_white")
+		self.destinationModel:SetupBones()
+
+		self.destinationModel:SetColor(Color( 70, 70, 70, 200))
+		self.destinationModel:SetRenderMode(RENDERMODE_TRANSALPHA)
+	end
+	
+	if (self:CalcDestination() != NULL) then
+	self.destinationModel:SetPos(self:CalcDestination())
+	local textPos = self.destinationModel:GetPos():ToScreen()
+	draw.DrawText( "7", "Marlett", textPos.x, textPos.y, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+	end
 end

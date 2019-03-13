@@ -5,6 +5,8 @@ include("cl_tokenshop.lua")
 include("playerInfo.lua")
 include("rounds.lua")
 include("cl_holster.lua")
+include("minigame.lua")
+include("Tutorialframe.lua")
 
 LevelCurve = {}
 LevelCurve[0] = 0
@@ -213,7 +215,6 @@ local function RecvMyUmsg3( data3 )
 
 --print( "roundTimer" ..data3:ReadString() );
 --put here because [ Warning: Unhandled usermessage 'RoundTimer' ]
-
 
 end
 usermessage.Hook( "RoundTimer", RecvMyUmsg3 );
