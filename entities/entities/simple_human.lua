@@ -34,11 +34,6 @@ function ENT:OnKilled( dmg )
     self:Remove()
 end
 
-function ENT:OnTakeDamage(dmginfo)
-	self:SetHealth(self:Health() - dmginfo:GetDamage())
-end
-
-
 list.Set( "NPC", "simple_human",
 {    Name = "Simple Human",
      Class = "simple_human",

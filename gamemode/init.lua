@@ -234,7 +234,8 @@ end
 
 function GM:OnNPCKilled( victim, killer, weapon )
 
-	local plyvictim = victim:GetOwner()
+	-- local plyvictim = victim:GetOwner() 
+	local plyvictim = victim:GetCreator()
 
 	if victim:GetName() == "SpecialOne" then
 	killer:AddXp( math.random(600, 1000) , killer )

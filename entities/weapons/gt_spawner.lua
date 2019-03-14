@@ -212,7 +212,6 @@ if (ply:Team() == 1) then
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc = ents.Create("simple_human")
-	--ent:SetOwner(ply)
 	--npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
@@ -223,6 +222,8 @@ if (ply:Team() == 1) then
 	npc:SetMaterial("models/props_farm/chicken_white")
 	--npc:SetMaterial("models/props_farm/chicken_brown")
 	npc:Spawn()
+	--npc:SetOwner(self.Owner) https://wiki.garrysmod.com/page/Entity/SetOwner
+	npc:SetCreator( ply ) 
 	GiveBonus( ply )
 else
 	SetGlobalInt("NPCteam2", GetGlobalInt("NPCteam2") + 1 )
@@ -230,7 +231,6 @@ else
 	ply:SetHealth( ply:Health() - 10 )
 	ply:AddFrags( 1 )
 	local npc2 = ents.Create("simple_human")
-	--ent:SetOwner(ply)
 	npc2:SetPos(self:CalcDestination())
 	npc2:SetHealth(99)
 	npc2:SetName("TEAM2")
@@ -239,6 +239,7 @@ else
 	npc2:SetColor(Color( 255, 0, 0, 255 ))
 	npc2:SetMaterial("models/props_farm/chicken_white")
 	npc2:Spawn()
+	npc2:SetCreator( ply ) 
 	GiveBonus( ply )
 	end
 		end
