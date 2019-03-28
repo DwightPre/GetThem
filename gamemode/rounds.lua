@@ -219,6 +219,7 @@ hook.Add( "HUDPaint", "RoundHud", function()
 	end
 
 	draw.WordBox( 12, ScrW() /2 - 48, ScrH() * 0.009, "".. GetGlobalInt("roundTimer") ,"DermaLarge",Color(0,0,0,0),Color(255,255,255,255))	
+
 end )
 
 function EndStatsHud()

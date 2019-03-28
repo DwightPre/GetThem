@@ -203,7 +203,7 @@ function SWEP:spawn_humans ()
 if (!SERVER) then return end
 local ply = self:GetOwner()
 local tr = self.Owner:GetEyeTrace()
-local ent = ply:GetEyeTrace().Entity
+--local ent = ply:GetEyeTrace().Entity
 
 if (ply:Health()>10) then
 if (ply:Team() == 1) then
@@ -215,7 +215,7 @@ if (ply:Team() == 1) then
 	--npc:SetPos(ply:GetEyeTrace().HitPos)
 	npc:SetPos(self:CalcDestination())
 	npc:SetHealth(99)
-	ent:SetSolid( SOLID_VPHYSICS  )
+	--ent:SetSolid( SOLID_VPHYSICS  )
 	npc:SetName("TEAM1")
 	npc:DrawShadow( false )
 	npc:SetColor(Color( 0, 51, 255, 255 ))
@@ -234,7 +234,7 @@ else
 	npc2:SetPos(self:CalcDestination())
 	npc2:SetHealth(99)
 	npc2:SetName("TEAM2")
-	ent:SetSolid( SOLID_VPHYSICS  )
+	--ent:SetSolid( SOLID_VPHYSICS  )
 	npc2:DrawShadow( false )
 	npc2:SetColor(Color( 255, 0, 0, 255 ))
 	npc2:SetMaterial("models/props_farm/chicken_white")

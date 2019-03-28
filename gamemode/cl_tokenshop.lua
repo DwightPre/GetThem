@@ -121,6 +121,21 @@ gtObject2[14] = {
 	60,					
 	"You now spawn with a SMG!"	
 }
+gtObject2[15] = {
+	"Medic Chicken", 			
+	2, 					
+	"Entities",			
+	210,					
+	60,					
+	"You now got a Medic Chicken following you!"	
+}gtObject2[16] = {
+	"Triple Jump", 			
+	1, 					
+	"Loadout",			
+	370,					
+	60,					
+	"You now got Triple Jump!"	
+}
 
 //---------------//
 // Token	Shop!// 
@@ -288,7 +303,8 @@ function GivePlayerASpecial(ply, cmd, command)
 				if(Special == "+1 Token") and current_money > entity[2] then 
 				ply:TakeXp ( Price , ply )				
 				timer.Simple( 3, function()
-				ply:AddToken( 1 )				
+				ply:AddToken( 1 )	
+				ply:ChatPrint(Message)	
 				net.Start( "Notification" )
 				net.WriteString("+ 1 Token")
 				net.WriteDouble(4)
@@ -327,6 +343,10 @@ function GivePlayerASpecial(ply, cmd, command)
 
 				if(Special == "Knife") then
 				ply:Give("gt_knife")
+				end		
+				
+				if(Special == "Triple Jump") then
+				ply:SetMaxJumpLevel(2)
 				end		
 
 				if (Special == "+1000 $") then
@@ -404,6 +424,29 @@ function GivePlayerASpecial(ply, cmd, command)
 				else
 				ply:AddToken(Price)
 				ply:ChatPrint("Already Bought!")
+				end
+				end
+				
+				if (Special == "Medic Chicken") then
+				if (ply:GetNWBool( "Bought_MedChicken") == false) then
+				ply:SetNWBool( "Bought_MedChicken", true )
+				local MedChicken = ents.Create("med_chicken")
+				MedChicken:SetPos(ply:GetEyeTrace().HitPos)
+				MedChicken:SetNWEntity("MedicChickenOwner", ply)
+				local model = ents.Create("prop_physics")	
+				model:SetModel("models/weapons/w_medkit.mdl")
+				model:SetModelScale( model:GetModelScale() / 1.5, 1 )
+				model:FollowBone( MedChicken, 0 ) 
+				model:SetPos( MedChicken:GetPos()+ Vector(0, 0, 15))
+				model:SetOwner(MedChicken)
+				model:SetAngles(MedChicken:GetAngles()+ Vector(0, 90, 0):Angle())
+				model:SetParent(MedChicken)
+				MedChicken:DeleteOnRemove(model)
+				model:Spawn()
+				MedChicken:Spawn()
+				else
+				ply:AddToken(Price)
+				ply:ChatPrint("Already have a Medic Chicken!")
 				end
 				end
 				

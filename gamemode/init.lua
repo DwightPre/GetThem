@@ -143,6 +143,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_AmmoBox", false )
 	ply:SetNWBool( "CanBuy_Spike", false )
 	ply:SetNWBool( "CanBuy_Builder", false )
+	ply:SetNWBool( "Bought_MedChicken", false )
 	ply:SetNWString("SpawnWith" , "none")
 	ply:SetNWString("BlockModel" , "models/hunter/blocks/cube075x075x075.mdl")
 	--ply:SetNetworkedString("level", 1)
@@ -166,7 +167,7 @@ function GM:PlayerLoadout(ply)
     timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
 	end
-	
+		
 	if (ply:GetNWString("SpawnWith") == "weapon_pistol") then
 	ply:Give("weapon_pistol")
 	ply:GiveAmmo( 40, "Pistol", true )
@@ -194,9 +195,36 @@ function GM:PlayerLoadout(ply)
 	elseif (PlayerLevel >= 1) then
 	ply:SetArmor( 5 )
 	end
-
 end
+
+function GM:IsSpawnpointSuitable( ply, spawnpointent, bMakeSuitable )
+
+	local Pos = spawnpointent:GetPos()
+	local Ents = ents.FindInBox( Pos + Vector( -16, -16, 0 ), Pos + Vector( 16, 16, 72 ) )
+
+	if ( ply:Team() == TEAM_SPECTATOR or ply:Team() == TEAM_UNASSIGNED ) then return true end
+
+	local Blockers = 0
+
+	for k, v in pairs( Ents ) do
+		if ( IsValid( v ) && v:GetClass() == "player" && v:Alive() ) then
+
+			Blockers = Blockers + 1
+
+			if ( bMakeSuitable ) then
+				--v:Kill()
+				v:SetPos(v:GetPos() + Vector( 1000, 0, 0 ))
+				--v:SetVelocity(v:GetForward() * 500 + Vector(0,math.random( 0, 1400 ), math.random( 0, 1800 )))
+			end
+		end
+	end
+
+	if ( bMakeSuitable ) then return true end
+	if ( Blockers > 0 ) then return false end
+	return true
 	
+end
+
 //---------------//
 // Healthgain	//
 //---------------//

@@ -63,8 +63,8 @@ if (CLIENT) then
 
 net.Receive( "PlayMiniGame", function()
 	
-	if not IsValid(Minigameframe) then	
-  Minigameframe = vgui.Create( "DFrame" )
+	if not IsValid(Tutorialframe) and not IsValid(Minigameframe) then	
+	Minigameframe = vgui.Create( "DFrame" )
 	Minigameframe:SetSize(380, 230)
 	Minigameframe:Center()
 	Minigameframe:SetTitle("The Search For Chicken Continuous")
@@ -79,9 +79,9 @@ net.Receive( "PlayMiniGame", function()
 	TextDLabel:SetSize(365, 200)
 	TextDLabel:SetFont( "Trebuchet18" )
 	TextDLabel:SetText( " It looks like you are alone in the server."..
-  " \n While waiting for players, would you like to play a mini-game?"..
-  " \n Find chickens everywhere around the map!"..
-  " \n You also earn money! Try to find them all to earn a token!" )
+	" \n While waiting for players, would you like to play a mini-game?"..
+	" \n Find chickens everywhere around the map!"..
+	" \n You also earn money! Try to find them all to earn a token!" )
 	
 	local PlayButton = vgui.Create( "DButton", Minigameframe ) 
 	PlayButton:SetText( "Play Mini Game While Waiting" )					
