@@ -144,6 +144,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_Spike", false )
 	ply:SetNWBool( "CanBuy_Builder", false )
 	ply:SetNWBool( "Bought_MedChicken", false )
+	ply:SetNWBool( "Bought_ShopDiscount", false )
 	ply:SetNWString("SpawnWith" , "none")
 	ply:SetNWString("BlockModel" , "models/hunter/blocks/cube075x075x075.mdl")
 	--ply:SetNetworkedString("level", 1)
@@ -151,7 +152,6 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetJumpLevel(0)
 	ply:SetMaxJumpLevel(1)
 	--hook.Call("HUDPaint");
-	
 	net.Start("ShowTutorial")
 	net.Send(ply)
 end

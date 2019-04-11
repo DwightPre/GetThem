@@ -40,6 +40,47 @@ end
 
 function SWEP:PrimaryAttack()
 
+	if ( CLIENT ) then return end
+
+	if ( self.Owner:IsPlayer() ) then
+		self.Owner:LagCompensation( true )
+	end
+
+	local tr = util.TraceLine( {
+		start = self.Owner:GetShootPos(),
+		endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * 64,
+		filter = self.Owner
+	} )
+
+	if ( self.Owner:IsPlayer() ) then
+		self.Owner:LagCompensation( false )
+	end
+
+	local ent = tr.Entity
+
+	local need = self.HealAmount
+	if ( IsValid( ent ) ) then need = math.min( ent:GetMaxHealth() - ent:Health(), self.HealAmount ) end
+
+	if ( IsValid( ent ) && self:Clip1() >= need && ( ent:IsPlayer() or ent:IsNPC() ) && ent:Health() < ent:GetMaxHealth() ) then
+
+		self:TakePrimaryAmmo( need )
+
+		ent:SetHealth( math.min( ent:GetMaxHealth(), ent:Health() + need ) )
+		ent:EmitSound( HealSound )
+
+		self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+
+		self:SetNextPrimaryFire( CurTime() + self:SequenceDuration() + 0.5 )
+		self.Owner:SetAnimation( PLAYER_ATTACK1 )
+
+		-- Even though the viewmodel has looping IDLE anim at all times, we need this to make fire animation work in multiplayer
+		timer.Create( "weapon_idle" .. self:EntIndex(), self:SequenceDuration(), 1, function() if ( IsValid( self ) ) then self:SendWeaponAnim( ACT_VM_IDLE ) end end )
+
+	else
+
+		self.Owner:EmitSound( DenySound )
+		self:SetNextPrimaryFire( CurTime() + 1 )
+end
 end
 
 
@@ -74,7 +115,8 @@ function SWEP:SecondaryAttack()
 	end
 	
 	if self:Clip1() < 19 then
-	ent:ConCommand("drop")
+	--ent:ConCommand("drop")
+	self:Remove()
 	end
 end
 

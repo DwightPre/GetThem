@@ -29,7 +29,7 @@ gtObject2[3] = {
 }
 
 gtObject2[4] = {
-	"- Respawn wait",
+	"- Respawn Wait",
 	1,
 	"Loadout",
 	50,
@@ -136,6 +136,14 @@ gtObject2[15] = {
 	60,					
 	"You now got Triple Jump!"	
 }
+gtObject2[17] = {
+	"20% Discount", 			
+	2, 					
+	"Trade",			
+	50,					
+	60,					
+	"You now got 20% discount in the Shop!"	
+}
 
 //---------------//
 // Token	Shop!// 
@@ -228,38 +236,97 @@ Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFr
 	if (LocalPlayer():GetNWBool( "CanBuy_AmmoBox") == true) then 
 	Button:SetColor( Color(0, 102, 0) ) 
 	Button:SetText("Ammobox Enabled")
+	Button:SetEnabled( disable ) 
 	end
 
 	elseif Button:GetText() == "Enable Guard" then 
 	if  (LocalPlayer():GetNWBool( "CanBuy_Guard") == true) then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetText("Guard Enabled")	
+	Button:SetEnabled( disable ) 
 	end 
 
 	elseif Button:GetText() == "Enable Spike" then 
 	if  (LocalPlayer():GetNWBool( "CanBuy_Spike") == true)then 
 	Button:SetColor( Color(0, 102, 0) ) 
 	Button:SetText("Spike Enabled")
+	Button:SetEnabled( disable ) 
 	end 
 
 	elseif Button:GetText() == "Enable Builder" then 
 	if (LocalPlayer():GetNWBool( "CanBuy_Builder") == true) then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetText("Builder Enabled")
+	Button:SetEnabled( disable ) 
+	end
+	
+	elseif Button:GetText() == "Knife" then 
+	if (LocalPlayer():HasWeapon( "gt_knife" )) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
 	end
 	
 	elseif Button:GetText() == "Spawn with Pistol" then 
 	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_pistol") then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetText("[Pistol]")
+	Button:SetEnabled( disable ) 
 	end
 	
 	elseif Button:GetText() == "Spawn with SMG" then 
 	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_smg1") then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetText("[ SMG ]")
+	Button:SetEnabled( disable ) 
+	end 
+
+	elseif Button:GetText() == "++ HP" then 
+	if (LocalPlayer():GetMaxHealth() >= 220) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
 	end 
 	
+	elseif Button:GetText() == "++ Armor" then 
+	if (LocalPlayer():Armor() >= 200) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "++ Sprint" then 
+	if (LocalPlayer():GetRunSpeed() == 650) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "- Respawn Wait" then 
+	if (LocalPlayer():GetNWInt("DeathWait") < 4 ) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Get Little" then 
+	if (LocalPlayer():GetModelScale() < 	1) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Triple Jump" then 
+	if (LocalPlayer():GetDTInt(24) == 2) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Medic Chicken" then 
+	if (LocalPlayer():GetNWBool("Bought_MedChicken")) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "20% Discount" then 
+	if (LocalPlayer():GetNWBool("Bought_ShopDiscount")) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 	
 end
 
 Button.OnCursorEntered = function()
@@ -300,7 +367,7 @@ function GivePlayerASpecial(ply, cmd, command)
 				local Message = entity[6]
 				
 				
-				if(Special == "+1 Token") and current_money > entity[2] then 
+				if(Special == "+1 Token") and current_money > Price then 
 				ply:TakeXp ( Price , ply )				
 				timer.Simple( 3, function()
 				ply:AddToken( 1 )	
@@ -312,7 +379,7 @@ function GivePlayerASpecial(ply, cmd, command)
 				return end 
 						
 						
-				if(current_token > entity[2]) then
+				if(current_token > Price) then
 				ply:TakeToken(Price)
 				ply:ChatPrint(Message)
 				net.Start( "Notification" )
@@ -337,7 +404,7 @@ function GivePlayerASpecial(ply, cmd, command)
 				ply:SetRunSpeed(650)
 				end
 				
-				if(Special == "- Respawn wait") then
+				if(Special == "- Respawn Wait") then
 				ply:SetNWInt("DeathWait", 2)
 				end	
 
@@ -357,73 +424,57 @@ function GivePlayerASpecial(ply, cmd, command)
 				
 					local ShrinkTime 	= 2*60
 					local ShrinkVol 	= 1.3
-					local DidShrink 	= ply:GetModelScale()
 					
-					if DidShrink 	< 	1 	then
-					ply:ChatPrint("You're still little!")
-					ply:AddToken(Price)
-					else
 					ply:SetModelScale( ply:GetModelScale() / ShrinkVol, 10 )
-					end
 					
 					timer.Create( "BackToNormal", ShrinkTime, 1, function() 
 					ply:ChatPrint("You're Getting Bigger!")
 					ply:SetModelScale( 1, 10 )
 					end )
 				
-				end				
+				end
+
+				if (Special == "20% Discount") then
+				if (ply:GetLevel() > 5) and (ply:GetNWBool( "Bought_ShopDiscount") == false) then
+				ply:SetNWBool( "Bought_ShopDiscount", true )
+				else
+				ply:ChatPrint("You must reach at least level 5!")
+				end
+				end
 								
 				if (Special == "Enable Guard") then
 				if (ply:GetNWBool( "CanBuy_Guard") == false)  then
 				ply:SetNWBool( "CanBuy_Guard", true )
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 				
 				if (Special == "Enable Ammobox") then
 				if (ply:GetNWBool( "CanBuy_Ammobox") == false) then
 				ply:SetNWBool( "CanBuy_AmmoBox", true )
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 				
 				if (Special == "Enable Spike") then
 				if (ply:GetNWBool( "CanBuy_Spike") == false) then
 				ply:SetNWBool( "CanBuy_Spike", true )
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 				
 				if (Special == "Enable Builder") then
 				if (ply:GetNWBool( "CanBuy_Builder") == false) then
 				ply:SetNWBool( "CanBuy_Builder", true )
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 
 				if (Special == "Spawn with Pistol") then
 				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_smg1") then
 				ply:SetNWString("SpawnWith" , "weapon_pistol")
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 				
 				if (Special == "Spawn with SMG") then
 				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_pistol") then
 				ply:SetNWString("SpawnWith" , "weapon_smg1")
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already Bought!")
 				end
 				end
 				
@@ -444,9 +495,6 @@ function GivePlayerASpecial(ply, cmd, command)
 				MedChicken:DeleteOnRemove(model)
 				model:Spawn()
 				MedChicken:Spawn()
-				else
-				ply:AddToken(Price)
-				ply:ChatPrint("Already have a Medic Chicken!")
 				end
 				end
 				

@@ -386,14 +386,20 @@ if SERVER then
       if(args[1] == gtObject[key][1]) then
         local entity = gtObject[key]
 				local current_xp = ply:GetXp()
-				if(current_xp > entity[2]) then
+				local discountprice = ((entity[2]/100)*80)
+				if(current_xp > entity[2]) or (ply:GetNWBool("Bought_ShopDiscount") and (current_xp > discountprice)) then
 					local Category = entity[10]
 					
+					if ply:GetNWBool("Bought_ShopDiscount") then
+					price = discountprice
+					else
+					price = entity[2]
+					end
 						if(entity[1] == "GT Builder") then
 						if ply:GetNWBool("CanBuy_Builder") then
 						ply:Give(entity[8])
 						ply:ChatPrint("You got a " .. entity[1] .. "!")
-						ply:TakeXp( entity[2] , ply )
+						ply:TakeXp( price , ply )
 						else
 						ply:ChatPrint("You need to enable " .. entity[1] .. " in Token Shop!")
 						end
@@ -402,7 +408,7 @@ if SERVER then
 					if(Category == "Weapon") and !(entity[1] == "GT Builder") then
 					ply:Give(entity[8])
 					ply:ChatPrint("You got a " .. entity[1] .. "!")
-					ply:TakeXp( entity[2] , ply )
+					ply:TakeXp( price , ply )
 			
 						if(entity[1] == "Frag") then
 							ply:GiveAmmo(1, "Grenade")
@@ -411,31 +417,31 @@ if SERVER then
 					elseif(Category == "Ammo") then
 						ply:GiveAmmo(50, entity[11])
 						ply:ChatPrint("You got " .. entity[1] .. "!")
-						ply:TakeXp( entity[2] , ply )
+						ply:TakeXp( price , ply )
 					elseif(Category == "Ability") then
 						local Ability = entity[1]
 						if(Ability == "Flashlight") then
 							ply:AllowFlashlight( true )
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						elseif(Ability == "HP") then
 							ply:SetMaxHealth( 150 )
 							ply:ChatPrint("You got " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						elseif(Ability == "Armor") then
 							ply:SetArmor( 100 )
 							ply:ChatPrint("You got " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						elseif(Ability == "Sprint") then
 							ply:SetRunSpeed(500)
 							ply:ChatPrint("You got " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						end
 
 					elseif(Category == "Model") then
 						ply:SetModel(entity[9])
 						ply:ChatPrint("You are a " .. entity[1] .. "!")
-						ply:TakeXp( entity[2] , ply )
+						ply:TakeXp( price , ply )
 
 					elseif(Category == "Entity") then
 						--ply:ChatPrint("You got a " .. entity[1] .. "!")
@@ -446,7 +452,7 @@ if SERVER then
 						if(GTEntity == "Ammo crate") then
 						if ply:GetNWBool("CanBuy_AmmoBox") then
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						
 							local ammo_crate1 = ents.Create("simple_ammo_crate")
 							ammo_crate1:SetPos(ply:GetEyeTrace().HitPos + Vector(0,0,17))
@@ -459,7 +465,7 @@ if SERVER then
 						elseif(GTEntity == "Guard") then
 						if ply:GetNWBool("CanBuy_Guard") then
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 						
 								local i = 0
 								local Guard1 = ents.Create("simple_nextbot")
@@ -477,7 +483,7 @@ if SERVER then
 						elseif(GTEntity == "Spike") then
 						if ply:GetNWBool("CanBuy_Spike") then
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
-							ply:TakeXp( entity[2] , ply )
+							ply:TakeXp( price , ply )
 							
 							local i = 0
 							local Spike = ents.Create("gt_spike")
@@ -619,6 +625,110 @@ Button:SetText(entity[1])
 Button:SetFont("ButtonLayout")
 Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if CloseCheckbox:GetChecked() then WeaponFrame:Close() end end
 
+	if Button:GetText() == "Pistol" then 
+	if (LocalPlayer():HasWeapon( "weapon_pistol" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end
+
+	elseif Button:GetText() == "SMG" then 
+	if (LocalPlayer():HasWeapon( "weapon_smg1" )) then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end 
+
+	elseif Button:GetText() == "Crossbow" then 
+	if (LocalPlayer():HasWeapon( "weapon_crossbow" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Shotgun" then 
+	if (LocalPlayer():HasWeapon( "weapon_shotgun" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "AR" then 
+	if (LocalPlayer():HasWeapon( "weapon_ar2" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Alyxgun" then 
+	if (LocalPlayer():HasWeapon( "weapon_alyxgun" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Health Kit" then 
+	if (LocalPlayer():HasWeapon( "gt_medkit" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Magnum.357" then 
+	if (LocalPlayer():HasWeapon( "weapon_357" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "GT Builder" then 
+	if (LocalPlayer():HasWeapon( "gt_builder" )) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Flashlight" then 
+	if (LocalPlayer():CanUseFlashlight()) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable )  
+	end 
+	
+	elseif Button:GetText() == "HP" then 
+	if (LocalPlayer():GetMaxHealth() >= 150) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+
+	elseif Button:GetText() == "Gman" then 
+	if (LocalPlayer():GetModel() == "models/player/gman_high.mdl" ) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Cop" then 
+	if (LocalPlayer():GetModel() == "models/player/police.mdl" ) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Skeleton" then 
+	if (LocalPlayer():GetModel() == "models/player/skeleton.mdl" ) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 	
+	
+	elseif Button:GetText() == "Zombie" then 
+	if (LocalPlayer():GetModel() == "models/player/zombie_classic.mdl" ) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Armor" then 
+	if (LocalPlayer():Armor() >= 100 ) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	elseif Button:GetText() == "Sprint" then 
+	if (LocalPlayer():GetRunSpeed() >= 500) then 
+	Button:SetColor( Color(0, 102, 0) ) 
+	Button:SetEnabled( disable ) 
+	end 
+	
+	end
+	
 Button.OnCursorEntered = function()
   local icon = vgui.Create( "DModelPanel", PrevPanel )
     icon:SetModel( entity[9] )
@@ -632,8 +742,12 @@ Button.OnCursorEntered = function()
 			icon:SetSize(1000,1000)
 		end
     icon:SetLookAt( Vector( 0, 0, 0 ) )
-    icon:Center()
-    CostText:SetText( "Cost: " .. tostring(entity[2]) .. "")
+    icon:Center()	
+	if LocalPlayer():GetNWBool("Bought_ShopDiscount") then
+	CostText:SetText( "Cost: " .. tostring((entity[2]/100)*80) .. "")
+	else
+	CostText:SetText( "Cost: " .. tostring(entity[2]) .. "")
+	end   
     function icon:LayoutEntity( Entity ) return end
   end
   Button.OnCursorExited = function()
