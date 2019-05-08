@@ -280,7 +280,7 @@ gtObject[21] = {
 	0
 }
 gtObject[22] = {
-	"Ammo crate",
+	"Ammo Box",
 	200,
 	"weaponsTab",
 	0,
@@ -449,7 +449,7 @@ if SERVER then
 						
 						local GTEntity = entity[1]
 
-						if(GTEntity == "Ammo crate") then
+						if(GTEntity == "Ammo Box") then
 						if ply:GetNWBool("CanBuy_AmmoBox") then
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
 							ply:TakeXp( price , ply )

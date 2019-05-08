@@ -156,7 +156,7 @@ end
 		v:Spawn()
 		v:SetFrags( 0 )
 		v:SetNWInt("AliveChickens", 0)
-    v:SetNWInt("ChickensBonus", 0)
+		v:SetNWInt("ChickensBonus", 0)
 		v:SetNWInt("killcounter", 0)
 		v:ConCommand("CloseEndStats")
 	end

@@ -9,6 +9,8 @@ AddCSLuaFile("playerInfo.lua")
 AddCSLuaFile("cl_holster.lua")
 AddCSLuaFile("minigame.lua")
 AddCSLuaFile("tutorialframe.lua")
+AddCSLuaFile("classes.lua")
+
 
 
 include( "shared.lua" )
@@ -20,7 +22,7 @@ include("cl_score.lua")
 include("minigame.lua")
 include("minigame.lua")
 include("tutorialframe.lua")
-
+include("classes.lua")
 
 resource.AddFile("models/chicken/chicken.mdl")
 resource.AddFile("models/chicken/chicken.phy")
@@ -35,6 +37,7 @@ resource.AddFile("materials/vgui/background.png")
 util.PrecacheModel( "models/chicken/chicken.mdl" );
 util.AddNetworkString( "PlayMiniGame" )
 util.AddNetworkString( "ShowTutorial" )
+util.AddNetworkString( "ShowClasses" )
 
 /*
   ________        __ ___________.__
@@ -120,6 +123,12 @@ function TokenShop( ply )
 end
 hook.Add("ShowTeam", "MyHook", TokenShop)
 
+function ClassSelect( ply )
+	net.Start("ShowClasses")
+	net.Send(ply)
+end
+hook.Add("ShowSpare1", "MyHook", ClassSelect)
+
 //---------------//
 // Player Spawn	//
 //---------------//
@@ -194,6 +203,20 @@ function GM:PlayerLoadout(ply)
 	ply:SetArmor( 10 )
 	elseif (PlayerLevel >= 1) then
 	ply:SetArmor( 5 )
+	end
+	
+	if ply:GetNWString("PlayerClass") == "Assault" then
+	ply:SetNWString("PlayerClass", "Dead")
+	ply:ConCommand("assault_class")
+	elseif ply:GetNWString("PlayerClass") == "Builder" then
+	ply:SetNWString("PlayerClass", "Dead")
+	ply:ConCommand("builder_class")
+	elseif ply:GetNWString("PlayerClass") == "Scavenger" then
+	ply:SetNWString("PlayerClass", "Dead")
+	ply:ConCommand("scavenger_class")
+	elseif ply:GetNWString("PlayerClass") == "Spawner" then
+	ply:SetNWString("PlayerClass", "Dead")
+	ply:ConCommand("spawner_class")
 	end
 end
 

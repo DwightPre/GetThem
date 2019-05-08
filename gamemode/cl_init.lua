@@ -7,6 +7,7 @@ include("rounds.lua")
 include("cl_holster.lua")
 include("minigame.lua")
 include("Tutorialframe.lua")
+include("classes.lua")
 
 LevelCurve = {}
 LevelCurve[0] = 0

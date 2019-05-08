@@ -242,7 +242,7 @@ else
 	npc2:SetCreator( ply ) 
 	GiveBonus( ply )
 	end
-		end
+	end
 
 end
 
