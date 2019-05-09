@@ -5,6 +5,8 @@ local LevelForBuilder = 5
 local LevelForAssault = 4
 local LevelForScavenger = 10
 
+local Cooldown = 180
+
 
 
 if (CLIENT) then
@@ -181,6 +183,18 @@ net.Receive("ShowClasses", function ( len, pl )
 	scavenger_button:SetEnabled( disable ) 
 	end
 	
+	if LocalPlayer():GetNWBool( "ClassesCooldown") then
+	spawner_button:SetEnabled( disable ) 
+	assault_button:SetEnabled( disable ) 
+	builder_button:SetEnabled( disable ) 
+	scavenger_button:SetEnabled( disable ) 
+	
+	spawner_button:SetText("Need to wait..." )
+	assault_button:SetText("Need to wait..." )
+	builder_button:SetText("Need to wait..." )
+	scavenger_button:SetText("Need to wait..." )
+	end
+	
 
 	if (LocalPlayer():GetNWString("PlayerClass") == "Spawner") then
 	spawner_button:SetEnabled( disable )
@@ -198,19 +212,23 @@ net.Receive("ShowClasses", function ( len, pl )
 
 	
 	assault_button.DoClick = function()
-	RunConsoleCommand( "assault_class" )		
+	RunConsoleCommand( "assault_class" )
+	Class_select:Close()
 	end
 	
 	builder_button.DoClick = function()
-	RunConsoleCommand( "builder_class" )	
+	RunConsoleCommand( "builder_class" )
+	Class_select:Close()	
 	end
 	
 	scavenger_button.DoClick = function()
-	RunConsoleCommand( "scavenger_class" )	
+	RunConsoleCommand( "scavenger_class" )
+	Class_select:Close()
 	end
 	
 	spawner_button.DoClick = function()
-	RunConsoleCommand( "spawner_class" )	
+	RunConsoleCommand( "spawner_class" )
+	Class_select:Close()
 	end
 		
 end)
@@ -220,7 +238,7 @@ end
 if (SERVER) then
 
 function SetClassSpawner(ply, cmd, command)
-if (ply:GetLevel()  >= LevelForSpawner) and(ply:GetNWString("PlayerClass") != "Spawner") then
+if (ply:GetLevel()  >= LevelForSpawner) and(ply:GetNWString("PlayerClass") != "Spawner") and (ply:GetToken() >= 1) then
 		ply:Give("weapon_pistol")
 		ply:Give("weapon_357")
 		ply:Give("gt_medkit")
@@ -228,13 +246,20 @@ if (ply:GetLevel()  >= LevelForSpawner) and(ply:GetNWString("PlayerClass") != "S
 		--ply:SetRunSpeed(ply:GetRunSpeed()*1.2)
 		ply:GiveAmmo(50, "Pistol", true )
 		ply:GiveAmmo(6, "357"	)
-		ply:SetNWString("PlayerClass" , "Spawner")	
+		ply:SetNWString("PlayerClass" , "Spawner")
+		ply:SetNWBool( "ClassesCooldown", true )	
+			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
+				ply:TakeToken(1)
+				net.Start( "Notification" )
+				net.WriteString("- 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
 end		
 end  
 concommand.Add("spawner_class", SetClassSpawner)
 
 function SetClassScavenger(ply, cmd, command)
-	if (ply:GetLevel()  >= LevelForScavenger) and (ply:GetNWString("PlayerClass") != "Scavenger") then 
+	if (ply:GetLevel()  >= LevelForScavenger) and (ply:GetNWString("PlayerClass") != "Scavenger") and (ply:GetToken() >= 1) then 
 		ply:Give("weapon_pistol")
 		ply:GiveAmmo(150, "Pistol", true )
 		ply:Give("weapon_frag")
@@ -242,8 +267,14 @@ function SetClassScavenger(ply, cmd, command)
 		ply:Give("weapon_crossbow")
 		ply:GiveAmmo(20, "XBowBolt")
 		ply:SetRunSpeed(500)
-		ply:SetNWString("PlayerClass" , "Scavenger")	
-		
+		ply:SetNWString("PlayerClass" , "Scavenger")
+		ply:SetNWBool( "ClassesCooldown", true )
+			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
+				ply:TakeToken(1)
+				net.Start( "Notification" )
+				net.WriteString("- 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
 		if (ply:GetNWBool( "CanBuy_Ammobox") == false) then
 			ply:SetNWBool( "CanBuy_AmmoBox", true )
 		end
@@ -252,20 +283,27 @@ end
 concommand.Add("scavenger_class", SetClassScavenger)
 
 function SetClassBuilder(ply, cmd, command)
-	if (ply:GetLevel()  >= LevelForBuilder) and (ply:GetNWString("PlayerClass") != "Builder") then 
+	if (ply:GetLevel()  >= LevelForBuilder) and (ply:GetNWString("PlayerClass") != "Builder") and (ply:GetToken() > 1) then 
 		ply:Give("gt_builder")
 		ply:GiveAmmo(90, "Battery", true )
 		ply:SetArmor(40)
 		ply:Give("weapon_pistol")
 		ply:GiveAmmo(90, "Pistol", true )
 		--ply:GiveAmmo( 	200, "Pistol", true )
-		ply:SetNWString("PlayerClass" , "Builder")		
+		ply:SetNWString("PlayerClass" , "Builder")	
+		ply:SetNWBool( "ClassesCooldown", true )
+			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
+				ply:TakeToken(1)
+				net.Start( "Notification" )
+				net.WriteString("- 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
 	end
 end  
 concommand.Add("builder_class", SetClassBuilder)
 
 function SetClassAssault(ply, cmd, command)
-	if (ply:GetLevel()  >= LevelForAssault) and (ply:GetNWString("PlayerClass") != "Assault")  then 
+	if (ply:GetLevel()  >= LevelForAssault) and (ply:GetNWString("PlayerClass") != "Assault") and (ply:GetToken() > 1)  then 
 		ply:Give("weapon_pistol")
 		ply:GiveAmmo(100, "Pistol", true )
 		ply:Give("weapon_smg1")
@@ -273,9 +311,15 @@ function SetClassAssault(ply, cmd, command)
 		ply:Give("weapon_shotgun")		
 		ply:SetArmor(100)
 		ply:SetNWString("PlayerClass" , "Assault")		
+		ply:SetNWBool( "ClassesCooldown", true )
+			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
+				ply:TakeToken(1)
+				net.Start( "Notification" )
+				net.WriteString("- 1 Token")
+				net.WriteDouble(4)
+				net.Send( ply )
 	end
 
 end  
 concommand.Add("assault_class", SetClassAssault)
-
 end

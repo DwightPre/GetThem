@@ -154,6 +154,8 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "CanBuy_Builder", false )
 	ply:SetNWBool( "Bought_MedChicken", false )
 	ply:SetNWBool( "Bought_ShopDiscount", false )
+	ply:SetNWBool( "ClassesCooldown" , false )
+	
 	ply:SetNWString("SpawnWith" , "none")
 	ply:SetNWString("BlockModel" , "models/hunter/blocks/cube075x075x075.mdl")
 	--ply:SetNetworkedString("level", 1)

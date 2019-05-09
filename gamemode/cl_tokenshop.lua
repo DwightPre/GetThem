@@ -367,7 +367,7 @@ function GivePlayerASpecial(ply, cmd, command)
 				local Message = entity[6]
 				
 				
-				if(Special == "+1 Token") and current_money > Price then 
+				if(Special == "+1 Token") and current_money >= Price then 
 				ply:TakeXp ( Price , ply )				
 				timer.Simple( 3, function()
 				ply:AddToken( 1 )	
@@ -377,9 +377,22 @@ function GivePlayerASpecial(ply, cmd, command)
 				net.WriteDouble(4)
 				net.Send( ply ) end )
 				return end 
+				
+				if (Special == "20% Discount") and current_token >= Price then
+				if (ply:GetLevel() >= 5) and (ply:GetNWBool( "Bought_ShopDiscount") == false) then
+				ply:SetNWBool( "Bought_ShopDiscount", true )
+				ply:TakeToken(Price)
+				ply:ChatPrint(Message)
+				net.Start( "Notification" )
+				net.WriteString("- 2 Tokens")
+				net.WriteDouble(4)
+				net.Send( ply )
+				else
+				ply:ChatPrint("You must reach at least level 5!")
+				end
+				return end						
 						
-						
-				if(current_token > Price) then
+				if(current_token >= Price) then
 				ply:TakeToken(Price)
 				ply:ChatPrint(Message)
 				net.Start( "Notification" )
@@ -433,15 +446,7 @@ function GivePlayerASpecial(ply, cmd, command)
 					end )
 				
 				end
-
-				if (Special == "20% Discount") then
-				if (ply:GetLevel() > 5) and (ply:GetNWBool( "Bought_ShopDiscount") == false) then
-				ply:SetNWBool( "Bought_ShopDiscount", true )
-				else
-				ply:ChatPrint("You must reach at least level 5!")
-				end
-				end
-								
+		
 				if (Special == "Enable Guard") then
 				if (ply:GetNWBool( "CanBuy_Guard") == false)  then
 				ply:SetNWBool( "CanBuy_Guard", true )
