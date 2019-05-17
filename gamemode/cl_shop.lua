@@ -59,7 +59,7 @@ gtObject[4] = {
 }
 
 gtObject[5] = {
-	"AR",
+	"AR2",
 	1000,
 	"weaponsTab",
 	100,
@@ -422,6 +422,7 @@ if SERVER then
 						local Ability = entity[1]
 						if(Ability == "Flashlight") then
 							ply:AllowFlashlight( true )
+							ply:SetNWBool( "CanUseFlashlight", true )
 							ply:ChatPrint("You got a " .. entity[1] .. "!")
 							ply:TakeXp( price , ply )
 						elseif(Ability == "HP") then
@@ -649,7 +650,7 @@ Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if Close
 	Button:SetEnabled( disable ) 
 	end 
 	
-	elseif Button:GetText() == "AR" then 
+	elseif Button:GetText() == "AR2" then 
 	if (LocalPlayer():HasWeapon( "weapon_ar2" )) then 
 	Button:SetColor( Color(0, 102, 0) ) 
 	Button:SetEnabled( disable ) 
@@ -680,7 +681,7 @@ Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if Close
 	end 
 	
 	elseif Button:GetText() == "Flashlight" then 
-	if (LocalPlayer():CanUseFlashlight()) then 
+	if (LocalPlayer():GetNWBool("CanUseFlashlight")) then 
 	Button:SetColor( Color(0, 102, 0) ) 
 	Button:SetEnabled( disable )  
 	end 

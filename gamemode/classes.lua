@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
 local LevelForSpawner = 3
-local LevelForBuilder = 5
 local LevelForAssault = 4
+local LevelForBuilder = 5
 local LevelForScavenger = 10
 
 local Cooldown = 180
@@ -159,6 +159,18 @@ net.Receive("ShowClasses", function ( len, pl )
 		surface.DrawRect( 0, 0, spawner_button:GetWide(), spawner_button:GetTall() )
 	end
 	
+	if LocalPlayer():GetNWBool( "ClassesCooldown") then
+	spawner_button:SetEnabled( disable ) 
+	assault_button:SetEnabled( disable ) 
+	builder_button:SetEnabled( disable ) 
+	scavenger_button:SetEnabled( disable ) 
+	
+	spawner_button:SetText("Need to wait..." )
+	assault_button:SetText("Need to wait..." )
+	builder_button:SetText("Need to wait..." )
+	scavenger_button:SetText("Need to wait..." )
+	end
+	
 	if (LocalPlayer():GetLevel()  < LevelForSpawner) then 
 	spawner_button:SetColor( Color(0, 102, 0) ) 
 	spawner_button:SetText("Unlocks at level " .. LevelForSpawner )
@@ -182,19 +194,6 @@ net.Receive("ShowClasses", function ( len, pl )
 	scavenger_button:SetText("Unlocks at level " .. LevelForScavenger )
 	scavenger_button:SetEnabled( disable ) 
 	end
-	
-	if LocalPlayer():GetNWBool( "ClassesCooldown") then
-	spawner_button:SetEnabled( disable ) 
-	assault_button:SetEnabled( disable ) 
-	builder_button:SetEnabled( disable ) 
-	scavenger_button:SetEnabled( disable ) 
-	
-	spawner_button:SetText("Need to wait..." )
-	assault_button:SetText("Need to wait..." )
-	builder_button:SetText("Need to wait..." )
-	scavenger_button:SetText("Need to wait..." )
-	end
-	
 
 	if (LocalPlayer():GetNWString("PlayerClass") == "Spawner") then
 	spawner_button:SetEnabled( disable )

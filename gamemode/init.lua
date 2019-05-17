@@ -155,6 +155,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool( "Bought_MedChicken", false )
 	ply:SetNWBool( "Bought_ShopDiscount", false )
 	ply:SetNWBool( "ClassesCooldown" , false )
+	ply:SetNWBool( "CanUseFlashlight", false )
 	
 	ply:SetNWString("SpawnWith" , "none")
 	ply:SetNWString("BlockModel" , "models/hunter/blocks/cube075x075x075.mdl")
@@ -179,9 +180,9 @@ function GM:PlayerLoadout(ply)
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
 	end
 		
-	if (ply:GetNWString("SpawnWith") == "weapon_pistol") then
-	ply:Give("weapon_pistol")
-	ply:GiveAmmo( 40, "Pistol", true )
+	if (ply:GetNWString("SpawnWith") == "weapon_ar2") then
+	ply:Give("weapon_ar2")
+	ply:GiveAmmo( 40, "AR2", true )
 	else if (ply:GetNWString("SpawnWith") == "weapon_smg1") then
 	ply:Give("weapon_smg1")
 	ply:GiveAmmo( 70, "smg1", true )
@@ -205,6 +206,10 @@ function GM:PlayerLoadout(ply)
 	ply:SetArmor( 10 )
 	elseif (PlayerLevel >= 1) then
 	ply:SetArmor( 5 )
+	end
+	
+	if (ply:CanUseFlashlight()) then
+	ply:SetNWBool( "CanUseFlashlight", true )
 	end
 	
 	if ply:GetNWString("PlayerClass") == "Assault" then
@@ -542,6 +547,7 @@ timer.Create( "GivePoints", 600, 0, function() //300
 		end
 	end
 end )
+
 
 //---------------//
 // 	DoubleJump 	//

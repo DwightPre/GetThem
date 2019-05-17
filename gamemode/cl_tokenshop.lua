@@ -106,12 +106,12 @@ gtObject2[12] = {
 	"You got the Speedrun Knife!"	
 }
 gtObject2[13] = {
-	"Spawn with Pistol", 			
+	"Spawn with AR2", 			
 	2, 					
 	"Weapons",			
 	50,					
 	60,					
-	"You now spawn with a Pistol!"	
+	"You now spawn with a AR2!"	
 }
 gtObject2[14] = {
 	"Spawn with SMG", 			
@@ -266,10 +266,10 @@ Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFr
 	Button:SetEnabled( disable ) 
 	end
 	
-	elseif Button:GetText() == "Spawn with Pistol" then 
-	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_pistol") then 
+	elseif Button:GetText() == "Spawn with AR2" then 
+	if (LocalPlayer():GetNWString( "SpawnWith") == "weapon_ar2") then 
 	Button:SetColor( Color(0, 102, 0) )
-	Button:SetText("[Pistol]")
+	Button:SetText("[ AR2 ]")
 	Button:SetEnabled( disable ) 
 	end
 	
@@ -471,15 +471,19 @@ function GivePlayerASpecial(ply, cmd, command)
 				end
 				end
 
-				if (Special == "Spawn with Pistol") then
+				if (Special == "Spawn with AR2") then
 				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_smg1") then
-				ply:SetNWString("SpawnWith" , "weapon_pistol")
+				ply:SetNWString("SpawnWith" , "weapon_ar2")
+				ply:Give("weapon_ar2")
+				ply:GiveAmmo( 40, "AR2", true )
 				end
 				end
 				
 				if (Special == "Spawn with SMG") then
-				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_pistol") then
+				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_ar2") then
 				ply:SetNWString("SpawnWith" , "weapon_smg1")
+				ply:Give("weapon_smg1")
+				ply:GiveAmmo( 70, "smg1", true )
 				end
 				end
 				
