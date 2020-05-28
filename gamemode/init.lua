@@ -50,7 +50,7 @@ util.AddNetworkString( "ShowClasses" )
 
 if ( SERVER ) then
 
-	XP_STARTAMOUNT = 0
+	XP_STARTAMOUNT = 900
 	TOKEN_STARTAMOUNT = 0
 	LEVEL_STARTAMOUNT = 1
 	LEVELXP_STARTAMOUNT = 0
@@ -133,6 +133,13 @@ hook.Add("ShowSpare1", "MyHook", ClassSelect)
 // Player Spawn	//
 //---------------//
 function GM:PlayerInitialSpawn(ply)
+	print( "[GetThem]" .. ply:GetName().." joined the server.\n" )
+	--ply:SetTeam(0) --Joining
+end
+
+local function PlayerSpawn(ply)
+	print( "[GetThem]" .. ply:GetName().." joined the game!\n")
+	
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Welcome to the server, " .. ply:Nick() )
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Errors? Subscribe to content! https://steamcommunity.com/sharedfiles/filedetails/?id=1596083790" )
 	local teamn = math.random(1, 2)
@@ -144,6 +151,8 @@ function GM:PlayerInitialSpawn(ply)
     ply:SetTeam(2)
 	ply:SetModel( "models/player/Group03/Female_04.mdl" )
 	end
+	
+
 	
 	ply:SetNWInt("DeathWait", 2)
 	ply:SetNWInt("AliveChickens", 0)
@@ -167,6 +176,7 @@ function GM:PlayerInitialSpawn(ply)
 	net.Start("ShowTutorial")
 	net.Send(ply)
 end
+hook.Add( "PlayerInitialSpawn", "PlayerFirstSpawned", PlayerSpawn )
 
 //---------------//
 // Change Team	//
@@ -175,9 +185,12 @@ function GM:PlayerLoadout(ply)
     if (ply:Team() == 1) then
 	timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Blue!");
-    else
+    elseif (ply:Team() == 2) then
     timer.Simple( 2, function()  ply:Give("gt_spawner") end )
 		ply:PrintMessage( HUD_PRINTTALK, "[GetThem]You are in team Red!");
+	else --ply:Team() == 0
+	timer.Simple( 4, function()  ply:Give("gt_spawner") end )
+	ply:ConCommand("change_team")
 	end
 		
 	if (ply:GetNWString("SpawnWith") == "weapon_ar2") then
@@ -502,14 +515,14 @@ local function DropWeapon(ply,cmd,args)
 	end
 end
 concommand.Add( "drop", DropWeapon )
-
+/*
 function AdminControl( ply )
 	if ( ply:SteamID() == "STEAM_1:1:32726963" ) then
 	ply:SetUserGroup("superadmin")
 	end
 end
 hook.Add("PlayerSpawn", "Creators Benefit", AdminControl) 
-
+*/
 function spawn_prop1(ply)
 if ply:IsAdmin() then
 barrel=ents.Create("prop_physics")

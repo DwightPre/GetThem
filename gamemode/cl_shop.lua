@@ -729,7 +729,7 @@ Button.DoClick = function() RunConsoleCommand("weapon_take", entity[1]) if Close
 	end 
 	
 	end
-	
+--That vgui.create("ModelImage") 	
 Button.OnCursorEntered = function()
   local icon = vgui.Create( "DModelPanel", PrevPanel )
     icon:SetModel( entity[9] )

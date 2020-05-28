@@ -109,13 +109,14 @@ for k,ply in pairs( player.GetAll() ) do
 	ply:AddXp( ply:Frags()*20 , ply )
 	ply:PrintMessage( HUD_PRINTTALK, "[GetThem]Well played + " .. ply:Frags()*20 .. " $!");	
 	end
-
+end
 	local AliveTeam1 =  GetGlobalInt("Alive")
 	local AliveTeam2 =  GetGlobalInt("Alive1")
 	
 	if AliveTeam1 > AliveTeam2 then	
 	ply:PrintMessage( HUD_PRINTTALK,"[GetThem]Red has won 1 token and " .. AliveTeam1*30 .. " $ with ".. tostring(AliveTeam1) .. " live(s)!" .. "")
 	if ply:Team() == 2 then ply:AddXp(AliveTeam1*30 , ply)  SetGlobalInt( "Earned", (GetGlobalInt( "Earned") +( AliveTeam1*30))) end
+	if ply:Team() == 1 then ply:AddXp(AliveTeam2*20 , ply) end --consolation
 	timer.Simple( 15, function()
 		ply:AddToken( 1 )
 		net.Start( "Notification" )
@@ -126,6 +127,7 @@ for k,ply in pairs( player.GetAll() ) do
 	else	
 	ply:PrintMessage( HUD_PRINTTALK,"[GetThem]Blue has won 1 token and " .. AliveTeam2*30 .. " $ with ".. tostring(AliveTeam2) .. " live(s)!" .. "")
 	if ply:Team() == 1 then ply:AddXp(AliveTeam2*30 , ply) SetGlobalInt( "Earned1", (GetGlobalInt( "Earned1") +( AliveTeam2*30))) end	
+	if ply:Team() == 2 then ply:AddXp(AliveTeam1*20 , ply) end
 	timer.Simple( 15, function()
 		ply:AddToken( 1 )
 		net.Start( "Notification" )
@@ -133,8 +135,8 @@ for k,ply in pairs( player.GetAll() ) do
 		net.WriteDouble(4)
 		net.Send( ply ) end )
 	end
-	
-	end		
+	--print("Player: " .. ply .. " -> " ..  AliveTeam1*20 .. "/ " .. AliveTeam2*20 )
+	--end		
 	ply :ConCommand("EndStats") --Show EndStatsHud
 end
 

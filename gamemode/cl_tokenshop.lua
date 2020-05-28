@@ -144,7 +144,14 @@ gtObject2[17] = {
 	60,					
 	"You now got 20% discount in the Shop!"	
 }
-
+gtObject2[18] = {
+	"Spawn Point", 			
+	2, 					
+	"Entities",			
+	370,					
+	60,					
+	"Purchased a Spawn Point! You now respawn with weapons!"	
+}
 //---------------//
 // Token	Shop!// 
 //---------------//
@@ -326,7 +333,14 @@ Button.DoClick = function() RunConsoleCommand("givespecial", entity[1]) WeaponFr
 	if (LocalPlayer():GetNWBool("Bought_ShopDiscount")) then 
 	Button:SetColor( Color(0, 102, 0) )
 	Button:SetEnabled( disable ) 
-	end 	
+	end
+
+	/*elseif Button:GetText() == "Spawn Point" then 
+	if (LocalPlayer().NewPlayerSpawn:IsValid() then 
+	Button:SetColor( Color(0, 102, 0) )
+	Button:SetEnabled( disable ) 
+	end*/
+
 end
 
 Button.OnCursorEntered = function()
@@ -390,7 +404,23 @@ function GivePlayerASpecial(ply, cmd, command)
 				else
 				ply:ChatPrint("You must reach at least level 5!")
 				end
-				return end						
+				return end
+
+				if (Special == "Spawn Point") and current_token >= Price then
+				if (ply:GetLevel() >= 6) then
+				local SpawnPoint = ents.Create("spawnpoint")
+				SpawnPoint:SetPos(ply:GetEyeTrace().HitPos)
+				SpawnPoint:Spawn()
+				ply:TakeToken(Price)
+				ply:ChatPrint(Message)
+				net.Start( "Notification" )
+				net.WriteString("- 2 Tokens")
+				net.WriteDouble(4)
+				net.Send( ply )
+				else
+				ply:ChatPrint("You must reach at least level 6!")
+				end
+				end				
 						
 				if(current_token >= Price) then
 				ply:TakeToken(Price)
@@ -469,7 +499,7 @@ function GivePlayerASpecial(ply, cmd, command)
 				if (ply:GetNWBool( "CanBuy_Builder") == false) then
 				ply:SetNWBool( "CanBuy_Builder", true )
 				end
-				end
+				end				
 
 				if (Special == "Spawn with AR2") then
 				if (ply:GetNWString("SpawnWith") == "none") or (ply:GetNWString("SpawnWith") == "weapon_smg1") then

@@ -42,7 +42,7 @@ net.Receive( "ShowTutorial", function()
 	"\n- Keep your team's score alive by defending your chickens!"..
 	"\n- Search other's team chickens - kill them!"..
 	"\n"..
-	"\n- F1 for Shop - buy weapons, armour,.."..
+	"\n- F1 for Shop - buy weapons, armor,.."..
 	"\n- F2 for Token Shop"..
 	"\n"..
 	"\n- Unlock different abilities to make the game even better!"..

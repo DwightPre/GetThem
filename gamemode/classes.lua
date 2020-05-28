@@ -212,21 +212,25 @@ net.Receive("ShowClasses", function ( len, pl )
 	
 	assault_button.DoClick = function()
 	RunConsoleCommand( "assault_class" )
+	RunConsoleCommand( "take_token" )
 	Class_select:Close()
 	end
 	
 	builder_button.DoClick = function()
 	RunConsoleCommand( "builder_class" )
+	RunConsoleCommand( "take_token" )
 	Class_select:Close()	
 	end
 	
 	scavenger_button.DoClick = function()
 	RunConsoleCommand( "scavenger_class" )
+	RunConsoleCommand( "take_token" )
 	Class_select:Close()
 	end
 	
 	spawner_button.DoClick = function()
 	RunConsoleCommand( "spawner_class" )
+	RunConsoleCommand( "take_token" )
 	Class_select:Close()
 	end
 		
@@ -237,7 +241,7 @@ end
 if (SERVER) then
 
 function SetClassSpawner(ply, cmd, command)
-if (ply:GetLevel()  >= LevelForSpawner) and(ply:GetNWString("PlayerClass") != "Spawner") and (ply:GetToken() >= 1) then
+if (ply:GetLevel()  >= LevelForSpawner) and (ply:GetNWString("PlayerClass") != "Spawner") and (ply:GetToken() >= 1) then
 		ply:Give("weapon_pistol")
 		ply:Give("weapon_357")
 		ply:Give("gt_medkit")
@@ -248,11 +252,11 @@ if (ply:GetLevel()  >= LevelForSpawner) and(ply:GetNWString("PlayerClass") != "S
 		ply:SetNWString("PlayerClass" , "Spawner")
 		ply:SetNWBool( "ClassesCooldown", true )	
 			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
-				ply:TakeToken(1)
+			/*	ply:TakeToken(1)
 				net.Start( "Notification" )
 				net.WriteString("- 1 Token")
 				net.WriteDouble(4)
-				net.Send( ply )
+				net.Send( ply )*/
 end		
 end  
 concommand.Add("spawner_class", SetClassSpawner)
@@ -269,11 +273,11 @@ function SetClassScavenger(ply, cmd, command)
 		ply:SetNWString("PlayerClass" , "Scavenger")
 		ply:SetNWBool( "ClassesCooldown", true )
 			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
-				ply:TakeToken(1)
+				/*ply:TakeToken(1)
 				net.Start( "Notification" )
 				net.WriteString("- 1 Token")
 				net.WriteDouble(4)
-				net.Send( ply )
+				net.Send( ply )*/
 		if (ply:GetNWBool( "CanBuy_Ammobox") == false) then
 			ply:SetNWBool( "CanBuy_AmmoBox", true )
 		end
@@ -282,7 +286,7 @@ end
 concommand.Add("scavenger_class", SetClassScavenger)
 
 function SetClassBuilder(ply, cmd, command)
-	if (ply:GetLevel()  >= LevelForBuilder) and (ply:GetNWString("PlayerClass") != "Builder") and (ply:GetToken() > 1) then 
+	if (ply:GetLevel()  >= LevelForBuilder) and (ply:GetNWString("PlayerClass") != "Builder") and (ply:GetToken() >= 1) then 
 		ply:Give("gt_builder")
 		ply:GiveAmmo(90, "Battery", true )
 		ply:SetArmor(40)
@@ -292,17 +296,17 @@ function SetClassBuilder(ply, cmd, command)
 		ply:SetNWString("PlayerClass" , "Builder")	
 		ply:SetNWBool( "ClassesCooldown", true )
 			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
-				ply:TakeToken(1)
+			/*	ply:TakeToken(1)
 				net.Start( "Notification" )
 				net.WriteString("- 1 Token")
 				net.WriteDouble(4)
-				net.Send( ply )
+				net.Send( ply )*/
 	end
 end  
 concommand.Add("builder_class", SetClassBuilder)
 
 function SetClassAssault(ply, cmd, command)
-	if (ply:GetLevel()  >= LevelForAssault) and (ply:GetNWString("PlayerClass") != "Assault") and (ply:GetToken() > 1)  then 
+	if (ply:GetLevel()  >= LevelForAssault) and (ply:GetNWString("PlayerClass") != "Assault") and (ply:GetToken() >= 1)  then 
 		ply:Give("weapon_pistol")
 		ply:GiveAmmo(100, "Pistol", true )
 		ply:Give("weapon_smg1")
@@ -312,13 +316,25 @@ function SetClassAssault(ply, cmd, command)
 		ply:SetNWString("PlayerClass" , "Assault")		
 		ply:SetNWBool( "ClassesCooldown", true )
 			timer.Simple( Cooldown, function() ply:SetNWBool( "ClassesCooldown" , false) end )
-				ply:TakeToken(1)
+				/*ply:TakeToken(1)
 				net.Start( "Notification" )
 				net.WriteString("- 1 Token")
 				net.WriteDouble(4)
-				net.Send( ply )
+				net.Send( ply )*/
 	end
 
 end  
 concommand.Add("assault_class", SetClassAssault)
+
+function TakeAToken(ply, cmd, command)
+	if (ply:GetToken() >= 1) then 
+			ply:TakeToken(1)
+			net.Start( "Notification" )
+			net.WriteString("- 1 Token")
+			net.WriteDouble(4)
+			net.Send( ply )
+	end
+
+end  
+concommand.Add("take_token", TakeAToken)
 end

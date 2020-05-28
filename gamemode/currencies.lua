@@ -211,7 +211,7 @@ function meta:AddXp( amount ,ply )
 	if string.find(string.lower(amount), "-")then
 		self:SetXp( current_xp + amount )
 	else	
-		timer.Create( "counting", 0.02, amount, function()
+		timer.Create( "counting", 0.01, amount, function()
 		self:SetXp(self:GetXp() +1)
 	end)
 	
